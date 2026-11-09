@@ -30,7 +30,7 @@ from datagen.generator.export import build_tables, datetime_fields, handling_tab
 from datagen.generator.handling import Handled, handle_all
 from datagen.generator.model import World
 from datagen.generator.review import render_review
-from datagen.generator.truth import planted_effects, true_outcome_rows
+from datagen.generator.truth import counterfactual_metrics, planted_effects, true_outcome_rows
 from datagen.generator.world import build_world
 
 CONFIG_DIR = Path(__file__).resolve().parent / "config"
@@ -55,6 +55,22 @@ def rules_for(cfg: GeneratorConfig, config_dir: Path = CONFIG_DIR) -> ServiceRul
     return load_rules(config_dir / cfg.service_rules_file)
 
 
+def counterfactual_runs(cfg: GeneratorConfig, rules: ServiceRules) -> dict:
+    """Handle the same world and enquiry stream once per arm, with every enquiry given that arm."""
+    runs = {}
+    for arm in cfg.design.arms:
+        data = cfg.model_dump()
+        other = next(a.name for a in cfg.design.arms if a.name != arm.name)
+        data["design"] = {"type": "randomized_split", "rollout_date": None,
+                          "arms": [{"name": arm.name, "share": 1.0}, {"name": other, "share": 0.0}]}
+        data["counterfactuals"] = False
+        one = GeneratorConfig.model_validate(data)
+        world = build_world(one, rules.follow_up.observation_window_days)
+        world.enquiries = build_enquiries(one, world)
+        runs[arm.name] = handle_all(one, rules, world).truths
+    return runs
+
+
 def generate(cfg: GeneratorConfig, rules: ServiceRules | None = None) -> World:
     """Layers 1-5. Returns the world with enquiries (including repeat contacts) handled."""
     return generate_all(cfg, rules).world
@@ -73,7 +89,9 @@ def generate_all(cfg: GeneratorConfig, rules: ServiceRules | None = None) -> Gen
         "cost_parameters": [cost_parameters(cfg, world)],
         "staffing": staffing_rows(cfg, world),
         "true_outcome": true_outcome_rows(world, handled),
-        "planted_effects": [planted_effects(cfg, rules, world, handled)],
+        "planted_effects": [planted_effects(
+            cfg, rules, world, handled,
+            counterfactual_metrics(cfg, counterfactual_runs(cfg, rules), world) if cfg.counterfactuals else None)],
     }
     d = load_dictionary()
     localize(tables, cfg.rendering.local_time_files, cfg.rendering.local_timezone, d)

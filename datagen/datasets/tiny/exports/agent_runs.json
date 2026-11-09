@@ -42,10 +42,51 @@
  },
  {
   "run_id": "RUN-0000002",
+  "enquiry_id": "ENQ-000007",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-11T16:33:57+00:00",
+  "ended_at": "2026-01-11T16:39:47+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "SBL000500023",
+    "tool_output": "BKG000100023",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100023",
+    "tool_output": "status=departed; eta=2026-01-25T22:00:00+00:00",
+    "snapshot_time": "2026-01-11T16:39:47+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-01-25T22:00:00+00:00",
+  "response_text": "Shipment BKG000100023 is currently departed. Estimated arrival: 25 Jan 2026 22:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 2292,
+  "tokens_out": 408,
+  "voice_seconds": 350
+ },
+ {
+  "run_id": "RUN-0000003",
   "enquiry_id": "ENQ-000008",
   "agent_version": "agent_v1",
-  "started_at": "2026-01-11T19:07:34+00:00",
-  "ended_at": "2026-01-11T19:12:58+00:00",
+  "started_at": "2026-01-11T19:07:45+00:00",
+  "ended_at": "2026-01-11T19:09:22+00:00",
   "steps": [
    {
     "step_no": 1,
@@ -59,7 +100,7 @@
     "step_no": 2,
     "tool_input": "BKG000100017",
     "tool_output": "status=departed; eta=2026-02-15T00:00:00+00:00",
-    "snapshot_time": "2026-01-11T19:12:58+00:00",
+    "snapshot_time": "2026-01-11T19:09:22+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -77,30 +118,30 @@
   "response_text": "Shipment BKG000100017 is currently departed. Estimated arrival: 15 Feb 2026 00:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 890,
-  "tokens_out": 545,
-  "voice_seconds": 324
+  "tokens_in": 2021,
+  "tokens_out": 213,
+  "voice_seconds": 97
  },
  {
-  "run_id": "RUN-0000003",
-  "enquiry_id": "ENQ-000009",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-12T05:13:01+00:00",
-  "ended_at": "2026-01-12T05:14:24+00:00",
+  "run_id": "RUN-0000004",
+  "enquiry_id": "ENQ-000010",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-12T10:18:58+00:00",
+  "ended_at": "2026-01-12T10:19:56+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "BKG000100024",
-    "tool_output": "BKG000100024",
+    "tool_input": "BKG000100022",
+    "tool_output": "BKG000100022",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
     "success": true
    },
    {
     "step_no": 2,
-    "tool_input": "BKG000100024",
-    "tool_output": "status=departed; eta=2026-01-12T10:00:00+00:00",
-    "snapshot_time": "2026-01-12T05:14:24+00:00",
+    "tool_input": "BKG000100022",
+    "tool_output": "status=departed; eta=2026-02-04T23:00:00+00:00",
+    "snapshot_time": "2026-01-12T10:19:56+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -114,20 +155,102 @@
    }
   ],
   "claimed_status": "departed",
-  "claimed_eta": "2026-01-12T10:00:00+00:00",
-  "response_text": "Shipment BKG000100024 is currently departed. Estimated arrival: 12 Jan 2026 10:00 UTC.",
+  "claimed_eta": "2026-02-04T23:00:00+00:00",
+  "response_text": "Shipment BKG000100022 is currently departed. Estimated arrival: 04 Feb 2026 23:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 6642,
-  "tokens_out": 252,
-  "voice_seconds": 83
+  "tokens_in": 8352,
+  "tokens_out": 460,
+  "voice_seconds": 58
  },
  {
-  "run_id": "RUN-0000004",
-  "enquiry_id": "ENQ-000015",
+  "run_id": "RUN-0000005",
+  "enquiry_id": "ENQ-000012",
   "agent_version": "agent_v1",
-  "started_at": "2026-01-14T04:13:20+00:00",
-  "ended_at": "2026-01-14T04:15:32+00:00",
+  "started_at": "2026-01-13T12:10:53+00:00",
+  "ended_at": "2026-01-13T12:11:34+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100018",
+    "tool_output": "BKG000100018",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100018",
+    "tool_output": "status=released; eta=2026-01-10T20:33:04+00:00",
+    "snapshot_time": "2026-01-13T12:11:34+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "released",
+  "claimed_eta": "2026-01-10T20:33:04+00:00",
+  "response_text": "Shipment BKG000100018 is currently released. Estimated arrival: 10 Jan 2026 20:33 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 873,
+  "tokens_out": 172,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000006",
+  "enquiry_id": "ENQ-000013",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-13T22:54:47+00:00",
+  "ended_at": "2026-01-13T22:55:17+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "SYNU0000020",
+    "tool_output": "BKG000100001",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100001",
+    "tool_output": "status=gated_in; eta=2026-02-02T01:00:00+00:00",
+    "snapshot_time": "2026-01-13T22:55:17+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "gated_in",
+  "claimed_eta": "2026-02-02T01:00:00+00:00",
+  "response_text": "Shipment BKG000100001 is currently gated_in. Estimated arrival: 02 Feb 2026 01:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 4352,
+  "tokens_out": 336,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000007",
+  "enquiry_id": "ENQ-000014",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-14T04:13:30+00:00",
+  "ended_at": "2026-01-14T04:21:27+00:00",
   "steps": [
    {
     "step_no": 1,
@@ -141,7 +264,7 @@
     "step_no": 2,
     "tool_input": "BKG000100002",
     "tool_output": "status=departed; eta=2026-01-31T02:00:00+00:00",
-    "snapshot_time": "2026-01-14T04:15:32+00:00",
+    "snapshot_time": "2026-01-14T04:21:27+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -159,153 +282,30 @@
   "response_text": "Shipment BKG000100002 is currently departed. Estimated arrival: 31 Jan 2026 02:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 913,
-  "tokens_out": 300,
-  "voice_seconds": 132
- },
- {
-  "run_id": "RUN-0000005",
-  "enquiry_id": "ENQ-000018",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-19T04:42:49+00:00",
-  "ended_at": "2026-01-19T04:48:54+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "SYNU0000539",
-    "tool_output": "BKG000100025",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": "BKG000100025",
-    "tool_output": "status=departed; eta=2026-01-23T11:00:00+00:00",
-    "snapshot_time": "2026-01-19T04:48:54+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
-    "tool_input": null,
-    "tool_output": "sent",
-    "snapshot_time": null,
-    "tool_name": "send_message",
-    "success": true
-   }
-  ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-01-23T11:00:00+00:00",
-  "response_text": "Shipment BKG000100025 is currently departed. Estimated arrival: 23 Jan 2026 11:00 UTC.",
-  "self_reported_outcome": "resolved",
-  "handoff_flag": false,
-  "tokens_in": 1368,
-  "tokens_out": 217,
-  "voice_seconds": 365
- },
- {
-  "run_id": "RUN-0000006",
-  "enquiry_id": "ENQ-000019",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-19T21:33:22+00:00",
-  "ended_at": "2026-01-19T21:33:48+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG000100015",
-    "tool_output": "BKG000100015",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": "BKG000100015",
-    "tool_output": "status=departed; eta=2026-02-07T03:00:00+00:00",
-    "snapshot_time": "2026-01-19T21:33:48+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
-    "tool_input": null,
-    "tool_output": "sent",
-    "snapshot_time": null,
-    "tool_name": "send_message",
-    "success": true
-   }
-  ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-02-07T03:00:00+00:00",
-  "response_text": "Shipment BKG000100015 is currently departed. Estimated arrival: 07 Feb 2026 03:00 UTC.",
-  "self_reported_outcome": "resolved",
-  "handoff_flag": false,
-  "tokens_in": 2569,
-  "tokens_out": 935,
-  "voice_seconds": null
- },
- {
-  "run_id": "RUN-0000007",
-  "enquiry_id": "ENQ-000020",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-21T00:37:26+00:00",
-  "ended_at": "2026-01-21T00:38:41+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG000100022",
-    "tool_output": "BKG000100022",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": "BKG000100022",
-    "tool_output": "status=departed; eta=2026-02-04T23:00:00+00:00",
-    "snapshot_time": "2026-01-21T00:38:41+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
-    "tool_input": null,
-    "tool_output": "sent",
-    "snapshot_time": null,
-    "tool_name": "send_message",
-    "success": true
-   }
-  ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-02-04T23:00:00+00:00",
-  "response_text": "Shipment BKG000100022 is currently departed. Estimated arrival: 04 Feb 2026 23:00 UTC.",
-  "self_reported_outcome": "failed",
-  "handoff_flag": false,
-  "tokens_in": 2116,
-  "tokens_out": 654,
-  "voice_seconds": null
+  "tokens_in": 3295,
+  "tokens_out": 243,
+  "voice_seconds": 477
  },
  {
   "run_id": "RUN-0000008",
-  "enquiry_id": "ENQ-000021",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-21T10:11:11+00:00",
-  "ended_at": "2026-01-21T10:12:26+00:00",
+  "enquiry_id": "ENQ-000015",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-18T18:21:08+00:00",
+  "ended_at": "2026-01-18T18:21:32+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "SYNU0000122",
-    "tool_output": "BKG000100006",
+    "tool_input": "BKG000100023",
+    "tool_output": "BKG000100023",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
     "success": true
    },
    {
     "step_no": 2,
-    "tool_input": "BKG000100006",
-    "tool_output": "status=departed; eta=2026-01-24T05:00:00+00:00",
-    "snapshot_time": "2026-01-21T10:12:26+00:00",
+    "tool_input": "BKG000100023",
+    "tool_output": "status=departed; eta=2026-01-25T22:00:00+00:00",
+    "snapshot_time": "2026-01-18T18:21:32+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -319,246 +319,24 @@
    }
   ],
   "claimed_status": "departed",
-  "claimed_eta": "2026-01-24T05:00:00+00:00",
-  "response_text": "Shipment BKG000100006 is currently departed. Estimated arrival: 24 Jan 2026 05:00 UTC.",
+  "claimed_eta": "2026-01-25T22:00:00+00:00",
+  "response_text": "Shipment BKG000100023 is currently departed. Estimated arrival: 25 Jan 2026 22:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 9099,
-  "tokens_out": 247,
+  "tokens_in": 7409,
+  "tokens_out": 173,
   "voice_seconds": null
  },
  {
   "run_id": "RUN-0000009",
-  "enquiry_id": "ENQ-000022",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-21T16:13:33+00:00",
-  "ended_at": "2026-01-21T16:16:14+00:00",
+  "enquiry_id": "ENQ-000016",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-18T19:08:58+00:00",
+  "ended_at": "2026-01-18T19:10:04+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "BKG000100025",
-    "tool_output": "BKG000100025",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": "BKG000100025",
-    "tool_output": "status=departed; eta=2026-01-23T11:00:00+00:00",
-    "snapshot_time": "2026-01-21T16:16:14+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
-    "tool_input": null,
-    "tool_output": "sent",
-    "snapshot_time": null,
-    "tool_name": "send_message",
-    "success": true
-   }
-  ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-01-23T11:00:00+00:00",
-  "response_text": "Shipment BKG000100025 is currently departed. Estimated arrival: 23 Jan 2026 11:00 UTC.",
-  "self_reported_outcome": "resolved",
-  "handoff_flag": false,
-  "tokens_in": 9155,
-  "tokens_out": 94,
-  "voice_seconds": 161
- },
- {
-  "run_id": "RUN-0000010",
-  "enquiry_id": "ENQ-000026",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-22T15:43:32+00:00",
-  "ended_at": "2026-01-22T15:48:13+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG004100019",
-    "tool_output": "not_found",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": null,
-    "tool_output": "queued",
-    "snapshot_time": null,
-    "tool_name": "handoff_to_human",
-    "success": true
-   }
-  ],
-  "claimed_status": null,
-  "claimed_eta": null,
-  "response_text": "Let me transfer you to a colleague.",
-  "self_reported_outcome": "handed_off",
-  "handoff_flag": true,
-  "tokens_in": 1525,
-  "tokens_out": 432,
-  "voice_seconds": 281
- },
- {
-  "run_id": "RUN-0000011",
-  "enquiry_id": "ENQ-000028",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-24T13:28:30+00:00",
-  "ended_at": "2026-01-24T13:30:13+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG000100021",
-    "tool_output": "BKG000100021",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": null,
-    "tool_output": "queued",
-    "snapshot_time": null,
-    "tool_name": "handoff_to_human",
-    "success": true
-   }
-  ],
-  "claimed_status": null,
-  "claimed_eta": null,
-  "response_text": "Let me transfer you to a colleague.",
-  "self_reported_outcome": "handed_off",
-  "handoff_flag": true,
-  "tokens_in": 3173,
-  "tokens_out": 322,
-  "voice_seconds": 103
- },
- {
-  "run_id": "RUN-0000012",
-  "enquiry_id": "ENQ-000029",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-24T18:10:05+00:00",
-  "ended_at": "2026-01-24T18:10:35+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG000100013",
-    "tool_output": "BKG000100013",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": "BKG000100013",
-    "tool_output": "status=departed; eta=2026-02-08T08:00:00+00:00",
-    "snapshot_time": "2026-01-24T18:10:35+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
-    "tool_input": null,
-    "tool_output": "sent",
-    "snapshot_time": null,
-    "tool_name": "send_message",
-    "success": true
-   }
-  ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-02-08T08:00:00+00:00",
-  "response_text": "Shipment BKG000100013 is currently departed. Estimated arrival: 08 Feb 2026 08:00 UTC.",
-  "self_reported_outcome": "resolved",
-  "handoff_flag": false,
-  "tokens_in": 2333,
-  "tokens_out": 125,
-  "voice_seconds": null
- },
- {
-  "run_id": "RUN-0000013",
-  "enquiry_id": "ENQ-000030",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-25T21:29:09+00:00",
-  "ended_at": "2026-01-25T21:30:47+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG000100100",
-    "tool_output": "not_found",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": false
-   },
-   {
-    "step_no": 2,
-    "tool_input": null,
-    "tool_output": "queued",
-    "snapshot_time": null,
-    "tool_name": "handoff_to_human",
-    "success": true
-   }
-  ],
-  "claimed_status": null,
-  "claimed_eta": null,
-  "response_text": "Let me transfer you to a colleague.",
-  "self_reported_outcome": "handed_off",
-  "handoff_flag": true,
-  "tokens_in": 1001,
-  "tokens_out": 659,
-  "voice_seconds": 98
- },
- {
-  "run_id": "RUN-0000014",
-  "enquiry_id": "ENQ-000031",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-25T22:32:05+00:00",
-  "ended_at": "2026-01-25T22:34:32+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "SYNU0000020",
-    "tool_output": "BKG000100001",
-    "snapshot_time": null,
-    "tool_name": "lookup_shipment",
-    "success": true
-   },
-   {
-    "step_no": 2,
-    "tool_input": "BKG000100001",
-    "tool_output": "status=departed; eta=2026-02-02T01:00:00+00:00",
-    "snapshot_time": "2026-01-25T22:34:32+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
-    "tool_input": null,
-    "tool_output": "sent",
-    "snapshot_time": null,
-    "tool_name": "send_message",
-    "success": true
-   }
-  ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-02-02T01:00:00+00:00",
-  "response_text": "Shipment BKG000100001 is currently departed. Estimated arrival: 02 Feb 2026 01:00 UTC.",
-  "self_reported_outcome": "resolved",
-  "handoff_flag": false,
-  "tokens_in": 2003,
-  "tokens_out": 314,
-  "voice_seconds": 147
- },
- {
-  "run_id": "RUN-0000015",
-  "enquiry_id": "ENQ-000032",
-  "agent_version": "agent_v1",
-  "started_at": "2026-01-26T23:17:17+00:00",
-  "ended_at": "2026-01-26T23:20:46+00:00",
-  "steps": [
-   {
-    "step_no": 1,
-    "tool_input": "BKG000100000",
+    "tool_input": "SYNU0000014",
     "tool_output": "BKG000100000",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
@@ -568,7 +346,7 @@
     "step_no": 2,
     "tool_input": "BKG000100000",
     "tool_output": "status=departed; eta=2026-02-05T21:00:00+00:00",
-    "snapshot_time": "2026-01-26T23:20:46+00:00",
+    "snapshot_time": "2026-01-18T19:10:04+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -602,30 +380,87 @@
   "response_text": "Shipment BKG000100000 is currently departed. Estimated arrival: 05 Feb 2026 21:00 UTC.",
   "self_reported_outcome": "escalated",
   "handoff_flag": false,
-  "tokens_in": 2779,
-  "tokens_out": 215,
-  "voice_seconds": 209
+  "tokens_in": 4069,
+  "tokens_out": 818,
+  "voice_seconds": null
  },
  {
-  "run_id": "RUN-0000016",
-  "enquiry_id": "ENQ-000033",
+  "run_id": "RUN-0000010",
+  "enquiry_id": "ENQ-000017",
   "agent_version": "agent_v1",
-  "started_at": "2026-01-27T04:30:25+00:00",
-  "ended_at": "2026-01-27T04:36:22+00:00",
+  "started_at": "2026-01-19T04:42:53+00:00",
+  "ended_at": "2026-01-19T04:44:35+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "BKG000100023",
-    "tool_output": "BKG000100023",
+    "tool_input": "SYNU0000539",
+    "tool_output": "BKG000100025",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
     "success": true
    },
    {
     "step_no": 2,
-    "tool_input": "BKG000100023",
-    "tool_output": "status=discharged; eta=2026-01-26T00:28:37+00:00",
-    "snapshot_time": "2026-01-27T04:36:22+00:00",
+    "tool_input": "BKG000100025",
+    "tool_output": "status=departed; eta=2026-01-23T11:00:00+00:00",
+    "snapshot_time": "2026-01-19T04:44:35+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   },
+   {
+    "step_no": 4,
+    "tool_input": "BKG000100025",
+    "tool_output": "created",
+    "snapshot_time": null,
+    "tool_name": "create_case",
+    "success": true
+   },
+   {
+    "step_no": 5,
+    "tool_input": "BKG000100025",
+    "tool_output": "escalated",
+    "snapshot_time": null,
+    "tool_name": "escalate_case",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-01-23T11:00:00+00:00",
+  "response_text": "Shipment BKG000100025 is currently departed. Estimated arrival: 23 Jan 2026 11:00 UTC.",
+  "self_reported_outcome": "escalated",
+  "handoff_flag": false,
+  "tokens_in": 5607,
+  "tokens_out": 185,
+  "voice_seconds": 102
+ },
+ {
+  "run_id": "RUN-0000011",
+  "enquiry_id": "ENQ-000018",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-19T21:41:22+00:00",
+  "ended_at": "2026-01-19T21:42:32+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100015",
+    "tool_output": "BKG000100015",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100015",
+    "tool_output": "status=departed; eta=2026-02-07T03:00:00+00:00",
+    "snapshot_time": "2026-01-19T21:42:32+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -638,25 +473,66 @@
     "success": true
    }
   ],
-  "claimed_status": "discharged",
-  "claimed_eta": "2026-01-26T00:28:37+00:00",
-  "response_text": "Shipment BKG000100023 is currently discharged. Estimated arrival: 26 Jan 2026 00:28 UTC.",
+  "claimed_status": "departed",
+  "claimed_eta": "2026-02-07T03:00:00+00:00",
+  "response_text": "Shipment BKG000100015 is currently departed. Estimated arrival: 07 Feb 2026 03:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 1938,
-  "tokens_out": 102,
-  "voice_seconds": 357
+  "tokens_in": 2240,
+  "tokens_out": 249,
+  "voice_seconds": null
  },
  {
-  "run_id": "RUN-0000017",
-  "enquiry_id": "ENQ-000037",
+  "run_id": "RUN-0000012",
+  "enquiry_id": "ENQ-000019",
   "agent_version": "agent_v1",
-  "started_at": "2026-01-28T15:06:52+00:00",
-  "ended_at": "2026-01-28T15:08:16+00:00",
+  "started_at": "2026-01-21T00:46:41+00:00",
+  "ended_at": "2026-01-21T00:48:03+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "SYNU0000138",
+    "tool_input": "BKG000100022",
+    "tool_output": "BKG000100022",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100022",
+    "tool_output": "status=departed; eta=2026-02-04T23:00:00+00:00",
+    "snapshot_time": "2026-01-21T00:48:03+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-02-04T23:00:00+00:00",
+  "response_text": "Shipment BKG000100022 is currently departed. Estimated arrival: 04 Feb 2026 23:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 3172,
+  "tokens_out": 549,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000013",
+  "enquiry_id": "ENQ-000020",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-21T10:37:42+00:00",
+  "ended_at": "2026-01-21T10:38:58+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "SYNU0000122",
     "tool_output": "BKG000100006",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
@@ -665,8 +541,8 @@
    {
     "step_no": 2,
     "tool_input": "BKG000100006",
-    "tool_output": "status=released; eta=2026-01-24T05:22:13+00:00",
-    "snapshot_time": "2026-01-28T15:08:16+00:00",
+    "tool_output": "status=departed; eta=2026-01-24T05:00:00+00:00",
+    "snapshot_time": "2026-01-21T10:38:58+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -679,26 +555,108 @@
     "success": true
    }
   ],
-  "claimed_status": "released",
-  "claimed_eta": "2026-01-24T05:22:13+00:00",
-  "response_text": "Shipment BKG000100006 is currently released. Estimated arrival: 24 Jan 2026 05:22 UTC.",
+  "claimed_status": "departed",
+  "claimed_eta": "2026-01-24T05:00:00+00:00",
+  "response_text": "Shipment BKG000100006 is currently departed. Estimated arrival: 24 Jan 2026 05:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 1639,
-  "tokens_out": 227,
+  "tokens_in": 4356,
+  "tokens_out": 466,
   "voice_seconds": null
  },
  {
-  "run_id": "RUN-0000018",
-  "enquiry_id": "ENQ-000040",
+  "run_id": "RUN-0000014",
+  "enquiry_id": "ENQ-000021",
   "agent_version": "agent_v1",
-  "started_at": "2026-02-02T10:10:07+00:00",
-  "ended_at": "2026-02-02T10:10:45+00:00",
+  "started_at": "2026-01-22T06:57:25+00:00",
+  "ended_at": "2026-01-22T07:00:41+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "SYNU0000061",
-    "tool_output": "BKG000100002",
+    "tool_input": "SBL000500016",
+    "tool_output": "BKG000100016",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100016",
+    "tool_output": "status=departed; eta=2026-02-15T23:00:00+00:00",
+    "snapshot_time": "2026-01-22T07:00:41+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-02-15T23:00:00+00:00",
+  "response_text": "Shipment BKG000100016 is currently departed. Estimated arrival: 15 Feb 2026 23:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 1728,
+  "tokens_out": 463,
+  "voice_seconds": 196
+ },
+ {
+  "run_id": "RUN-0000015",
+  "enquiry_id": "ENQ-000022",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-22T12:50:57+00:00",
+  "ended_at": "2026-01-22T12:51:49+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100010",
+    "tool_output": "BKG000100010",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100010",
+    "tool_output": "status=booked; eta=2026-02-18T21:00:00+00:00",
+    "snapshot_time": "2026-01-22T12:51:49+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "booked",
+  "claimed_eta": "2026-02-18T21:00:00+00:00",
+  "response_text": "Shipment BKG000100010 is currently booked. Estimated arrival: 18 Feb 2026 21:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 2061,
+  "tokens_out": 838,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000016",
+  "enquiry_id": "ENQ-000023",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-22T15:43:43+00:00",
+  "ended_at": "2026-01-22T15:45:31+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG004100019",
+    "tool_output": "not_found",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
     "success": true
@@ -717,16 +675,353 @@
   "response_text": "Let me transfer you to a colleague.",
   "self_reported_outcome": "handed_off",
   "handoff_flag": true,
-  "tokens_in": 1557,
-  "tokens_out": 274,
+  "tokens_in": 2869,
+  "tokens_out": 248,
+  "voice_seconds": 108
+ },
+ {
+  "run_id": "RUN-0000017",
+  "enquiry_id": "ENQ-000024",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-23T11:39:44+00:00",
+  "ended_at": "2026-01-23T11:40:16+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "SYNU0000293",
+    "tool_output": "BKG000100014",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": null,
+    "tool_output": "queued",
+    "snapshot_time": null,
+    "tool_name": "handoff_to_human",
+    "success": true
+   }
+  ],
+  "claimed_status": null,
+  "claimed_eta": null,
+  "response_text": "Let me transfer you to a colleague.",
+  "self_reported_outcome": "handed_off",
+  "handoff_flag": true,
+  "tokens_in": 1671,
+  "tokens_out": 1312,
   "voice_seconds": null
  },
  {
+  "run_id": "RUN-0000018",
+  "enquiry_id": "ENQ-000025",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-24T13:28:15+00:00",
+  "ended_at": "2026-01-24T13:29:42+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100021",
+    "tool_output": "BKG000100021",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": null,
+    "tool_output": "queued",
+    "snapshot_time": null,
+    "tool_name": "handoff_to_human",
+    "success": true
+   }
+  ],
+  "claimed_status": null,
+  "claimed_eta": null,
+  "response_text": "Let me transfer you to a colleague.",
+  "self_reported_outcome": "handed_off",
+  "handoff_flag": true,
+  "tokens_in": 2835,
+  "tokens_out": 414,
+  "voice_seconds": 87
+ },
+ {
   "run_id": "RUN-0000019",
-  "enquiry_id": "ENQ-000041",
+  "enquiry_id": "ENQ-000026",
   "agent_version": "agent_v1",
-  "started_at": "2026-02-02T17:12:23+00:00",
-  "ended_at": "2026-02-02T17:14:37+00:00",
+  "started_at": "2026-01-25T07:18:27+00:00",
+  "ended_at": "2026-01-25T07:22:15+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100025",
+    "tool_output": "BKG000100025",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100025",
+    "tool_output": "status=discharged; eta=2026-01-24T01:15:13+00:00",
+    "snapshot_time": "2026-01-25T07:22:15+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "discharged",
+  "claimed_eta": "2026-01-24T01:15:13+00:00",
+  "response_text": "Shipment BKG000100025 is currently discharged. Estimated arrival: 24 Jan 2026 01:15 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 1085,
+  "tokens_out": 124,
+  "voice_seconds": 228
+ },
+ {
+  "run_id": "RUN-0000020",
+  "enquiry_id": "ENQ-000027",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-25T21:29:22+00:00",
+  "ended_at": "2026-01-25T21:31:24+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100100",
+    "tool_output": "not_found",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": null,
+    "tool_output": "queued",
+    "snapshot_time": null,
+    "tool_name": "handoff_to_human",
+    "success": true
+   }
+  ],
+  "claimed_status": null,
+  "claimed_eta": null,
+  "response_text": "Let me transfer you to a colleague.",
+  "self_reported_outcome": "handed_off",
+  "handoff_flag": true,
+  "tokens_in": 2175,
+  "tokens_out": 149,
+  "voice_seconds": 122
+ },
+ {
+  "run_id": "RUN-0000021",
+  "enquiry_id": "ENQ-000030",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-27T05:59:34+00:00",
+  "ended_at": "2026-01-27T06:00:03+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100017",
+    "tool_output": "BKG000100017",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100017",
+    "tool_output": "status=departed; eta=2026-02-15T00:00:00+00:00",
+    "snapshot_time": "2026-01-27T06:00:03+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-02-15T00:00:00+00:00",
+  "response_text": "Shipment BKG000100017 is currently departed. Estimated arrival: 15 Feb 2026 00:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 5700,
+  "tokens_out": 768,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000022",
+  "enquiry_id": "ENQ-000032",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-28T12:32:06+00:00",
+  "ended_at": "2026-01-28T12:33:23+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100005",
+    "tool_output": "BKG000100005",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100005",
+    "tool_output": "status=departed; eta=2026-03-01T14:00:00+00:00",
+    "snapshot_time": "2026-01-27T02:27:16+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-03-01T14:00:00+00:00",
+  "response_text": "Shipment BKG000100005 is currently departed. Estimated arrival: 01 Mar 2026 14:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 2914,
+  "tokens_out": 239,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000023",
+  "enquiry_id": "ENQ-000033",
+  "agent_version": "agent_v1",
+  "started_at": "2026-01-28T15:11:50+00:00",
+  "ended_at": "2026-01-28T15:13:05+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "SYNU0000138",
+    "tool_output": "BKG000100006",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100006",
+    "tool_output": "status=released; eta=2026-01-24T05:22:13+00:00",
+    "snapshot_time": "2026-01-28T15:13:05+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "released",
+  "claimed_eta": "2026-01-24T05:22:13+00:00",
+  "response_text": "Shipment BKG000100006 is currently released. Estimated arrival: 24 Jan 2026 05:22 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 6087,
+  "tokens_out": 500,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000024",
+  "enquiry_id": "ENQ-000034",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-28T23:46:48+00:00",
+  "ended_at": "2026-01-28T23:49:28+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "SBL000500007",
+    "tool_output": "BKG000100007",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": null,
+    "tool_output": "queued",
+    "snapshot_time": null,
+    "tool_name": "handoff_to_human",
+    "success": true
+   }
+  ],
+  "claimed_status": null,
+  "claimed_eta": null,
+  "response_text": "Let me transfer you to a colleague.",
+  "self_reported_outcome": "handed_off",
+  "handoff_flag": true,
+  "tokens_in": 4390,
+  "tokens_out": 752,
+  "voice_seconds": 160
+ },
+ {
+  "run_id": "RUN-0000025",
+  "enquiry_id": "ENQ-000035",
+  "agent_version": "agent_v2",
+  "started_at": "2026-01-29T21:58:23+00:00",
+  "ended_at": "2026-01-29T22:01:37+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG000100019",
+    "tool_output": "BKG000100019",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": "BKG000100019",
+    "tool_output": "status=departed; eta=2026-02-03T09:00:00+00:00",
+    "snapshot_time": "2026-01-29T22:01:37+00:00",
+    "tool_name": "get_tracking_status",
+    "success": true
+   },
+   {
+    "step_no": 3,
+    "tool_input": null,
+    "tool_output": "sent",
+    "snapshot_time": null,
+    "tool_name": "send_message",
+    "success": true
+   }
+  ],
+  "claimed_status": "departed",
+  "claimed_eta": "2026-02-03T09:00:00+00:00",
+  "response_text": "Shipment BKG000100019 is currently departed. Estimated arrival: 03 Feb 2026 09:00 UTC.",
+  "self_reported_outcome": "resolved",
+  "handoff_flag": false,
+  "tokens_in": 2918,
+  "tokens_out": 760,
+  "voice_seconds": 194
+ },
+ {
+  "run_id": "RUN-0000026",
+  "enquiry_id": "ENQ-000037",
+  "agent_version": "agent_v1",
+  "started_at": "2026-02-02T17:11:49+00:00",
+  "ended_at": "2026-02-02T17:17:09+00:00",
   "steps": [
    {
     "step_no": 1,
@@ -750,30 +1045,30 @@
   "response_text": "Let me transfer you to a colleague.",
   "self_reported_outcome": "handed_off",
   "handoff_flag": true,
-  "tokens_in": 1999,
-  "tokens_out": 205,
-  "voice_seconds": 134
+  "tokens_in": 1040,
+  "tokens_out": 347,
+  "voice_seconds": 320
  },
  {
-  "run_id": "RUN-0000020",
-  "enquiry_id": "ENQ-000042",
-  "agent_version": "agent_v1",
-  "started_at": "2026-02-02T20:05:28+00:00",
-  "ended_at": "2026-02-02T20:06:56+00:00",
+  "run_id": "RUN-0000027",
+  "enquiry_id": "ENQ-000039",
+  "agent_version": "agent_v2",
+  "started_at": "2026-02-03T13:11:25+00:00",
+  "ended_at": "2026-02-03T13:13:53+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "BKG000100022",
-    "tool_output": "BKG000100022",
+    "tool_input": "SBL000500000",
+    "tool_output": "BKG000100000",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
     "success": true
    },
    {
     "step_no": 2,
-    "tool_input": "BKG000100022",
-    "tool_output": "status=departed; eta=2026-02-05T03:00:00+00:00",
-    "snapshot_time": "2026-02-02T20:06:56+00:00",
+    "tool_input": "BKG000100000",
+    "tool_output": "status=departed; eta=2026-02-07T02:00:00+00:00",
+    "snapshot_time": "2026-02-03T13:13:53+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -784,23 +1079,39 @@
     "snapshot_time": null,
     "tool_name": "send_message",
     "success": true
+   },
+   {
+    "step_no": 4,
+    "tool_input": "BKG000100000",
+    "tool_output": "created",
+    "snapshot_time": null,
+    "tool_name": "create_case",
+    "success": true
+   },
+   {
+    "step_no": 5,
+    "tool_input": "BKG000100000",
+    "tool_output": "escalated",
+    "snapshot_time": null,
+    "tool_name": "escalate_case",
+    "success": true
    }
   ],
   "claimed_status": "departed",
-  "claimed_eta": "2026-02-05T03:00:00+00:00",
-  "response_text": "Shipment BKG000100022 is currently departed. Estimated arrival: 05 Feb 2026 03:00 UTC.",
-  "self_reported_outcome": "resolved",
+  "claimed_eta": "2026-02-07T02:00:00+00:00",
+  "response_text": "Shipment BKG000100000 is currently departed. Estimated arrival: 07 Feb 2026 02:00 UTC.",
+  "self_reported_outcome": "escalated",
   "handoff_flag": false,
-  "tokens_in": 1040,
-  "tokens_out": 347,
-  "voice_seconds": null
+  "tokens_in": 671,
+  "tokens_out": 237,
+  "voice_seconds": 148
  },
  {
-  "run_id": "RUN-0000021",
-  "enquiry_id": "ENQ-000044",
-  "agent_version": "agent_v1",
-  "started_at": "2026-02-05T06:35:34+00:00",
-  "ended_at": "2026-02-05T06:43:34+00:00",
+  "run_id": "RUN-0000028",
+  "enquiry_id": "ENQ-000040",
+  "agent_version": "agent_v2",
+  "started_at": "2026-02-05T06:35:56+00:00",
+  "ended_at": "2026-02-05T06:38:36+00:00",
   "steps": [
    {
     "step_no": 1,
@@ -814,7 +1125,7 @@
     "step_no": 2,
     "tool_input": "BKG000100009",
     "tool_output": "status=departed; eta=2026-02-21T03:00:00+00:00",
-    "snapshot_time": "2026-02-05T06:43:34+00:00",
+    "snapshot_time": "2026-02-05T06:38:36+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -832,30 +1143,30 @@
   "response_text": "Shipment BKG000100009 is currently departed. Estimated arrival: 21 Feb 2026 03:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 795,
-  "tokens_out": 322,
-  "voice_seconds": 480
+  "tokens_in": 5987,
+  "tokens_out": 531,
+  "voice_seconds": 160
  },
  {
-  "run_id": "RUN-0000022",
-  "enquiry_id": "ENQ-000045",
+  "run_id": "RUN-0000029",
+  "enquiry_id": "ENQ-000042",
   "agent_version": "agent_v1",
-  "started_at": "2026-02-07T10:37:18+00:00",
-  "ended_at": "2026-02-07T10:38:04+00:00",
+  "started_at": "2026-02-08T18:10:42+00:00",
+  "ended_at": "2026-02-08T18:12:08+00:00",
   "steps": [
    {
     "step_no": 1,
-    "tool_input": "BKG000100021",
-    "tool_output": "BKG000100021",
+    "tool_input": "BKG000100013",
+    "tool_output": "BKG000100013",
     "snapshot_time": null,
     "tool_name": "lookup_shipment",
     "success": true
    },
    {
     "step_no": 2,
-    "tool_input": "BKG000100021",
-    "tool_output": "status=departed; eta=2026-02-13T22:00:00+00:00",
-    "snapshot_time": "2026-02-07T10:38:04+00:00",
+    "tool_input": "BKG000100013",
+    "tool_output": "status=arrived; eta=2026-02-08T07:42:28+00:00",
+    "snapshot_time": "2026-02-08T18:12:08+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -868,21 +1179,21 @@
     "success": true
    }
   ],
-  "claimed_status": "departed",
-  "claimed_eta": "2026-02-13T22:00:00+00:00",
-  "response_text": "Shipment BKG000100021 is currently departed. Estimated arrival: 13 Feb 2026 22:00 UTC.",
+  "claimed_status": "arrived",
+  "claimed_eta": "2026-02-08T07:42:28+00:00",
+  "response_text": "Shipment BKG000100013 is currently arrived. Estimated arrival: 08 Feb 2026 07:42 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 1899,
-  "tokens_out": 277,
-  "voice_seconds": 46
+  "tokens_in": 2178,
+  "tokens_out": 180,
+  "voice_seconds": 86
  },
  {
-  "run_id": "RUN-0000023",
-  "enquiry_id": "ENQ-000049",
+  "run_id": "RUN-0000030",
+  "enquiry_id": "ENQ-000045",
   "agent_version": "agent_v1",
-  "started_at": "2026-02-10T03:49:01+00:00",
-  "ended_at": "2026-02-10T03:50:11+00:00",
+  "started_at": "2026-02-10T03:49:26+00:00",
+  "ended_at": "2026-02-10T03:50:14+00:00",
   "steps": [
    {
     "step_no": 1,
@@ -894,36 +1205,61 @@
    },
    {
     "step_no": 2,
-    "tool_input": "BKG000100007",
-    "tool_output": "status=discharged; eta=2026-02-08T20:50:13+00:00",
-    "snapshot_time": "2026-02-10T03:50:11+00:00",
-    "tool_name": "get_tracking_status",
-    "success": true
-   },
-   {
-    "step_no": 3,
     "tool_input": null,
-    "tool_output": "sent",
+    "tool_output": "queued",
     "snapshot_time": null,
-    "tool_name": "send_message",
+    "tool_name": "handoff_to_human",
     "success": true
    }
   ],
-  "claimed_status": "discharged",
-  "claimed_eta": "2026-02-08T20:50:13+00:00",
-  "response_text": "Shipment BKG000100007 is currently discharged. Estimated arrival: 08 Feb 2026 20:50 UTC.",
-  "self_reported_outcome": "resolved",
-  "handoff_flag": false,
-  "tokens_in": 1825,
-  "tokens_out": 120,
+  "claimed_status": null,
+  "claimed_eta": null,
+  "response_text": "Let me transfer you to a colleague.",
+  "self_reported_outcome": "handed_off",
+  "handoff_flag": true,
+  "tokens_in": 1593,
+  "tokens_out": 572,
   "voice_seconds": null
  },
  {
-  "run_id": "RUN-0000024",
-  "enquiry_id": "ENQ-000052",
+  "run_id": "RUN-0000031",
+  "enquiry_id": "ENQ-000046",
+  "agent_version": "agent_v2",
+  "started_at": "2026-02-11T05:50:23+00:00",
+  "ended_at": "2026-02-11T05:51:45+00:00",
+  "steps": [
+   {
+    "step_no": 1,
+    "tool_input": "BKG070100000",
+    "tool_output": "not_found",
+    "snapshot_time": null,
+    "tool_name": "lookup_shipment",
+    "success": true
+   },
+   {
+    "step_no": 2,
+    "tool_input": null,
+    "tool_output": "queued",
+    "snapshot_time": null,
+    "tool_name": "handoff_to_human",
+    "success": true
+   }
+  ],
+  "claimed_status": null,
+  "claimed_eta": null,
+  "response_text": "Let me transfer you to a colleague.",
+  "self_reported_outcome": "handed_off",
+  "handoff_flag": true,
+  "tokens_in": 1090,
+  "tokens_out": 281,
+  "voice_seconds": null
+ },
+ {
+  "run_id": "RUN-0000032",
+  "enquiry_id": "ENQ-000048",
   "agent_version": "agent_v1",
-  "started_at": "2026-02-13T22:13:52+00:00",
-  "ended_at": "2026-02-13T22:17:41+00:00",
+  "started_at": "2026-02-13T22:14:39+00:00",
+  "ended_at": "2026-02-13T22:17:10+00:00",
   "steps": [
    {
     "step_no": 1,
@@ -937,7 +1273,7 @@
     "step_no": 2,
     "tool_input": "BKG000100029",
     "tool_output": "status=departed; eta=2026-02-14T04:00:00+00:00",
-    "snapshot_time": "2026-02-13T22:17:41+00:00",
+    "snapshot_time": "2026-02-13T22:17:10+00:00",
     "tool_name": "get_tracking_status",
     "success": true
    },
@@ -955,8 +1291,8 @@
   "response_text": "Shipment BKG000100029 is currently departed. Estimated arrival: 14 Feb 2026 04:00 UTC.",
   "self_reported_outcome": "resolved",
   "handoff_flag": false,
-  "tokens_in": 3103,
-  "tokens_out": 71,
-  "voice_seconds": 229
+  "tokens_in": 2177,
+  "tokens_out": 99,
+  "voice_seconds": 151
  }
 ]

@@ -6,11 +6,15 @@
   "arms": [
    {
     "name": "human_baseline",
-    "share": 0.5
+    "share": 0.34
    },
    {
     "name": "agent_v1",
-    "share": 0.5
+    "share": 0.33
+   },
+   {
+    "name": "agent_v2",
+    "share": 0.33
    }
   ],
   "rollout_date": null
@@ -24,10 +28,10 @@
  "agent_behaviour": {
   "agent_v1": {
    "lookup_success": 0.95,
-   "wrong_shipment_prob": 0.02,
-   "stale_cache_prob": 0.06,
-   "escalation_compliance": 0.8,
-   "unsupported_claim_prob": 0.03,
+   "wrong_shipment_prob": 0.03,
+   "stale_cache_prob": 0.1,
+   "escalation_compliance": 0.7,
+   "unsupported_claim_prob": 0.05,
    "handoff_prob": 0.15,
    "false_success_report_prob": 0.5,
    "tokens_in": {
@@ -45,10 +49,10 @@
   },
   "agent_v2": {
    "lookup_success": 0.97,
-   "wrong_shipment_prob": 0.01,
+   "wrong_shipment_prob": 0.005,
    "stale_cache_prob": 0.01,
-   "escalation_compliance": 0.95,
-   "unsupported_claim_prob": 0.02,
+   "escalation_compliance": 0.97,
+   "unsupported_claim_prob": 0.01,
    "handoff_prob": 0.12,
    "false_success_report_prob": 0.5,
    "tokens_in": {
@@ -65,63 +69,311 @@
    }
   }
  },
+ "delay_regimes": [],
  "metrics_by_arm": {
   "human_baseline": {
-   "n": 21,
-   "verified_resolution_rate": 0.8571,
+   "n": 9,
+   "verified_resolution_rate": 1.0,
    "escalated_open_rate": 0.0,
-   "failed_rate": 0.1429,
+   "failed_rate": 0.0,
    "ai_only_rate": 0.0,
    "first_answer_correct_rate": 1.0,
    "handoff_rate": 0.0,
    "rescue_rate": 0.0,
-   "repeat_contact_rate": 0.1429,
+   "repeat_contact_rate": 0.0,
    "false_self_report_rate": 0.0,
-   "human_minutes_per_enquiry": 9.107,
-   "human_cost_per_enquiry": 3.0357,
+   "human_minutes_per_enquiry": 6.52,
+   "human_minutes_sd": 3.419,
+   "human_cost_per_enquiry": 2.1735,
    "ai_variable_cost_per_enquiry": 0.0,
-   "variable_cost_per_enquiry": 3.0357,
-   "variable_cost_per_verified_resolution": 3.5417
+   "variable_cost_per_enquiry": 2.1735,
+   "variable_cost_sd": 1.1396,
+   "variable_cost_per_verified_resolution": 2.1735
   },
   "agent_v1": {
-   "n": 16,
-   "verified_resolution_rate": 0.6875,
+   "n": 15,
+   "verified_resolution_rate": 0.8667,
    "escalated_open_rate": 0.0,
-   "failed_rate": 0.3125,
-   "ai_only_rate": 0.625,
-   "first_answer_correct_rate": 0.9375,
-   "handoff_rate": 0.125,
-   "rescue_rate": 0.125,
-   "repeat_contact_rate": 0.1875,
-   "false_self_report_rate": 0.125,
-   "human_minutes_per_enquiry": 4.758,
-   "human_cost_per_enquiry": 1.5861,
-   "ai_variable_cost_per_enquiry": 0.23938,
-   "variable_cost_per_enquiry": 1.8255,
-   "variable_cost_per_verified_resolution": 2.6553
+   "failed_rate": 0.1333,
+   "ai_only_rate": 0.7333,
+   "first_answer_correct_rate": 0.9333,
+   "handoff_rate": 0.1333,
+   "rescue_rate": 0.0,
+   "repeat_contact_rate": 0.0667,
+   "false_self_report_rate": 0.0667,
+   "human_minutes_per_enquiry": 3.471,
+   "human_minutes_sd": 10.017,
+   "human_cost_per_enquiry": 1.157,
+   "ai_variable_cost_per_enquiry": 0.18887,
+   "variable_cost_per_enquiry": 1.3459,
+   "variable_cost_sd": 3.339,
+   "variable_cost_per_verified_resolution": 1.553
+  },
+  "agent_v2": {
+   "n": 9,
+   "verified_resolution_rate": 1.0,
+   "escalated_open_rate": 0.0,
+   "failed_rate": 0.0,
+   "ai_only_rate": 0.6667,
+   "first_answer_correct_rate": 1.0,
+   "handoff_rate": 0.2222,
+   "rescue_rate": 0.0,
+   "repeat_contact_rate": 0.0,
+   "false_self_report_rate": 0.0,
+   "human_minutes_per_enquiry": 4.948,
+   "human_minutes_sd": 7.162,
+   "human_cost_per_enquiry": 1.6494,
+   "ai_variable_cost_per_enquiry": 0.11914,
+   "variable_cost_per_enquiry": 1.7685,
+   "variable_cost_sd": 2.4148,
+   "variable_cost_per_verified_resolution": 1.7685
   }
  },
- "differences_vs_reference": {
+ "comparisons": {
   "agent_v1_minus_human_baseline": {
-   "verified_resolution_rate": -0.1696,
-   "escalated_open_rate": 0.0,
-   "failed_rate": 0.1696,
-   "ai_only_rate": 0.625,
-   "first_answer_correct_rate": -0.0625,
-   "handoff_rate": 0.125,
-   "rescue_rate": 0.125,
-   "repeat_contact_rate": 0.0446,
-   "false_self_report_rate": 0.125,
-   "human_minutes_per_enquiry": -4.349,
-   "human_cost_per_enquiry": -1.4496,
-   "ai_variable_cost_per_enquiry": 0.23938,
-   "variable_cost_per_enquiry": -1.2102,
-   "variable_cost_per_verified_resolution": -0.8864
+   "difference": {
+    "verified_resolution_rate": {
+     "diff": -0.1333,
+     "se": 0.08776,
+     "mde_80": 0.24573,
+     "detectable": false
+    },
+    "escalated_open_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "failed_rate": {
+     "diff": 0.1333,
+     "se": 0.08776,
+     "mde_80": 0.24573,
+     "detectable": false
+    },
+    "ai_only_rate": {
+     "diff": 0.7333,
+     "se": 0.11418,
+     "mde_80": 0.31972,
+     "detectable": true
+    },
+    "first_answer_correct_rate": {
+     "diff": -0.0667,
+     "se": 0.06442,
+     "mde_80": 0.18038,
+     "detectable": false
+    },
+    "handoff_rate": {
+     "diff": 0.1333,
+     "se": 0.08776,
+     "mde_80": 0.24573,
+     "detectable": false
+    },
+    "rescue_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "repeat_contact_rate": {
+     "diff": 0.0667,
+     "se": 0.06442,
+     "mde_80": 0.18038,
+     "detectable": false
+    },
+    "false_self_report_rate": {
+     "diff": 0.0667,
+     "se": 0.06442,
+     "mde_80": 0.18038,
+     "detectable": false
+    },
+    "human_minutes_per_enquiry": {
+     "diff": -3.049,
+     "se": 2.82634,
+     "mde_80": 7.91375,
+     "detectable": false
+    },
+    "human_cost_per_enquiry": {
+     "diff": -1.0165
+    },
+    "ai_variable_cost_per_enquiry": {
+     "diff": 0.18887
+    },
+    "variable_cost_per_enquiry": {
+     "diff": -0.8276,
+     "se": 0.9421,
+     "mde_80": 2.63789,
+     "detectable": false
+    },
+    "variable_cost_per_verified_resolution": {
+     "diff": -0.6205
+    }
+   }
+  },
+  "agent_v2_minus_human_baseline": {
+   "difference": {
+    "verified_resolution_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "escalated_open_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "failed_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "ai_only_rate": {
+     "diff": 0.6667,
+     "se": 0.15713,
+     "mde_80": 0.43997,
+     "detectable": true
+    },
+    "first_answer_correct_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "handoff_rate": {
+     "diff": 0.2222,
+     "se": 0.13857,
+     "mde_80": 0.38801,
+     "detectable": false
+    },
+    "rescue_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "repeat_contact_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "false_self_report_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "human_minutes_per_enquiry": {
+     "diff": -1.572,
+     "se": 2.64541,
+     "mde_80": 7.40715,
+     "detectable": false
+    },
+    "human_cost_per_enquiry": {
+     "diff": -0.5241
+    },
+    "ai_variable_cost_per_enquiry": {
+     "diff": 0.11914
+    },
+    "variable_cost_per_enquiry": {
+     "diff": -0.405,
+     "se": 0.89007,
+     "mde_80": 2.49218,
+     "detectable": false
+    },
+    "variable_cost_per_verified_resolution": {
+     "diff": -0.405
+    }
+   }
+  },
+  "agent_v2_minus_agent_v1": {
+   "difference": {
+    "verified_resolution_rate": {
+     "diff": 0.1333,
+     "se": 0.08776,
+     "mde_80": 0.24573,
+     "detectable": false
+    },
+    "escalated_open_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "failed_rate": {
+     "diff": -0.1333,
+     "se": 0.08776,
+     "mde_80": 0.24573,
+     "detectable": false
+    },
+    "ai_only_rate": {
+     "diff": -0.0666,
+     "se": 0.19424,
+     "mde_80": 0.54386,
+     "detectable": false
+    },
+    "first_answer_correct_rate": {
+     "diff": 0.0667,
+     "se": 0.06442,
+     "mde_80": 0.18038,
+     "detectable": false
+    },
+    "handoff_rate": {
+     "diff": 0.0889,
+     "se": 0.16403,
+     "mde_80": 0.45928,
+     "detectable": false
+    },
+    "rescue_rate": {
+     "diff": 0.0,
+     "se": 0.0,
+     "mde_80": 0.0,
+     "detectable": true
+    },
+    "repeat_contact_rate": {
+     "diff": -0.0667,
+     "se": 0.06442,
+     "mde_80": 0.18038,
+     "detectable": false
+    },
+    "false_self_report_rate": {
+     "diff": -0.0667,
+     "se": 0.06442,
+     "mde_80": 0.18038,
+     "detectable": false
+    },
+    "human_minutes_per_enquiry": {
+     "diff": 1.477,
+     "se": 3.51976,
+     "mde_80": 9.85533,
+     "detectable": false
+    },
+    "human_cost_per_enquiry": {
+     "diff": 0.4924
+    },
+    "ai_variable_cost_per_enquiry": {
+     "diff": -0.06973
+    },
+    "variable_cost_per_enquiry": {
+     "diff": 0.4226,
+     "se": 1.17948,
+     "mde_80": 3.30255,
+     "detectable": false
+    },
+    "variable_cost_per_verified_resolution": {
+     "diff": 0.2155
+    }
+   },
+   "identical_behaviour": false
   }
  },
+ "counterfactual": null,
  "realized_cash_savings": 0.0,
  "notes": [
-  "Metrics are the true in-sample values; a correct evaluator should recover them from the exports.",
+  "metrics_by_arm are true in-sample values; a correct evaluator should recover them from the exports.",
+  "comparisons: in-sample differences with standard error and mde_80 (minimum detectable effect at 80% power).",
   "Staffing is flat by design: released human capacity is NOT realized cash savings.",
   "Variable cost = human active minutes x labor rate + AI token/voice usage; fixed costs are separate."
  ]

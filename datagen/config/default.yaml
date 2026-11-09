@@ -1,4 +1,6 @@
-# Generator configuration for the `dev` dataset.
+# Generator configuration for the `dev` dataset (also the base that other dataset configs extend).
+# Sized so the planted agent_v2 - agent_v1 differences are detectable (see comparisons.*.mde_80
+# in ground_truth/planted_effects.json): ~2,500 in-population enquiries per arm.
 # ALL numeric behaviour values are ASSUMPTIONS for development, not facts about any company.
 # They exist so we can plant known answers and test the evaluator. Tune them; do not cite them.
 
@@ -12,8 +14,8 @@ period:
   timezone: "UTC"
 
 world:
-  n_customers: 400
-  n_shipments: 2000
+  n_customers: 1800
+  n_shipments: 9000
   segment_shares: {large_account: 0.2, mid_market: 0.4, small: 0.4}
   containers_per_shipment: {min: 1, max: 4}
   transit_days: {min: 10, max: 40}
@@ -46,9 +48,10 @@ enquiries:
 
 design:
   type: randomized_split         # randomized_split | staged_rollout | before_after_confounded
-  arms:                          # traffic shares must sum to 1
-    - {name: human_baseline, share: 0.5}
-    - {name: agent_v1, share: 0.5}
+  arms:                          # traffic shares must sum to 1; the first arm is the reference
+    - {name: human_baseline, share: 0.34}
+    - {name: agent_v1, share: 0.33}
+    - {name: agent_v2, share: 0.33}
   rollout_date: null             # used by staged_rollout / before_after_confounded
 
 human:
@@ -65,21 +68,21 @@ human:
 agents:
   agent_v1:
     lookup_success: 0.95
-    wrong_shipment_prob: 0.02
-    stale_cache_prob: 0.06       # agent answers from an old snapshot
-    escalation_compliance: 0.80
-    unsupported_claim_prob: 0.03 # states a status/ETA not supported by any record
+    wrong_shipment_prob: 0.03
+    stale_cache_prob: 0.10       # agent answers from an old snapshot
+    escalation_compliance: 0.70
+    unsupported_claim_prob: 0.05 # states a status/ETA not supported by any record
     handoff_prob: 0.15
     false_success_report_prob: 0.50   # of failed runs, share self-reported as "resolved"
     tokens_in: {median: 2500, p95: 6000}
     tokens_out: {median: 300, p95: 900}
     voice_seconds: {median: 150, p95: 420}
-  agent_v2:                      # "integrator enhancement": better escalation and freshness
+  agent_v2:                      # "integrator enhancement": fresher tracking data, stricter escalation
     lookup_success: 0.97
-    wrong_shipment_prob: 0.01
+    wrong_shipment_prob: 0.005
     stale_cache_prob: 0.01
-    escalation_compliance: 0.95
-    unsupported_claim_prob: 0.02
+    escalation_compliance: 0.97
+    unsupported_claim_prob: 0.01
     handoff_prob: 0.12
     false_success_report_prob: 0.50
     tokens_in: {median: 3200, p95: 7500}

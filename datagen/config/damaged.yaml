@@ -1,0 +1,17 @@
+# `damaged`: dev with heavy defect injection (5% per defect type; 5% of shipments lose their
+# tracking history). Tests that the evaluator recovers what is recoverable and says "unknown"
+# where evidence is genuinely missing.
+extends: default.yaml
+dataset_name: damaged
+defects:
+  enabled: true
+  rates:
+    duplicate_row: 0.05
+    missing_field: 0.05
+    missing_snapshot: 0.05
+    timezone_shift: 0.05
+    id_typo: 0.05
+    orphan_record: 0.05
+    retry_row: 0.05
+    late_record: 0.05
+    conflicting_closure: 0.05

@@ -99,8 +99,17 @@ class DelayMix(Strict):
         return self
 
 
+class DelayRegime(Strict):
+    """From `from_date` on (by planned arrival), shipments use a different delay mix.
+    Used to create a confounder that coincides with a rollout."""
+
+    from_date: date
+    delay_mix: DelayMix
+
+
 class Operations(Strict):
     delay_mix: DelayMix
+    delay_regimes: list[DelayRegime] = Field(default_factory=list)
     short_delay_hours: NumRange
     long_delay_hours: NumRange
     eta_revisions: IntRange
@@ -269,6 +278,8 @@ class GeneratorConfig(Strict):
     costs: Costs
     rendering: Rendering = Field(default_factory=Rendering)
     defects: Defects
+    # Also run every arm on the whole population (same world and enquiries) to get true causal effects.
+    counterfactuals: bool = False
 
     @model_validator(mode="after")
     def _arms_have_behaviour(self) -> "GeneratorConfig":
@@ -337,8 +348,26 @@ def _read_yaml(path: str | Path) -> dict:
         return yaml.safe_load(f)
 
 
+def _deep_merge(base: dict, override: dict) -> dict:
+    out = dict(base)
+    for k, v in override.items():
+        out[k] = _deep_merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def read_config_dict(path: str | Path) -> dict:
+    """Read a config, resolving `extends: other.yaml` (relative to this file) by deep merge.
+    Lists (e.g. design.arms) are replaced, not merged."""
+    path = Path(path)
+    data = _read_yaml(path)
+    parent = data.pop("extends", None)
+    if parent:
+        data = _deep_merge(read_config_dict(path.parent / parent), data)
+    return data
+
+
 def load_config(path: str | Path) -> GeneratorConfig:
-    return GeneratorConfig.model_validate(_read_yaml(path))
+    return GeneratorConfig.model_validate(read_config_dict(path))
 
 
 def load_rules(path: str | Path) -> ServiceRules:

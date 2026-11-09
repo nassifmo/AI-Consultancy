@@ -32,6 +32,14 @@ resolution_definition:
   # Population: in-scope enquiries received inside the study period. Exports run until
   # period end + observation_window_days so every enquiry in the population can be judged.
 
+# Boundary interpretation used by the generator and the scenario library (TO CONFIRM with the team):
+#   delay requires escalation only if STRICTLY greater than escalate_if_delay_hours (exactly 24h -> not required)
+#   claimed ETA counts as correct if within eta_tolerance_hours INCLUSIVE (exactly 6h off -> correct)
+#   escalation on time if opened within max_hours_to_escalate INCLUSIVE (exactly 2h -> on time)
+#   customer update on time if within followup_deadline_hours INCLUSIVE
+#   a later contact counts as a repeat if within repeat_contact_window_days INCLUSIVE (exactly 7 days -> repeat)
+#   escalated case counts as closed in the observation window if closed_at <= received + observation window
+
 closure_codes:
   resolved: [resolved_info_provided, resolved_after_investigation]
   not_resolved: [escalated_to_operations, customer_unreachable, cancelled]

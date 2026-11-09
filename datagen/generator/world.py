@@ -47,6 +47,14 @@ def _delay_hours(cfg: GeneratorConfig, rng, delay_class: str) -> float:
     return rng.uniform(-2.0, 1.0)  # on time, within normal noise
 
 
+def _delay_mix_for(cfg: GeneratorConfig, planned_arrival: datetime) -> dict[str, float]:
+    mix = cfg.operations.delay_mix
+    for regime in sorted(cfg.operations.delay_regimes, key=lambda r: r.from_date):
+        if planned_arrival.date() >= regime.from_date:
+            mix = regime.delay_mix
+    return mix.model_dump()
+
+
 def build_shipments(cfg: GeneratorConfig, customers: list[Customer]) -> list[Shipment]:
     rng = layer_rng(cfg.seed, "shipments")
     start, end = period_bounds(cfg)
@@ -65,7 +73,7 @@ def build_shipments(cfg: GeneratorConfig, customers: list[Customer]) -> list[Shi
             container_serial += 1
             containers.append(ids.container_ref(container_serial))
 
-        delay_class = choice_weighted(rng, cfg.operations.delay_mix.model_dump())
+        delay_class = choice_weighted(rng, _delay_mix_for(cfg, planned_arrival))
         delay = _delay_hours(cfg, rng, delay_class)
         actual_departure = planned_departure + hours(rng.uniform(-3, 6))
         actual_arrival = planned_arrival + hours(delay)

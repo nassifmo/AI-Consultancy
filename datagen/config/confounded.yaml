@@ -1,0 +1,19 @@
+# `confounded`: before/after rollout (human until 15 Feb, agent_v1 from 15 Feb) while the share of
+# long delays jumps for shipments arriving from 15 Feb. A naive before/after comparison mixes the
+# agent's effect with the harder period. The true causal effect is in
+# ground_truth/planted_effects.json -> counterfactual.after_rollout.causal_effects
+# (same world and enquiries, everyone handled by each arm). The evaluator must flag the confounding
+# or adjust for it, not report the naive difference as the agent's contribution.
+extends: default.yaml
+dataset_name: confounded
+design:
+  type: before_after_confounded
+  rollout_date: "2026-02-15"
+  arms:
+    - {name: human_baseline, share: 0.5}
+    - {name: agent_v1, share: 0.5}
+operations:
+  delay_regimes:
+    - from_date: "2026-02-15"
+      delay_mix: {none: 0.45, short: 0.25, long: 0.30}
+counterfactuals: true

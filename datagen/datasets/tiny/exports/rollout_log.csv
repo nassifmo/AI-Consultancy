@@ -1,3 +1,4 @@
 date,agent_version,arm_assignment_rule,traffic_share,change_description
-2026-01-01,human_baseline,random_by_enquiry,0.5,Existing human-handled process
-2026-01-01,agent_v1,random_by_enquiry,0.5,AI agent first release
+2026-01-01,human_baseline,random_by_enquiry,0.34,Existing human-handled process
+2026-01-01,agent_v1,random_by_enquiry,0.33,AI agent first release
+2026-01-01,agent_v2,random_by_enquiry,0.33,"Integrator enhancement: fresher tracking data, stricter escalation"

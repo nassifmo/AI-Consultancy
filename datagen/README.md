@@ -53,6 +53,25 @@ Plan: `docs/SYNTHETIC_DATA_PLAN.md`. Human-readable field list: `docs/DATA_DICTI
 - `scenario_library.py`: builds each case into partner-format tables and validates it.
 - Review checklist and open questions: `docs/SCENARIO_REVIEW.md`.
 
+## Step 6 (done): named datasets
+Configs extend each other (`extends: default.yaml`, deep merge; lists replaced). Build them all with
+`python -m datagen.build_datasets`, which prints what each one plants.
+
+| Dataset | Config | What it tests |
+|---|---|---|
+| tiny | `tiny.yaml` | ~50 enquiries, clean, committed for row-by-row review |
+| dev | `default.yaml` | 3 arms (human, agent_v1, agent_v2), randomized, light defects; ~2,500 enquiries per arm so the v2 - v1 effect is detectable |
+| damaged | `damaged.yaml` | dev with 5% of every defect type |
+| null_effect | `null_effect.yaml` | agent_v2 identical to agent_v1: true effect is zero |
+| confounded | `confounded.yaml` | before/after rollout coinciding with a jump in long delays; naive difference is biased |
+| staged | `staged.yaml` | staged rollout by region |
+| heldout | `heldout.template.yaml` | copied privately to `heldout.yaml` (git-ignored) by the teammate who does not build the evaluator |
+
+`ground_truth/planted_effects.json` now gives every pairwise comparison with its standard error and
+`mde_80` (minimum detectable effect, 80% power, 5% two-sided), and for rollout designs
+`counterfactual.*.causal_effects`: the true effect from re-running the same world and enquiries with
+every enquiry given each arm.
+
 ## Commands
 ```bash
 pip install -r requirements.txt
@@ -62,4 +81,5 @@ python -m datagen.dictionary_tools render   # regenerates docs/DATA_DICTIONARY.m
 python -m datagen.generate --config datagen/config/tiny.yaml     # -> datagen/datasets/tiny
 python -m datagen.generate --config datagen/config/default.yaml  # -> datagen/datasets/dev (not committed)
 python -m datagen.scenario_library --write                       # -> datagen/datasets/scenarios/<id> (not committed)
+python -m datagen.build_datasets                                 # all named datasets (~40 s)
 ```

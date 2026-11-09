@@ -67,3 +67,4 @@ not in this repo yet.
 - 2026-11-03: Workflow and architecture plan concluded (see `docs/ARCHITECTURE_PLAN.md`); stack Python/SQLite/FastAPI/Streamlit.
 - 2026-11: Build and prove the evaluator on synthetic/simulated data first, then apply to real company data (CMA CGM or others).
 - 2026-11: Rule boundaries proposed (delay strictly > 24h; ETA tolerance, escalation, follow-up and repeat windows inclusive); pending team confirmation. See `docs/SCENARIO_REVIEW.md`.
+- 2026-11: Test datasets defined (dev 3-arm, damaged, null_effect, confounded, staged, heldout template). dev sized so the planted integrator effect is detectable (~2,500 enquiries/arm). Rollout datasets carry true causal effects from counterfactual runs.

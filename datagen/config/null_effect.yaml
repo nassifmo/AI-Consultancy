@@ -1,0 +1,22 @@
+# `null_effect`: two agent arms with IDENTICAL behaviour. The true effect of "v2" is zero, so any
+# difference the evaluator reports is noise. Tests that the evaluator does not claim a false effect
+# (it should report differences within their uncertainty, not as a contribution).
+extends: default.yaml
+dataset_name: null_effect
+design:
+  type: randomized_split
+  arms:
+    - {name: agent_v1, share: 0.5}
+    - {name: agent_v2, share: 0.5}
+agents:
+  agent_v2:                      # exact copy of agent_v1 in default.yaml
+    lookup_success: 0.95
+    wrong_shipment_prob: 0.03
+    stale_cache_prob: 0.10
+    escalation_compliance: 0.70
+    unsupported_claim_prob: 0.05
+    handoff_prob: 0.15
+    false_success_report_prob: 0.50
+    tokens_in: {median: 2500, p95: 6000}
+    tokens_out: {median: 300, p95: 900}
+    voice_seconds: {median: 150, p95: 420}

@@ -3,3 +3,4 @@ __pycache__/
 .pytest_cache/
 datagen/datasets/*
 !datagen/datasets/tiny/
+datagen/config/heldout.yaml

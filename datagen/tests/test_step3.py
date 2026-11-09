@@ -75,8 +75,9 @@ def test_run_writes_exports_and_ground_truth(tmp_path):
 
 def test_randomized_split_shares(dev):
     pop = [t for t in dev.handled.truths if t.enquiry.repeat_of is None]
-    share = Counter(t.arm for t in pop)[HUMAN_BASELINE] / len(pop)
-    assert share == pytest.approx(0.5, abs=0.04)
+    counts = Counter(t.arm for t in pop)
+    for arm in dev.cfg.design.arms:
+        assert counts[arm.name] / len(pop) == pytest.approx(arm.share, abs=0.03)
 
 
 def test_repeats_stay_in_parent_arm(dev):

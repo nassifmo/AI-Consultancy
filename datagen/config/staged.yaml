@@ -1,0 +1,12 @@
+# `staged`: realistic staged rollout. Human handling everywhere until 1 Feb, then agent_v2 in half of
+# the customer countries. Countries that switch and those that wait form a comparison group, but
+# they are not randomized. True causal effects come from counterfactual runs (counterfactual.*).
+extends: default.yaml
+dataset_name: staged
+design:
+  type: staged_rollout
+  rollout_date: "2026-02-01"
+  arms:
+    - {name: human_baseline, share: 0.5}
+    - {name: agent_v2, share: 0.5}
+counterfactuals: true

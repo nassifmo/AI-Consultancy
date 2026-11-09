@@ -1,0 +1,12 @@
+# `heldout` TEMPLATE. The held-out dataset is the final accuracy test of the evaluator, so its exact
+# settings must stay hidden from whoever builds the evaluator.
+#
+# The teammate who does NOT build the evaluator:
+#   1. copies this file to datagen/config/heldout.yaml (git-ignored, never committed or shared),
+#   2. sets a new seed and changes several values below within plausible ranges
+#      (e.g. agent behaviour, delay mix, human handling, enquiry mix, defect rates),
+#   3. runs: python -m datagen.generate --config datagen/config/heldout.yaml
+#   4. keeps datagen/datasets/heldout/ground_truth/ private until the evaluator is frozen.
+extends: default.yaml
+dataset_name: heldout
+seed: 0                          # CHANGE: any integer not used elsewhere

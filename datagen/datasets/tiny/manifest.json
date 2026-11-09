@@ -2,7 +2,7 @@
   "dataset_name": "tiny",
   "seed": 42,
   "config_file": "datagen/config/tiny.yaml",
-  "config_sha256": "ea87ddd15879428f7717b512b93c088055acfdf68c1c8be8dea0b7c47f26b9ef",
+  "config_sha256": "2755c3225a8d44d5d880136581ffca3c99b54ea8ed4d3fc8360ee73ad97b47bd",
   "rule_version": "0.1.0-proposed",
   "study_period": [
     "2026-01-01T00:00:00+00:00",
@@ -25,31 +25,30 @@
     "shipments": 30,
     "tracking_events": 520,
     "stale_events": 46,
-    "enquiries": 52,
-    "repeat_contacts_generated": 5,
-    "population_in_scope": 37,
+    "enquiries": 48,
+    "repeat_contacts_generated": 1,
+    "population_in_scope": 33,
     "arm": {
-      "agent_v1": 16,
-      "human_baseline": 21
+      "agent_v1": 15,
+      "human_baseline": 9,
+      "agent_v2": 9
     },
     "true_outcome": {
-      "resolved": 29,
-      "failed": 8
+      "resolved": 31,
+      "failed": 2
     },
     "scenario": {
       "S1": 39,
-      "S10": 2,
-      "S11": 2,
+      "S11": 1,
       "S12": 3,
-      "S2": 1,
-      "S4": 1,
-      "S6": 1,
-      "S8": 3
+      "S2": 3,
+      "S5": 1,
+      "S6": 1
     },
-    "agent_runs": 24,
-    "cases": 9,
-    "human_work_items": 45,
-    "responses": 59,
+    "agent_runs": 32,
+    "cases": 4,
+    "human_work_items": 30,
+    "responses": 51,
     "defects_injected": {},
     "expected_unknown": 0
   }

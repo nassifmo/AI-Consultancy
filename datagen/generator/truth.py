@@ -4,7 +4,8 @@ should recover. Written before any defect is injected; never given to the evalua
 from __future__ import annotations
 
 from collections import defaultdict
-from statistics import mean
+from math import sqrt
+from statistics import mean, pstdev
 
 from datagen.config_schema import GeneratorConfig, ServiceRules
 
@@ -53,6 +54,18 @@ def true_outcome_rows(world: World, h: Handled) -> list[dict]:
     return rows
 
 
+RATE_METRICS = [
+    "verified_resolution_rate", "escalated_open_rate", "failed_rate", "ai_only_rate", "first_answer_correct_rate",
+    "handoff_rate", "rescue_rate", "repeat_contact_rate", "false_self_report_rate",
+]
+MEAN_METRICS = {"human_minutes_per_enquiry": "human_minutes_sd", "variable_cost_per_enquiry": "variable_cost_sd"}
+Z_80_POWER = 2.80  # 1.96 (two-sided 5%) + 0.84 (80% power)
+
+
+def _sd(xs: list[float]) -> float:
+    return pstdev(xs) if len(xs) > 1 else 0.0
+
+
 def _arm_metrics(ts: list[Truth], labor_rate: float) -> dict:
     n = len(ts)
     if n == 0:
@@ -61,8 +74,8 @@ def _arm_metrics(ts: list[Truth], labor_rate: float) -> dict:
     human_min = [t.human_seconds / 60 for t in ts]
     human_cost = [m / 60 * labor_rate for m in human_min]
     ai_cost = [t.ai_cost for t in ts]
+    var_cost = [h + a for h, a in zip(human_cost, ai_cost)]
     resolved = sum(t.true_outcome == "resolved" for t in ts)
-    variable = sum(human_cost) + sum(ai_cost)
     return {
         "n": n,
         "verified_resolution_rate": rate(lambda t: t.true_outcome == "resolved"),
@@ -75,29 +88,94 @@ def _arm_metrics(ts: list[Truth], labor_rate: float) -> dict:
         "repeat_contact_rate": rate(lambda t: t.repeat_contact),
         "false_self_report_rate": rate(lambda t: t.self_reported == "resolved" and t.true_outcome != "resolved"),
         "human_minutes_per_enquiry": round(mean(human_min), 3),
+        "human_minutes_sd": round(_sd(human_min), 3),
         "human_cost_per_enquiry": round(mean(human_cost), 4),
         "ai_variable_cost_per_enquiry": round(mean(ai_cost), 5),
-        "variable_cost_per_enquiry": round(variable / n, 4),
-        "variable_cost_per_verified_resolution": round(variable / resolved, 4) if resolved else None,
+        "variable_cost_per_enquiry": round(mean(var_cost), 4),
+        "variable_cost_sd": round(_sd(var_cost), 4),
+        "variable_cost_per_verified_resolution": round(sum(var_cost) / resolved, 4) if resolved else None,
     }
 
 
-def planted_effects(cfg: GeneratorConfig, rules: ServiceRules, world: World, h: Handled) -> dict:
-    """True in-sample metrics per arm on the evaluation population (in-scope enquiries in the study
-    period) and the differences a correct evaluator should recover."""
-    pop = [t for t in h.truths if t.in_population and t.in_scope]
-    by_arm: dict[str, list[Truth]] = defaultdict(list)
-    for t in pop:
-        by_arm[t.arm].append(t)
-    metrics = {a.name: _arm_metrics(by_arm[a.name], cfg.costs.labor_rate_per_hour) for a in cfg.design.arms}
+def compare(a: dict, b: dict) -> dict:
+    """b minus a for every metric, with standard error and the minimum detectable effect
+    (80% power, 5% two-sided) for rates and means. A difference smaller than mde_80 cannot be
+    expected to be detected reliably at this sample size."""
+    if not a.get("n") or not b.get("n"):
+        return {}
+    out = {}
+    for k, v in b.items():
+        if k == "n" or k.endswith("_sd") or not isinstance(v, float) or not isinstance(a.get(k), float):
+            continue
+        entry = {"diff": round(v - a[k], 5)}
+        if k in RATE_METRICS:
+            se = sqrt(a[k] * (1 - a[k]) / a["n"] + v * (1 - v) / b["n"])
+        elif k in MEAN_METRICS:
+            sd = MEAN_METRICS[k]
+            se = sqrt(a[sd] ** 2 / a["n"] + b[sd] ** 2 / b["n"])
+        else:
+            se = None
+        if se is not None:
+            entry.update(se=round(se, 5), mde_80=round(Z_80_POWER * se, 5),
+                         detectable=abs(entry["diff"]) >= Z_80_POWER * se)
+        out[k] = entry
+    return out
+
+
+def _population(h_truths: list[Truth], post_from=None) -> list[Truth]:
+    pop = [t for t in h_truths if t.in_population and t.in_scope]
+    if post_from is not None:
+        pop = [t for t in pop if t.enquiry.received_at >= post_from]
+    return pop
+
+
+def counterfactual_metrics(cfg: GeneratorConfig, runs: dict[str, list[Truth]], world: World) -> dict:
+    """Every arm applied to the same world and enquiry stream: true causal effects (vs the first arm),
+    for the whole population and, for rollout designs, for enquiries after the rollout date."""
+    rate = cfg.costs.labor_rate_per_hour
     ref = cfg.design.arms[0].name
-    diffs = {}
-    for a in cfg.design.arms[1:]:
-        m, r = metrics[a.name], metrics[ref]
-        if m.get("n") and r.get("n"):
-            diffs[f"{a.name}_minus_{ref}"] = {
-                k: round(m[k] - r[k], 5) for k in m if k != "n" and isinstance(m[k], float) and isinstance(r[k], float)
-            }
+    scopes = {"all": None}
+    if cfg.design.rollout_date:
+        from datetime import datetime
+
+        scopes["after_rollout"] = datetime.combine(cfg.design.rollout_date, datetime.min.time(),
+                                                   tzinfo=world.period_start.tzinfo)
+    out = {}
+    for scope, since in scopes.items():
+        m = {arm: _arm_metrics(_population(ts, since), rate) for arm, ts in runs.items()}
+        out[scope] = {
+            "metrics_if_everyone_got_arm": m,
+            "causal_effects": {f"{arm}_minus_{ref}": {k: v["diff"] for k, v in compare(m[ref], m[arm]).items()}
+                               for arm in m if arm != ref},
+        }
+    return out
+
+
+def planted_effects(cfg: GeneratorConfig, rules: ServiceRules, world: World, h: Handled,
+                    counterfactual: dict | None = None) -> dict:
+    """True in-sample metrics per arm on the evaluation population (in-scope enquiries in the study
+    period), every pairwise difference with its precision, and (optionally) true causal effects."""
+    by_arm: dict[str, list[Truth]] = defaultdict(list)
+    for t in _population(h.truths):
+        by_arm[t.arm].append(t)
+    arms = [a.name for a in cfg.design.arms]
+    metrics = {a: _arm_metrics(by_arm[a], cfg.costs.labor_rate_per_hour) for a in arms}
+    comparisons = {}
+    for i, a in enumerate(arms):
+        for b in arms[i + 1 :]:
+            c = {"difference": compare(metrics[a], metrics[b])}
+            if a in cfg.agents and b in cfg.agents:
+                c["identical_behaviour"] = cfg.agents[a] == cfg.agents[b]
+            comparisons[f"{b}_minus_{a}"] = c
+    notes = [
+        "metrics_by_arm are true in-sample values; a correct evaluator should recover them from the exports.",
+        "comparisons: in-sample differences with standard error and mde_80 (minimum detectable effect at 80% power).",
+        "Staffing is flat by design: released human capacity is NOT realized cash savings.",
+        "Variable cost = human active minutes x labor rate + AI token/voice usage; fixed costs are separate.",
+    ]
+    if cfg.design.type != "randomized_split":
+        notes.append("Arms are assigned by date/region, so in-sample differences are NOT causal; "
+                     "use counterfactual.*.causal_effects as the true effect.")
     return {
         "dataset_name": cfg.dataset_name,
         "rule_version": rules.rule_version,
@@ -106,12 +184,10 @@ def planted_effects(cfg: GeneratorConfig, rules: ServiceRules, world: World, h: 
         "study_period": [world.period_start.isoformat(), world.period_end.isoformat()],
         "data_cutoff": world.data_cutoff.isoformat(),
         "agent_behaviour": {k: v.model_dump() for k, v in cfg.agents.items()},
+        "delay_regimes": [r.model_dump(mode="json") for r in cfg.operations.delay_regimes],
         "metrics_by_arm": metrics,
-        "differences_vs_reference": diffs,
+        "comparisons": comparisons,
+        "counterfactual": counterfactual,
         "realized_cash_savings": 0.0,
-        "notes": [
-            "Metrics are the true in-sample values; a correct evaluator should recover them from the exports.",
-            "Staffing is flat by design: released human capacity is NOT realized cash savings.",
-            "Variable cost = human active minutes x labor rate + AI token/voice usage; fixed costs are separate.",
-        ],
+        "notes": notes,
     }
