@@ -2,39 +2,51 @@
   "dataset_name": "tiny",
   "seed": 42,
   "config_file": "datagen/config/tiny.yaml",
-  "config_sha256": "fc7845fb6d827c4e7ae686bce7600781e28f81af7bf30e05069cd7d7553d99a5",
+  "config_sha256": "61f8ffd8e4480d64035d37208164dec7df37cd3398f31968f50e83e0b330c63b",
+  "rule_version": "0.1.0-proposed",
+  "study_period": [
+    "2026-01-01T00:00:00+00:00",
+    "2026-02-01T00:00:00+00:00"
+  ],
+  "data_cutoff": "2026-02-15T00:00:00+00:00",
   "layers": [
     "world",
     "tracking",
-    "enquiries"
+    "enquiries",
+    "handling",
+    "follow_up",
+    "costs",
+    "ground_truth"
   ],
   "summary": {
     "customers": 8,
-    "shipments": 20,
-    "tracking_events": 325,
-    "stale_events": 28,
-    "enquiries": 42,
-    "delay_class": {
-      "long": 2,
-      "none": 13,
-      "short": 5
+    "shipments": 30,
+    "tracking_events": 520,
+    "stale_events": 46,
+    "enquiries": 52,
+    "repeat_contacts_generated": 5,
+    "population_in_scope": 37,
+    "arm": {
+      "agent_v1": 16,
+      "human_baseline": 21
     },
-    "enquiry_type": {
-      "delay": 20,
-      "status": 18,
-      "documents": 4
+    "true_outcome": {
+      "resolved": 29,
+      "failed": 8
     },
-    "reference_kind": {
-      "container": 10,
-      "booking": 26,
-      "other_shipment": 3,
-      "typo": 1,
-      "bl": 2
+    "scenario": {
+      "S1": 39,
+      "S10": 2,
+      "S11": 2,
+      "S12": 3,
+      "S2": 1,
+      "S4": 1,
+      "S6": 1,
+      "S8": 3
     },
-    "channel": {
-      "voice": 18,
-      "chat": 14,
-      "email": 10
-    }
+    "agent_runs": 24,
+    "cases": 9,
+    "human_work_items": 45,
+    "responses": 59
   }
 }

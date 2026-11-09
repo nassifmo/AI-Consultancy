@@ -5,6 +5,9 @@ Status: plan (Nov 2026). Builds on `DATA_REQUIREMENTS.md` and `DATA_SOURCES_AND_
 ## 1. Principle
 The synthetic dataset has **exactly the same files and fields we will request from a partner company**.
 The generator spec and the partner data request are the same document (section 9).
+
+Study period vs data cutoff: the evaluation population is enquiries received inside the study period;
+exports run until period end + observation window, so every enquiry in the population can be judged.
 When real data arrives, only a mapping step changes; the evaluator does not.
 
 Every generated dataset has two parts:
@@ -31,6 +34,7 @@ Values below marked *(assumption)* are placeholders to tune, not facts about any
 | E11 | `cost_parameters.json` | Finance | labor_rate_per_hour (fully loaded), currency, setup_cost, amortization_months, platform_fee_month, maintenance_month |
 | E12 | `service_rules.yaml` | Workflow owner | escalate_if_delay_hours, followup_deadline_hours, repeat_contact_window_days, resolution_definition, closure_code_list |
 | E13 | `staffing.csv` (optional) | HR/finance | month, support_headcount, overtime_hours, outsourcing_spend (needed for realized cash savings) |
+| E14 | `responses.csv` | Interaction history (emails, chats, call transcripts) | response_id, enquiry_id, case_id, sent_at, actor_type, purpose (answer/correction/case_update), shipment_reference, claimed_status, claimed_eta, message_text |
 
 Ground truth files (`ground_truth/`):
 `true_outcome.csv` (per enquiry: resolved / escalated_open / failed, true status and ETA at handling time,
@@ -129,6 +133,7 @@ v1 vs v2 difference. Ground truth then comes from the simulator's backend state,
 | E11 | Fully loaded labor rate, setup and running costs | Finance | Form | Current |
 | E12 | Escalation and resolution rules | Workflow owner | Workshop + document | Current |
 | E13 | Headcount, overtime, outsourcing (optional) | HR / Finance | CSV | 6 months before + study window |
+| E14 | Messages sent to customers (AI and human), with stated status/ETA | Customer service / integrator | CSV or transcripts | Study window + follow-up window |
 
 Privacy: request pseudonymized customer and agent IDs; no personal data beyond IDs and timestamps;
 transcripts redacted of personal details; data stays in an agreed storage location.

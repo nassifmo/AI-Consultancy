@@ -1,0 +1,10 @@
+case_id,enquiry_id,opened_at,reason,owner_id,priority,closed_at,closure_code
+CAS-000001,ENQ-000017,2026-01-18T22:51:52.930837+00:00,delay_investigation,HUM-021,high,,
+CAS-000002,ENQ-000018,2026-01-20T02:37:20.249687+00:00,wrong_information,HUM-019,normal,2026-01-20T02:42:37.249687+00:00,resolved_info_provided
+CAS-000003,ENQ-000018,2026-01-20T02:43:37.249687+00:00,delay_investigation,HUM-024,high,2026-01-24T15:57:02.798737+00:00,resolved_after_investigation
+CAS-000004,ENQ-000024,2026-01-22T09:28:14.893740+00:00,delay_investigation,HUM-018,high,2026-01-31T03:19:18.497608+00:00,resolved_after_investigation
+CAS-000005,ENQ-000022,2026-01-22T15:43:45.306794+00:00,wrong_information,HUM-008,normal,2026-01-22T15:53:05.306794+00:00,resolved_info_provided
+CAS-000006,ENQ-000022,2026-01-22T15:54:05.306794+00:00,delay_investigation,HUM-016,high,2026-01-26T02:18:20.626720+00:00,customer_unreachable
+CAS-000007,ENQ-000030,2026-01-25T21:57:37.631590+00:00,delay_investigation,HUM-013,high,2026-01-30T10:21:24.193107+00:00,resolved_after_investigation
+CAS-000008,ENQ-000032,2026-01-26T23:21:15.717820+00:00,delay_investigation,HUM-015,high,,
+CAS-000009,ENQ-000043,2026-02-03T15:20:35.838140+00:00,delay_investigation,HUM-001,high,2026-02-06T17:59:43.753621+00:00,resolved_after_investigation

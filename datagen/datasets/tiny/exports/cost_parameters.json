@@ -1,0 +1,9 @@
+{
+ "currency": "USD",
+ "labor_rate_per_hour": 20.0,
+ "setup_cost": 30000.0,
+ "amortization_months": 24,
+ "platform_fee_month": 1500.0,
+ "maintenance_month": 1000.0,
+ "valid_from": "2026-01-01"
+}

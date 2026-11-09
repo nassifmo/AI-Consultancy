@@ -21,6 +21,19 @@ Plan: `docs/SYNTHETIC_DATA_PLAN.md`. Human-readable field list: `docs/DATA_DICTI
 - `generator/review.py`: `review.md` sheet for row-by-row human checking of small datasets.
 - `config/tiny.yaml`: ~40-50 enquiries; committed output in `datasets/tiny/` for review.
 
+## Step 3 (done): layers 4-7
+- `generator/handling.py`: arm assignment (randomized split, staged rollout, before/after), human handling
+  (queue, typo lookups, ETA errors, escalation), AI agent runs (lookup, wrong shipment, stale snapshot,
+  unsupported claim, handoff, escalation, self-report), escalation cases (follow-up, closure, or never actioned),
+  rescues of bad AI answers, repeat contacts, true outcome per rules, scenario labels S1-S12.
+- `generator/costs.py`: AI invoices from run usage, cost parameters, flat staffing (no realized cash savings),
+  rollout log.
+- `generator/truth.py`: `ground_truth/true_outcome.csv` and `ground_truth/planted_effects.json`
+  (true per-arm metrics and differences the evaluator must recover).
+- Exports now E1-E14 (E14 `responses.csv` added: every message with stated status/ETA, AI or human).
+- Independent contacts about one shipment are spaced `min_days_between_contacts` apart, so recontacts
+  inside the repeat window come from handling quality (plus a small noise rate).
+
 ## Commands
 ```bash
 pip install -r requirements.txt

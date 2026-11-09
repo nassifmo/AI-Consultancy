@@ -228,6 +228,30 @@ files:
     notes: Schema defined in datagen/config_schema.py (ServiceRules). Example in datagen/config/service_rules.yaml.
     fields: []
 
+  responses:
+    id: E14
+    filename: responses.csv
+    format: csv
+    primary_key: response_id
+    partner_source: Interaction history (emails, chat and call transcripts) with the stated status/ETA extracted
+    owner: Customer service / integrator
+    notes: >
+      Every message that gave the customer shipment information, from the AI agent or a human.
+      claimed_status / claimed_eta are structured here; with real data they come from transcripts
+      and their extraction must be validated separately.
+    fields:
+      - {name: response_id, type: string, required: true, description: "Unique message ID"}
+      - {name: enquiry_id, type: string, required: true, references: enquiries.enquiry_id, description: "Enquiry answered"}
+      - {name: case_id, type: string, required: false, references: cases.case_id, description: "Case the message belongs to, if any"}
+      - {name: sent_at, type: datetime, required: true, description: "When the message was sent"}
+      - {name: actor_type, type: enum, required: true, values: [ai_agent, human], description: "Who sent it"}
+      - {name: actor_id, type: string, required: true, description: "Agent version or pseudonymized human ID"}
+      - {name: purpose, type: enum, required: true, values: [answer, correction, case_update], description: "Why it was sent"}
+      - {name: shipment_reference, type: string, required: false, description: "Booking reference the message is about, as linked by the sender"}
+      - {name: claimed_status, type: string, required: false, description: "Shipment status stated"}
+      - {name: claimed_eta, type: datetime, required: false, description: "ETA stated"}
+      - {name: message_text, type: string, required: false, description: "Message body"}
+
   staffing:
     id: E13
     filename: staffing.csv
@@ -252,18 +276,26 @@ ground_truth:
     primary_key: enquiry_id
     fields:
       - {name: enquiry_id, type: string, required: true, description: "Enquiry"}
+      - {name: in_population, type: boolean, required: true, description: "Received inside the study period (evaluation population)"}
+      - {name: repeat_of, type: string, required: false, description: "Enquiry this one follows up, if generated as a repeat contact"}
       - {name: true_booking_ref, type: string, required: true, description: "Shipment the customer actually meant"}
       - {name: arm, type: string, required: true, description: "human_baseline or agent version"}
       - {name: scenario_id, type: string, required: true, description: "S1-S12 scenario planted"}
       - {name: true_outcome, type: enum, required: true, values: [resolved, escalated_open, failed, out_of_scope], description: "True outcome"}
       - {name: true_status_at_handling, type: string, required: false, description: "Latest recorded status at handling time"}
       - {name: true_eta_at_handling, type: datetime, required: false, description: "Latest recorded ETA at handling time"}
-      - {name: info_correct, type: boolean, required: false, description: "Claim matched what was known at handling time"}
+      - {name: linked_correct_shipment, type: boolean, required: false, description: "First handler linked the right shipment"}
+      - {name: first_answer_correct, type: boolean, required: false, description: "First answer matched what was known when it was given"}
+      - {name: info_correct, type: boolean, required: false, description: "Final answer (after any correction) matched what was known when it was given"}
+      - {name: escalation_required, type: boolean, required: false, description: "Rules required an escalation case"}
       - {name: required_actions_done, type: boolean, required: false, description: "All rule-required actions performed"}
+      - {name: handed_off, type: boolean, required: true, description: "AI handed the enquiry to a human"}
+      - {name: self_report_false, type: boolean, required: true, description: "AI reported success but the true outcome is not resolved"}
       - {name: ai_only, type: boolean, required: true, description: "Resolved with no human work"}
       - {name: was_rescued, type: boolean, required: true, description: "Human corrected or took over after AI"}
       - {name: repeat_contact, type: boolean, required: true, description: "Customer contacted again within window"}
-      - {name: true_human_seconds, type: integer, required: true, description: "True active human effort"}
+      - {name: true_human_seconds, type: integer, required: true, description: "True active human effort (handling, cases, rescue, follow-up)"}
+      - {name: true_ai_cost, type: number, required: true, description: "True variable AI cost of this enquiry (tokens and voice)"}
       - {name: expected_evaluator_state, type: enum, required: true, values: [resolved, escalated_open, failed, unknown, out_of_scope], description: "What a correct evaluator should output given the (possibly damaged) exports"}
 
   planted_effects:

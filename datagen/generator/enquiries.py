@@ -3,7 +3,9 @@
 Each shipment gets a baseline stream of enquiries spread evenly over its life
 (booking to gate-out + 2 days). Once a delay is announced (an estimate later than the plan),
 extra enquiries arrive at `delay_rate_multiplier` times the baseline intensity for the rest
-of the journey; these are typed "delay". Only enquiries inside the study period are kept.
+of the journey; these are typed "delay". Enquiries are kept from the study period start until the
+data cutoff (period end + observation window); only those inside the study period form the
+evaluation population.
 """
 
 from __future__ import annotations
@@ -48,6 +50,19 @@ def _stated_reference(rng, cfg: GeneratorConfig, s: Shipment, received_at, same_
     return s.booking_ref, kind
 
 
+def _space_out(drafts: list, gap: timedelta) -> list:
+    """Keep independent contacts about the same shipment at least `gap` apart (earliest wins)."""
+    if gap <= timedelta(0):
+        return drafts
+    kept, last = [], {}
+    for d in sorted(drafts, key=lambda d: (d[1].booking_ref, d[0])):
+        prev = last.get(d[1].booking_ref)
+        if prev is None or d[0] - prev >= gap:
+            kept.append(d)
+            last[d[1].booking_ref] = d[0]
+    return kept
+
+
 def build_enquiries(cfg: GeneratorConfig, world: World) -> list[Enquiry]:
     rng = layer_rng(cfg.seed, "enquiries")
     eq = cfg.enquiries
@@ -69,7 +84,8 @@ def build_enquiries(cfg: GeneratorConfig, world: World) -> list[Enquiry]:
             for _ in range(poisson(rng, extra)):
                 drafts.append((uniform_time(rng, notice, post_end), s, "delay", True))
 
-    drafts = [d for d in drafts if world.period_start <= d[0] < world.period_end]
+    drafts = _space_out(drafts, timedelta(days=eq.min_days_between_contacts))
+    drafts = [d for d in drafts if world.period_start <= d[0] < world.data_cutoff]
     drafts.sort(key=lambda d: (d[0], d[1].booking_ref))
 
     enquiries = []

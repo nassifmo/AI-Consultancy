@@ -4,6 +4,7 @@
 
 dataset_name: dev
 seed: 42
+service_rules_file: service_rules.yaml   # relative to this config file
 
 period:
   start: "2026-01-01"
@@ -39,6 +40,8 @@ enquiries:
   type_mix: {status: 0.55, delay: 0.30, documents: 0.10, other: 0.05}
   channel_mix: {voice: 0.5, email: 0.3, chat: 0.2}
   language_mix: {en: 0.70, ar: 0.15, fr: 0.15}
+  min_days_between_contacts: 7   # independent contacts about one shipment are at least this far apart;
+                                 # recontacts inside the repeat window come from layer 5 (handling quality)
   wrong_reference_share: 0.03    # customer gives a wrong/partial reference
 
 design:
@@ -49,10 +52,15 @@ design:
   rollout_date: null             # used by staged_rollout / before_after_confounded
 
 human:
-  handle_minutes: {median: 6.0, p95: 18.0}       # lognormal
+  queue_minutes: {median: 20.0, p95: 240.0}      # wait before a human picks up an enquiry or handoff
+  handle_minutes: {median: 6.0, p95: 18.0}       # lognormal, active handling of one enquiry
   acw_minutes: {median: 1.5, p95: 5.0}
-  error_rate: 0.03
+  error_rate: 0.03                               # gives a wrong ETA
   escalation_compliance: 0.95
+  case_followup_compliance: 0.85                 # escalated case gets a customer update in time
+  case_minutes: {median: 15.0, p95: 45.0}        # investigation effort on an escalated case
+  followup_minutes: {median: 4.0, p95: 10.0}     # effort per customer update
+  case_resolution_days: {median: 3.0, p95: 10.0} # escalated case open -> closed
 
 agents:
   agent_v1:
@@ -81,9 +89,11 @@ agents:
 rescue:
   rescue_minutes: {median: 9.0, p95: 25.0}       # human time to fix a bad AI outcome
   detection_prob: 0.6                            # share of bad AI outcomes a human notices and fixes
+  delay_hours: {min: 1, max: 24}                 # time from the bad answer to the human fix
 
 follow_up:
-  repeat_prob_if_failed: 0.55
+  repeat_prob_if_failed: 0.55                    # customer contacts again about the same shipment
+  repeat_prob_if_open: 0.20                      # escalated, case still open
   repeat_prob_if_resolved: 0.05
 
 costs:

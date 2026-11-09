@@ -89,7 +89,7 @@ def test_exports_match_dictionary(world, request):
 def test_run_writes_files_and_manifest(tiny_cfg, tmp_path):
     out = run(CONFIG_DIR / "tiny.yaml", tmp_path / "tiny")
     names = {p.name for p in (out / "exports").iterdir()}
-    assert names == {"customers.csv", "shipments.csv", "tracking_events.json", "enquiries.csv"}
+    assert {"customers.csv", "shipments.csv", "tracking_events.json", "enquiries.csv"} <= names
     assert (out / "manifest.json").exists() and (out / "review.md").exists()
 
 
@@ -140,9 +140,9 @@ def test_last_estimate_is_close_to_actual_arrival(dev):
             assert abs((last.event_datetime - s.actual_arrival).total_seconds()) <= 2 * 3600
 
 
-def test_export_omits_events_recorded_after_period(dev):
+def test_export_omits_events_recorded_after_cutoff(dev):
     exported = build_tables(dev)["tracking_events"]
-    cutoff = dev.period_end.isoformat()
+    cutoff = dev.data_cutoff.isoformat()
     assert all(r["event_created_datetime"] < cutoff for r in exported)
     assert len(exported) < len(dev.events)
 
@@ -197,10 +197,11 @@ def test_stale_knowledge_occurs_in_dev(dev):
 # ---------------------------------------------------------------- enquiries
 
 
-def test_enquiries_inside_period_and_sorted(dev):
+def test_enquiries_inside_export_window_and_sorted(dev):
     times = [q.received_at for q in dev.enquiries]
     assert times == sorted(times)
-    assert all(dev.period_start <= t < dev.period_end for t in times)
+    assert all(dev.period_start <= t < dev.data_cutoff for t in times)
+    assert dev.data_cutoff > dev.period_end
 
 
 def test_enquiry_belongs_to_its_shipment_customer(dev):
@@ -214,6 +215,16 @@ def test_delayed_shipments_get_more_enquiries(dev):
         group = [s for s in dev.shipments if s.delay_class == cls]
         return sum(per[s.booking_ref] for s in group) / len(group)
     assert mean("long") > 1.3 * mean("none")
+
+
+def test_independent_contacts_are_spaced(dev, dev_cfg):
+    gap = timedelta(days=dev_cfg.enquiries.min_days_between_contacts)
+    last = {}
+    for q in dev.enquiries:
+        if q.repeat_of is None:
+            prev = last.get(q.true_booking_ref)
+            assert prev is None or q.received_at - prev >= gap
+            last[q.true_booking_ref] = q.received_at
 
 
 def test_delay_driven_enquiries_come_after_notice(dev):

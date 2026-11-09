@@ -1,6 +1,6 @@
 # Review sheet
 
-Period: 2026-01-01 00:00 to 2026-02-01 00:00 (UTC). 20 shipments, 325 events, 42 enquiries.
+Period: 2026-01-01 00:00 to 2026-02-01 00:00 (UTC). Data cutoff: 2026-02-15 00:00. 30 shipments, 520 events, 52 enquiries.
 
 For each enquiry check: the stated reference points to the right shipment (or is flagged wrong),
 the enquiry type makes sense, and 'known' vs 'actual' differ only when an event was recorded late (stale).
@@ -30,9 +30,21 @@ the enquiry type makes sense, and 'known' vs 'actual' differ only when an event 
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000029 | 2026-01-18 18:52 | delay (delay-driven) | SBL000500000 (bl) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
-| ENQ-000036 | 2026-01-25 21:28 | delay (delay-driven) | BKG000100000 (booking) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
-| ENQ-000040 | 2026-01-28 16:41 | delay (delay-driven) | SYNU0000014 (container) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
+| ENQ-000017 | 2026-01-18 18:52 | delay (delay-driven) | SYNU0000014 (container) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
+| ENQ-000024 | 2026-01-22 08:57 | delay | BKG000100000 (booking, repeat of ENQ-000017) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
+| ENQ-000030 | 2026-01-25 21:28 | delay (delay-driven) | BKG000100100 (typo) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
+| ENQ-000032 | 2026-01-26 23:17 | delay | BKG000100000 (booking, repeat of ENQ-000030) | departed / 2026-02-05 21:00 | departed / 2026-02-05 21:00 |
+| ENQ-000043 | 2026-02-03 13:11 | delay (delay-driven) | SBL000500000 (bl) | departed / 2026-02-07 02:00 | departed / 2026-02-07 02:00 |
+| ENQ-000050 | 2026-02-11 05:34 | status | BKG070100000 (typo) | gated_out / 2026-02-07 01:51 | gated_out / 2026-02-07 01:51 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000017 | human_baseline | human BKG000100000: departed / 2026-02-05 21:00 (ok) | human BKG000100000: departed / 2026-02-05 21:00 (ok) | yes / 1 | 5.4 | **failed** repeat | S11 |
+| ENQ-000024 | human_baseline | human BKG000100000: departed / 2026-02-05 21:00 (ok) | human BKG000100000: departed / 2026-02-05 21:00 (ok) | yes / 1 | 25.8 | **failed** repeat | S8 |
+| ENQ-000030 | agent_v1 | human BKG000100000: departed / 2026-02-05 21:00 (ok) | human BKG000100000: departed / 2026-02-05 21:00 (ok) | yes / 1 | 22.7 | **failed** handoff repeat | S8 |
+| ENQ-000032 | agent_v1 | ai_agent BKG000100000: departed / 2026-02-05 21:00 (ok) | ai_agent BKG000100000: departed / 2026-02-05 21:00 (ok) | yes / 1 | 0.0 | **failed** | S11 |
+| ENQ-000043 | human_baseline | human BKG000100000: departed / 2026-02-07 02:00 (ok) | human BKG000100000: departed / 2026-02-07 02:00 (ok) | yes / 1 | 68.1 | **failed** | S2 |
+| ENQ-000050 | human_baseline | human BKG000100000: gated_out / 2026-02-07 01:51 (ok) | human BKG000100000: gated_out / 2026-02-07 01:51 (ok) | no / 0 | 9.4 | **resolved** | S1 |
 
 ## BKG000100001 (CUS-00005) NLRTM -> CNSHA
 
@@ -57,9 +69,15 @@ the enquiry type makes sense, and 'known' vs 'actual' differ only when an event 
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000013 | 2026-01-06 04:22 | status | BKG000100001 (booking) | booked / 2026-02-02 01:00 | booked / 2026-02-02 01:00 |
-| ENQ-000022 | 2026-01-13 22:43 | delay | BKG000100001 (booking) | gated_in / 2026-02-02 01:00 | gated_in / 2026-02-02 01:00 |
-| ENQ-000037 | 2026-01-25 22:31 | status | SYNU0000020 (container) | departed / 2026-02-02 01:00 | departed / 2026-02-02 01:00 |
+| ENQ-000003 | 2026-01-06 04:22 | status | SYNU0000020 (container) | booked / 2026-02-02 01:00 | booked / 2026-02-02 01:00 |
+| ENQ-000014 | 2026-01-13 22:43 | delay | SYNU0000020 (container) | gated_in / 2026-02-02 01:00 | gated_in / 2026-02-02 01:00 |
+| ENQ-000031 | 2026-01-25 22:31 | status | SYNU0000020 (container) | departed / 2026-02-02 01:00 | departed / 2026-02-02 01:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000003 | human_baseline | human BKG000100001: booked / 2026-02-02 01:00 (ok) | human BKG000100001: booked / 2026-02-02 01:00 (ok) | no / 0 | 4.2 | **resolved** | S1 |
+| ENQ-000014 | human_baseline | human BKG000100001: gated_in / 2026-02-02 01:00 (ok) | human BKG000100001: gated_in / 2026-02-02 01:00 (ok) | no / 0 | 6.2 | **resolved** | S1 |
+| ENQ-000031 | agent_v1 | ai_agent BKG000100001: departed / 2026-02-02 01:00 (ok) | ai_agent BKG000100001: departed / 2026-02-02 01:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
 
 ## BKG000100002 (CUS-00005) AEJEA -> SGSIN
 
@@ -99,8 +117,13 @@ the enquiry type makes sense, and 'known' vs 'actual' differ only when an event 
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000028 | 2026-01-17 23:41 | delay | BKG000100002 (booking) | departed / 2026-01-31 02:00 | departed / 2026-01-31 02:00 |
-| ENQ-000033 | 2026-01-21 23:15 | status | SYNU0000061 (container) | departed / 2026-01-31 01:00 | departed / 2026-01-31 01:00 |
+| ENQ-000015 | 2026-01-14 04:12 | status | BKG000100002 (booking) | departed / 2026-01-31 02:00 | departed / 2026-01-31 02:00 |
+| ENQ-000040 | 2026-02-02 10:09 | documents | SYNU0000061 (container) | released / 2026-01-31 00:28 | released / 2026-01-31 00:28 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000015 | agent_v1 | ai_agent BKG000100002: departed / 2026-01-31 02:00 (ok) | ai_agent BKG000100002: departed / 2026-01-31 02:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+| ENQ-000040 | agent_v1 | human ?: None / - (WRONG) | human ?: None / - (WRONG) | no / 0 | 14.8 | **out_of_scope** handoff | S12 |
 
 ## BKG000100003 (CUS-00002) CNSHA -> SAJED
 
@@ -124,9 +147,7 @@ the enquiry type makes sense, and 'known' vs 'actual' differ only when an event 
 | RELS | ACT | 2026-01-19 11:54 | 2026-01-19 12:05 |  |
 | GTOT SYNU0000077 | ACT | 2026-01-21 01:47 | 2026-01-21 09:23 |  |
 
-| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
-|---|---|---|---|---|---|
-| ENQ-000021 | 2026-01-12 13:34 | delay | SBL000500003 (bl) | departed / 2026-01-18 04:00 | departed / 2026-01-18 04:00 |
+_No enquiries in the period._
 
 ## BKG000100004 (CUS-00006) FRMRS -> AEJEA
 
@@ -160,9 +181,7 @@ the enquiry type makes sense, and 'known' vs 'actual' differ only when an event 
 | GTOT SYNU0000082 | ACT | 2026-01-14 01:27 | 2026-01-14 02:10 |  |
 | GTOT SYNU0000101 | ACT | 2026-01-14 00:39 | 2026-01-14 10:52 | yes |
 
-| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
-|---|---|---|---|---|---|
-| ENQ-000006 | 2026-01-04 12:09 | delay (delay-driven) | BKG000100004 (booking) | departed / 2026-01-11 15:00 | departed / 2026-01-11 15:00 |
+_No enquiries in the period._
 
 ## BKG000100005 (CUS-00004) NLRTM -> SAJED
 
@@ -186,7 +205,13 @@ the enquiry type makes sense, and 'known' vs 'actual' differ only when an event 
 | RELS | ACT | 2026-03-07 12:21 | 2026-03-07 13:44 |  |
 | GTOT SYNU0000117 | ACT | 2026-03-09 19:12 | 2026-03-09 20:01 |  |
 
-_No enquiries in the period._
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000036 | 2026-01-28 11:34 | delay | BKG000100005 (booking) | departed / 2026-03-01 14:00 | departed / 2026-03-01 14:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000036 | human_baseline | human BKG000100005: departed / 2026-03-01 14:00 (ok) | human BKG000100005: departed / 2026-03-01 14:00 (ok) | no / 0 | 10.0 | **resolved** | S1 |
 
 ## BKG000100006 (CUS-00006) FRMRS -> SGSIN
 
@@ -220,11 +245,15 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000007 | 2026-01-04 20:30 | delay | BKG000100006 (booking) | loaded / 2026-01-23 18:00 | loaded / 2026-01-23 18:00 |
-| ENQ-000027 | 2026-01-16 21:07 | delay (delay-driven) | BKG000100006 (booking) | departed / 2026-01-24 05:00 | departed / 2026-01-24 05:00 |
-| ENQ-000031 | 2026-01-19 16:08 | delay | SYNU0000143 (container) | departed / 2026-01-24 05:00 | departed / 2026-01-24 05:00 |
-| ENQ-000034 | 2026-01-23 14:00 | delay (delay-driven) | BKG000100006 (booking) | departed / 2026-01-24 05:00 | departed / 2026-01-24 05:00 |
-| ENQ-000038 | 2026-01-26 01:23 | delay | BKG000100006 (booking) | discharged / 2026-01-24 05:22 | discharged / 2026-01-24 05:22 |
+| ENQ-000004 | 2026-01-07 18:32 | status | BKG000100006 (booking) | departed / 2026-01-23 18:00 | departed / 2026-01-23 18:00 |
+| ENQ-000021 | 2026-01-21 09:44 | delay (delay-driven) | SYNU0000122 (container) | departed / 2026-01-24 05:00 | departed / 2026-01-24 05:00 |
+| ENQ-000037 | 2026-01-28 14:48 | status | SYNU0000138 (container) | released / 2026-01-24 05:22 | released / 2026-01-24 05:22 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000004 | human_baseline | human BKG000100006: departed / 2026-01-23 18:00 (ok) | human BKG000100006: departed / 2026-01-23 18:00 (ok) | no / 0 | 1.9 | **resolved** | S1 |
+| ENQ-000021 | agent_v1 | ai_agent BKG000100006: departed / 2026-01-24 05:00 (ok) | ai_agent BKG000100006: departed / 2026-01-24 05:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+| ENQ-000037 | agent_v1 | ai_agent BKG000100006: released / 2026-01-24 05:22 (ok) | ai_agent BKG000100006: released / 2026-01-24 05:22 (ok) | no / 0 | 0.0 | **resolved** | S1 |
 
 ## BKG000100007 (CUS-00003) CNSHA -> SGSIN
 
@@ -250,7 +279,13 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000014 | 2026-01-06 17:45 | status | BKG000100077 (typo) | departed / 2026-02-08 22:00 | departed / 2026-02-08 22:00 |
+| ENQ-000038 | 2026-01-28 23:46 | status | SBL000500007 (bl) | departed / 2026-02-08 22:00 | departed / 2026-02-08 22:00 |
+| ENQ-000049 | 2026-02-10 03:48 | delay | BKG000100007 (booking) | discharged / 2026-02-08 20:50 | discharged / 2026-02-08 20:50 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000038 | human_baseline | human BKG000100007: departed / 2026-02-08 22:00 (ok) | human BKG000100007: departed / 2026-02-08 22:00 (ok) | no / 0 | 14.2 | **resolved** | S1 |
+| ENQ-000049 | agent_v1 | ai_agent BKG000100007: discharged / 2026-02-08 20:50 (ok) | ai_agent BKG000100007: discharged / 2026-02-08 20:50 (ok) | no / 0 | 0.0 | **resolved** | S1 |
 
 ## BKG000100008 (CUS-00008) SAJED -> AEJEA
 
@@ -282,9 +317,11 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000001 | 2026-01-01 04:28 | delay (delay-driven) | SYNU0000170 (container) | departed / 2026-01-05 18:00 | departed / 2026-01-05 18:00 |
-| ENQ-000012 | 2026-01-05 20:20 | status | BKG000100008 (booking) | arrived / 2026-01-05 19:22 | arrived / 2026-01-05 19:22 |
-| ENQ-000019 | 2026-01-09 12:55 | documents | BKG000100008 (booking) | released / 2026-01-05 19:22 | released / 2026-01-05 19:22 |
+| ENQ-000002 | 2026-01-03 00:49 | delay (delay-driven) | SYNU0000164 (container) | departed / 2026-01-05 18:00 | departed / 2026-01-05 18:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000002 | agent_v1 | ai_agent BKG000100008: departed / 2026-01-05 18:00 (ok) | ai_agent BKG000100008: departed / 2026-01-05 18:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
 
 ## BKG000100009 (CUS-00003) SAJED -> FRMRS
 
@@ -310,8 +347,13 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000035 | 2026-01-25 18:01 | delay | SYNU0000185 (container) | loaded / 2026-02-20 19:00 | loaded / 2026-02-20 19:00 |
-| ENQ-000039 | 2026-01-28 12:03 | status | BKG000100009 (booking) | departed / 2026-02-21 03:00 | departed / 2026-02-21 03:00 |
+| ENQ-000044 | 2026-02-05 06:35 | status | SYNU0000185 (container) | departed / 2026-02-21 03:00 | departed / 2026-02-21 03:00 |
+| ENQ-000051 | 2026-02-13 15:32 | delay (delay-driven) | BKG000100009 (booking) | departed / 2026-02-21 03:00 | departed / 2026-02-21 03:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000044 | agent_v1 | ai_agent BKG000100009: departed / 2026-02-21 03:00 (ok) | ai_agent BKG000100009: departed / 2026-02-21 03:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+| ENQ-000051 | human_baseline | human BKG000100009: departed / 2026-02-20 14:08 (WRONG) | human BKG000100009: departed / 2026-02-20 14:08 (WRONG) | no / 0 | 10.2 | **failed** | S4 |
 
 ## BKG000100010 (CUS-00007) NLRTM -> EGPSD
 
@@ -344,7 +386,13 @@ _No enquiries in the period._
 | GTOT SYNU0000210 | ACT | 2026-02-22 08:57 | 2026-02-22 09:42 |  |
 | GTOT SYNU0000204 | ACT | 2026-02-22 07:14 | 2026-02-22 22:21 |  |
 
-_No enquiries in the period._
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000025 | 2026-01-22 11:55 | delay | BKG000100010 (booking) | booked / 2026-02-18 21:00 | booked / 2026-02-18 21:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000025 | human_baseline | human BKG000100010: booked / 2026-02-18 21:00 (ok) | human BKG000100010: booked / 2026-02-18 21:00 (ok) | no / 0 | 15.6 | **resolved** | S1 |
 
 ## BKG000100011 (CUS-00002) FRMRS -> EGPSD
 
@@ -403,9 +451,7 @@ _No enquiries in the period._
 | GTOT SYNU0000267 | ACT | 2026-01-03 12:00 | 2026-01-03 12:23 |  |
 | GTOT SYNU0000230 | ACT | 2026-01-03 14:45 | 2026-01-03 16:39 |  |
 
-| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
-|---|---|---|---|---|---|
-| ENQ-000003 | 2026-01-03 06:09 | delay | BKG000100005 (other_shipment) | released / 2025-12-31 09:09 | released / 2025-12-31 09:09 |
+_No enquiries in the period._
 
 ## BKG000100013 (CUS-00005) FRMRS -> SGSIN
 
@@ -436,7 +482,15 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000005 | 2026-01-03 12:59 | status | BKG000100013 (booking) | gated_in / 2026-02-08 07:00 | gated_in / 2026-02-08 07:00 |
+| ENQ-000020 | 2026-01-20 23:59 | status | BKG000100022 (other_shipment) | departed / 2026-02-08 08:00 | departed / 2026-02-08 08:00 |
+| ENQ-000029 | 2026-01-24 17:25 | status | BKG000100013 (booking, repeat of ENQ-000020) | departed / 2026-02-08 08:00 | departed / 2026-02-08 08:00 |
+| ENQ-000046 | 2026-02-08 18:10 | delay | BKG000100013 (booking) | arrived / 2026-02-08 07:42 | arrived / 2026-02-08 07:42 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000020 | agent_v1 | ai_agent BKG000100022: departed / 2026-02-04 23:00 (WRONG) | ai_agent BKG000100022: departed / 2026-02-04 23:00 (WRONG) | no / 0 | 0.0 | **failed** repeat | S6 |
+| ENQ-000029 | agent_v1 | ai_agent BKG000100013: departed / 2026-02-08 08:00 (ok) | ai_agent BKG000100013: departed / 2026-02-08 08:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+| ENQ-000046 | human_baseline | human BKG000100013: discharged / 2026-02-08 07:42 (ok) | human BKG000100013: discharged / 2026-02-08 07:42 (ok) | no / 0 | 9.1 | **resolved** | S1 |
 
 ## BKG000100014 (CUS-00003) EGPSD -> FRMRS
 
@@ -469,12 +523,13 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000002 | 2026-01-02 22:16 | status | BKG000100014 (booking) | booked / 2026-01-26 03:00 | booked / 2026-01-26 03:00 |
-| ENQ-000008 | 2026-01-05 04:04 | documents | BKG000100014 (booking) | booked / 2026-01-26 03:00 | booked / 2026-01-26 03:00 |
-| ENQ-000009 | 2026-01-05 04:35 | status | SYNU0000293 (container) | booked / 2026-01-26 03:00 | booked / 2026-01-26 03:00 |
-| ENQ-000018 | 2026-01-09 11:37 | status | BKG000100014 (booking) | booked / 2026-01-26 03:00 | booked / 2026-01-26 03:00 |
-| ENQ-000025 | 2026-01-16 04:53 | delay | BKG000100014 (booking) | departed / 2026-01-26 03:00 | departed / 2026-01-26 03:00 |
-| ENQ-000026 | 2026-01-16 11:58 | delay | BKG000100014 (booking) | departed / 2026-01-26 03:00 | departed / 2026-01-26 03:00 |
+| ENQ-000012 | 2026-01-13 07:49 | status | BKG000100014 (booking) | departed / 2026-01-26 03:00 | departed / 2026-01-26 03:00 |
+| ENQ-000027 | 2026-01-23 11:39 | status | SYNU0000293 (container) | departed / 2026-01-26 03:00 | departed / 2026-01-26 03:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000012 | human_baseline | human BKG000100014: departed / 2026-01-26 03:00 (ok) | human BKG000100014: departed / 2026-01-26 03:00 (ok) | no / 0 | 7.4 | **resolved** | S1 |
+| ENQ-000027 | human_baseline | human BKG000100014: departed / 2026-01-26 03:00 (ok) | human BKG000100014: departed / 2026-01-26 03:00 (ok) | no / 0 | 7.6 | **resolved** | S1 |
 
 ## BKG000100015 (CUS-00008) EGPSD -> LBBEY
 
@@ -500,9 +555,13 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000004 | 2026-01-03 07:52 | status | BKG000100015 (booking) | booked / 2026-02-06 13:00 | gated_in / 2026-02-06 13:00 |
-| ENQ-000024 | 2026-01-15 14:15 | documents | BKG000100000 (other_shipment) | departed / 2026-02-06 13:00 | departed / 2026-02-06 13:00 |
-| ENQ-000030 | 2026-01-18 21:04 | status | SYNU0000328 (container) | departed / 2026-02-07 03:00 | departed / 2026-02-07 03:00 |
+| ENQ-000019 | 2026-01-19 20:44 | delay | BKG000100015 (booking) | departed / 2026-02-07 03:00 | departed / 2026-02-07 03:00 |
+| ENQ-000035 | 2026-01-27 10:34 | delay (delay-driven) | BKG040100015 (typo) | departed / 2026-02-07 03:00 | departed / 2026-02-07 03:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000019 | agent_v1 | ai_agent BKG000100015: departed / 2026-02-07 03:00 (ok) | ai_agent BKG000100015: departed / 2026-02-07 03:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+| ENQ-000035 | human_baseline | human BKG000100015: departed / 2026-02-07 03:00 (ok) | human BKG000100015: departed / 2026-02-07 03:00 (ok) | no / 0 | 13.6 | **resolved** | S1 |
 
 ## BKG000100016 (CUS-00002) FRMRS -> EGPSD
 
@@ -528,12 +587,13 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000010 | 2026-01-05 13:36 | status | BKG000100016 (booking) | booked / 2026-02-15 23:00 | booked / 2026-02-15 23:00 |
-| ENQ-000015 | 2026-01-07 19:27 | documents | BKG000100016 (booking) | booked / 2026-02-15 23:00 | booked / 2026-02-15 23:00 |
-| ENQ-000020 | 2026-01-10 07:28 | status | BKG000100016 (booking) | gated_in / 2026-02-15 23:00 | gated_in / 2026-02-15 23:00 |
-| ENQ-000023 | 2026-01-14 03:30 | delay | BKG000100011 (other_shipment) | departed / 2026-02-15 23:00 | departed / 2026-02-15 23:00 |
-| ENQ-000032 | 2026-01-21 19:48 | delay | BKG000100016 (booking) | departed / 2026-02-15 23:00 | departed / 2026-02-15 23:00 |
-| ENQ-000042 | 2026-01-31 09:19 | status | BKG000100016 (booking) | departed / 2026-02-15 23:00 | departed / 2026-02-15 23:00 |
+| ENQ-000005 | 2026-01-08 00:27 | status | SYNU0000333 (container) | booked / 2026-02-15 23:00 | booked / 2026-02-15 23:00 |
+| ENQ-000023 | 2026-01-22 06:56 | status | SBL000500016 (bl) | departed / 2026-02-15 23:00 | departed / 2026-02-15 23:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000005 | human_baseline | human BKG000100016: booked / 2026-02-15 23:00 (ok) | human BKG000100016: booked / 2026-02-15 23:00 (ok) | no / 0 | 6.8 | **resolved** | S1 |
+| ENQ-000023 | human_baseline | human BKG000100016: departed / 2026-02-15 23:00 (ok) | human BKG000100016: departed / 2026-02-15 23:00 (ok) | no / 0 | 8.2 | **resolved** | S1 |
 
 ## BKG000100017 (CUS-00008) FRMRS -> LBBEY
 
@@ -562,9 +622,15 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000011 | 2026-01-05 20:04 | status | BKG000100017 (booking) | booked / 2026-02-15 00:00 | booked / 2026-02-15 00:00 |
-| ENQ-000017 | 2026-01-09 06:25 | status | BKG000100017 (booking) | departed / 2026-02-15 00:00 | departed / 2026-02-15 00:00 |
-| ENQ-000041 | 2026-01-30 20:35 | delay | SYNU0000349 (container) | departed / 2026-02-15 00:00 | departed / 2026-02-15 00:00 |
+| ENQ-000008 | 2026-01-11 19:07 | status | SBL000500017 (bl) | departed / 2026-02-15 00:00 | departed / 2026-02-15 00:00 |
+| ENQ-000034 | 2026-01-27 05:27 | delay | BKG000100017 (booking) | departed / 2026-02-15 00:00 | departed / 2026-02-15 00:00 |
+| ENQ-000048 | 2026-02-09 03:06 | status | BKG000102017 (typo) | departed / 2026-02-15 00:00 | departed / 2026-02-15 00:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000008 | agent_v1 | ai_agent BKG000100017: departed / 2026-02-15 00:00 (ok) | ai_agent BKG000100017: departed / 2026-02-15 00:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+| ENQ-000034 | human_baseline | human BKG000100017: departed / 2026-02-15 00:00 (ok) | human BKG000100017: departed / 2026-02-15 00:00 (ok) | no / 0 | 3.5 | **resolved** | S1 |
+| ENQ-000048 | human_baseline | human BKG000100017: departed / 2026-02-15 00:00 (ok) | human BKG000100017: departed / 2026-02-15 00:00 (ok) | no / 0 | 9.8 | **resolved** | S1 |
 
 ## BKG000100018 (CUS-00003) AEJEA -> CNSHA
 
@@ -602,7 +668,11 @@ _No enquiries in the period._
 
 | Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
 |---|---|---|---|---|---|
-| ENQ-000016 | 2026-01-08 17:08 | status | SYNU0000360 (container) | departed / 2026-01-10 21:00 | departed / 2026-01-10 21:00 |
+| ENQ-000013 | 2026-01-13 11:19 | status | BKG000100018 (booking) | released / 2026-01-10 20:33 | released / 2026-01-10 20:33 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000013 | human_baseline | human BKG000100018: released / 2026-01-10 20:33 (ok) | human BKG000100018: released / 2026-01-10 20:33 (ok) | no / 0 | 8.2 | **resolved** | S1 |
 
 ## BKG000100019 (CUS-00006) CNSHA -> FRMRS
 
@@ -626,5 +696,388 @@ _No enquiries in the period._
 | RELS | ACT | 2026-02-05 18:20 | 2026-02-05 19:06 |  |
 | GTOT SYNU0000400 | ACT | 2026-02-08 12:09 | 2026-02-08 12:16 |  |
 
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000026 | 2026-01-22 15:43 | delay | BKG004100019 (typo) | departed / 2026-02-03 09:00 | departed / 2026-02-03 09:00 |
+| ENQ-000039 | 2026-01-29 21:57 | status | BKG000100019 (booking) | departed / 2026-02-03 09:00 | departed / 2026-02-03 09:00 |
+| ENQ-000047 | 2026-02-08 21:07 | delay | BKG000100019 (booking) | gated_out / 2026-02-03 09:12 | gated_out / 2026-02-03 09:12 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000026 | agent_v1 | human BKG000100019: departed / 2026-02-03 09:00 (ok) | human BKG000100019: departed / 2026-02-03 09:00 (ok) | no / 0 | 9.3 | **resolved** handoff | S1 |
+| ENQ-000039 | human_baseline | human BKG000100019: departed / 2026-02-03 09:00 (ok) | human BKG000100019: departed / 2026-02-03 09:00 (ok) | no / 0 | 14.1 | **resolved** | S1 |
+| ENQ-000047 | human_baseline | human BKG000100019: gated_out / 2026-02-03 09:12 (ok) | human BKG000100019: gated_out / 2026-02-03 09:12 (ok) | no / 0 | 6.6 | **resolved** | S1 |
+
+## BKG000100020 (CUS-00004) CNSHA -> LBBEY
+
+- Delay class: **none** (+0.6 h vs plan)
+- Planned: depart 2025-12-14 03:00, arrive 2025-12-29 03:00
+- Actual: depart 2025-12-14 03:01, arrive 2025-12-29 03:38, released 2025-12-31 05:19
+- Containers: SYNU0000415, SYNU0000420; BL SBL000500020 issued 2025-12-15 15:32
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2025-12-29 03:00 | 2025-11-23 11:11 |  |
+| DEPA | PLN | 2025-12-14 03:00 | 2025-11-23 11:11 |  |
+| CONF | ACT | 2025-11-23 11:11 | 2025-11-23 11:17 |  |
+| GTIN SYNU0000415 | ACT | 2025-12-11 05:14 | 2025-12-11 05:36 |  |
+| GTIN SYNU0000420 | ACT | 2025-12-11 22:49 | 2025-12-11 23:06 |  |
+| LOAD SYNU0000415 | ACT | 2025-12-13 15:25 | 2025-12-13 19:37 |  |
+| LOAD SYNU0000420 | ACT | 2025-12-13 19:58 | 2025-12-13 22:24 |  |
+| DEPA | ACT | 2025-12-14 03:01 | 2025-12-15 15:30 | yes |
+| ISSU | ACT | 2025-12-15 15:32 | 2025-12-15 15:42 |  |
+| ARRI | EST | 2025-12-29 04:00 | 2025-12-27 12:44 |  |
+| ARRI | ACT | 2025-12-29 03:38 | 2025-12-29 04:03 |  |
+| DISC SYNU0000420 | ACT | 2025-12-29 08:23 | 2025-12-29 08:35 |  |
+| DISC SYNU0000415 | ACT | 2025-12-29 14:09 | 2025-12-29 14:11 |  |
+| RELS | ACT | 2025-12-31 05:19 | 2025-12-31 05:40 |  |
+| GTOT SYNU0000415 | ACT | 2026-01-02 06:21 | 2026-01-02 06:50 |  |
+| GTOT SYNU0000420 | ACT | 2026-01-02 12:26 | 2026-01-02 13:24 |  |
+
 _No enquiries in the period._
+
+## BKG000100021 (CUS-00001) NLRTM -> CNSHA
+
+- Delay class: **short** (+8.0 h vs plan)
+- Planned: depart 2026-01-12 22:00, arrive 2026-02-13 22:00
+- Actual: depart 2026-01-13 02:00, arrive 2026-02-14 05:57, released 2026-02-16 20:31
+- Containers: SYNU0000436, SYNU0000441, SYNU0000457; BL SBL000500021 issued 2026-01-13 14:50
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-02-13 22:00 | 2026-01-05 18:08 |  |
+| DEPA | PLN | 2026-01-12 22:00 | 2026-01-05 18:08 |  |
+| CONF | ACT | 2026-01-05 18:08 | 2026-01-05 18:22 |  |
+| GTIN SYNU0000441 | ACT | 2026-01-10 07:00 | 2026-01-10 07:08 |  |
+| GTIN SYNU0000436 | ACT | 2026-01-10 07:45 | 2026-01-10 08:18 |  |
+| GTIN SYNU0000457 | ACT | 2026-01-11 21:33 | 2026-01-11 22:07 |  |
+| LOAD SYNU0000457 | ACT | 2026-01-12 19:08 | 2026-01-12 19:55 |  |
+| LOAD SYNU0000436 | ACT | 2026-01-12 20:21 | 2026-01-12 20:46 |  |
+| LOAD SYNU0000441 | ACT | 2026-01-12 20:47 | 2026-01-12 20:58 |  |
+| DEPA | ACT | 2026-01-13 02:00 | 2026-01-13 02:43 |  |
+| ISSU | ACT | 2026-01-13 14:50 | 2026-01-13 15:09 |  |
+| ARRI | EST | 2026-02-14 06:00 | 2026-02-13 11:27 |  |
+| ARRI | ACT | 2026-02-14 05:57 | 2026-02-14 06:55 |  |
+| DISC SYNU0000441 | ACT | 2026-02-14 18:00 | 2026-02-14 18:21 |  |
+| DISC SYNU0000457 | ACT | 2026-02-14 19:51 | 2026-02-14 20:17 |  |
+| DISC SYNU0000436 | ACT | 2026-02-15 02:31 | 2026-02-15 03:27 |  |
+| RELS | ACT | 2026-02-16 20:31 | 2026-02-17 14:11 |  |
+| GTOT SYNU0000457 | ACT | 2026-02-17 13:41 | 2026-02-17 14:13 |  |
+| GTOT SYNU0000441 | ACT | 2026-02-17 13:50 | 2026-02-17 15:50 |  |
+| GTOT SYNU0000436 | ACT | 2026-02-17 14:31 | 2026-02-17 19:18 |  |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000028 | 2026-01-24 13:27 | documents | BKG000100021 (booking) | departed / 2026-02-13 22:00 | departed / 2026-02-13 22:00 |
+| ENQ-000045 | 2026-02-07 10:36 | delay | BKG000100021 (booking) | departed / 2026-02-13 22:00 | departed / 2026-02-13 22:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000028 | agent_v1 | human ?: None / - (WRONG) | human ?: None / - (WRONG) | no / 0 | 14.1 | **out_of_scope** handoff | S12 |
+| ENQ-000045 | agent_v1 | ai_agent BKG000100021: departed / 2026-02-13 22:00 (ok) | ai_agent BKG000100021: departed / 2026-02-13 22:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+
+## BKG000100022 (CUS-00005) EGPSD -> SAJED
+
+- Delay class: **short** (+4.2 h vs plan)
+- Planned: depart 2025-12-30 23:00, arrive 2026-02-04 23:00
+- Actual: depart 2025-12-31 01:51, arrive 2026-02-05 03:10, released 2026-02-06 13:38
+- Containers: SYNU0000462, SYNU0000478; BL SBL000500022 issued 2025-12-31 09:00
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-02-04 23:00 | 2025-12-16 13:13 |  |
+| DEPA | PLN | 2025-12-30 23:00 | 2025-12-16 13:13 |  |
+| CONF | ACT | 2025-12-16 13:13 | 2025-12-16 13:15 |  |
+| GTIN SYNU0000462 | ACT | 2025-12-28 21:18 | 2025-12-28 23:00 |  |
+| GTIN SYNU0000478 | ACT | 2025-12-29 23:10 | 2025-12-29 23:19 |  |
+| LOAD SYNU0000478 | ACT | 2025-12-30 17:20 | 2025-12-30 21:37 |  |
+| LOAD SYNU0000462 | ACT | 2025-12-30 23:24 | 2025-12-30 23:26 |  |
+| DEPA | ACT | 2025-12-31 01:51 | 2025-12-31 02:17 |  |
+| ISSU | ACT | 2025-12-31 09:00 | 2025-12-31 09:10 |  |
+| ARRI | EST | 2026-02-05 03:00 | 2026-01-29 10:19 |  |
+| ARRI | ACT | 2026-02-05 03:10 | 2026-02-05 03:15 |  |
+| DISC SYNU0000462 | ACT | 2026-02-05 08:20 | 2026-02-05 08:28 |  |
+| DISC SYNU0000478 | ACT | 2026-02-05 23:20 | 2026-02-05 23:48 |  |
+| RELS | ACT | 2026-02-06 13:38 | 2026-02-06 15:50 |  |
+| GTOT SYNU0000462 | ACT | 2026-02-08 04:01 | 2026-02-08 04:23 |  |
+| GTOT SYNU0000478 | ACT | 2026-02-08 21:10 | 2026-02-10 16:49 | yes |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000010 | 2026-01-12 10:18 | status | BKG000100022 (booking) | departed / 2026-02-04 23:00 | departed / 2026-02-04 23:00 |
+| ENQ-000011 | 2026-01-12 15:26 | status | BKG000100022 (booking, repeat of ENQ-000010) | departed / 2026-02-04 23:00 | departed / 2026-02-04 23:00 |
+| ENQ-000042 | 2026-02-02 20:05 | status | BKG000100022 (booking) | departed / 2026-02-05 03:00 | departed / 2026-02-05 03:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000010 | human_baseline | human BKG000100022: departed / 2026-02-04 23:00 (ok) | human BKG000100022: departed / 2026-02-04 23:00 (ok) | no / 0 | 10.3 | **failed** repeat | S8 |
+| ENQ-000011 | human_baseline | human BKG000100022: departed / 2026-02-04 23:00 (ok) | human BKG000100022: departed / 2026-02-04 23:00 (ok) | no / 0 | 4.6 | **resolved** | S1 |
+| ENQ-000042 | agent_v1 | ai_agent BKG000100022: departed / 2026-02-05 03:00 (ok) | ai_agent BKG000100022: departed / 2026-02-05 03:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+
+## BKG000100023 (CUS-00006) LBBEY -> FRMRS
+
+- Delay class: **short** (+5.5 h vs plan)
+- Planned: depart 2025-12-28 19:00, arrive 2026-01-25 19:00
+- Actual: depart 2025-12-28 16:57, arrive 2026-01-26 00:28, released 2026-01-27 18:09
+- Containers: SYNU0000483, SYNU0000499; BL SBL000500023 issued 2025-12-30 16:53
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-01-25 19:00 | 2025-12-20 16:03 |  |
+| DEPA | PLN | 2025-12-28 19:00 | 2025-12-20 16:03 |  |
+| CONF | ACT | 2025-12-20 16:03 | 2025-12-20 17:24 |  |
+| GTIN SYNU0000499 | ACT | 2025-12-27 13:25 | 2025-12-27 14:24 |  |
+| GTIN SYNU0000483 | ACT | 2025-12-26 08:03 | 2025-12-27 16:32 | yes |
+| LOAD SYNU0000499 | ACT | 2025-12-28 12:53 | 2025-12-28 13:02 |  |
+| DEPA | ACT | 2025-12-28 16:57 | 2025-12-28 17:02 |  |
+| LOAD SYNU0000483 | ACT | 2025-12-28 13:49 | 2025-12-29 12:20 | yes |
+| ISSU | ACT | 2025-12-30 16:53 | 2025-12-30 17:01 |  |
+| ARRI | EST | 2026-01-25 22:00 | 2026-01-09 05:11 |  |
+| ARRI | EST | 2026-01-26 00:00 | 2026-01-20 22:08 |  |
+| ARRI | EST | 2026-01-26 00:00 | 2026-01-23 19:13 |  |
+| ARRI | ACT | 2026-01-26 00:28 | 2026-01-26 02:51 |  |
+| DISC SYNU0000499 | ACT | 2026-01-26 18:56 | 2026-01-26 19:02 |  |
+| DISC SYNU0000483 | ACT | 2026-01-26 20:08 | 2026-01-26 20:17 |  |
+| RELS | ACT | 2026-01-27 18:09 | 2026-01-27 18:21 |  |
+| GTOT SYNU0000483 | ACT | 2026-01-30 05:45 | 2026-01-30 08:58 |  |
+| GTOT SYNU0000499 | ACT | 2026-01-30 02:39 | 2026-01-30 21:57 | yes |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000007 | 2026-01-11 16:33 | delay (delay-driven) | SBL000500023 (bl) | departed / 2026-01-25 22:00 | departed / 2026-01-25 22:00 |
+| ENQ-000016 | 2026-01-18 18:20 | delay (delay-driven) | BKG000100023 (booking) | departed / 2026-01-25 22:00 | departed / 2026-01-25 22:00 |
+| ENQ-000033 | 2026-01-27 04:30 | delay (delay-driven) | BKG000100023 (booking) | discharged / 2026-01-26 00:28 | discharged / 2026-01-26 00:28 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000007 | human_baseline | human BKG000100023: departed / 2026-01-25 22:00 (ok) | human BKG000100023: departed / 2026-01-25 22:00 (ok) | no / 0 | 8.8 | **resolved** | S1 |
+| ENQ-000016 | human_baseline | human BKG000100023: departed / 2026-01-25 22:00 (ok) | human BKG000100023: departed / 2026-01-25 22:00 (ok) | no / 0 | 7.0 | **resolved** | S1 |
+| ENQ-000033 | agent_v1 | ai_agent BKG000100023: discharged / 2026-01-26 00:28 (ok) | ai_agent BKG000100023: discharged / 2026-01-26 00:28 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+
+## BKG000100024 (CUS-00007) LBBEY -> AEJEA
+
+- Delay class: **none** (-0.6 h vs plan)
+- Planned: depart 2025-12-15 10:00, arrive 2026-01-12 10:00
+- Actual: depart 2025-12-15 07:13, arrive 2026-01-12 09:25, released 2026-01-14 03:52
+- Containers: SYNU0000502, SYNU0000518, SYNU0000523; BL SBL000500024 issued 2025-12-16 18:22
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-01-12 10:00 | 2025-11-26 06:05 |  |
+| DEPA | PLN | 2025-12-15 10:00 | 2025-11-26 06:05 |  |
+| CONF | ACT | 2025-11-26 06:05 | 2025-11-26 06:50 |  |
+| GTIN SYNU0000523 | ACT | 2025-12-12 14:25 | 2025-12-12 16:13 |  |
+| GTIN SYNU0000502 | ACT | 2025-12-12 19:11 | 2025-12-12 20:22 |  |
+| GTIN SYNU0000518 | ACT | 2025-12-13 04:34 | 2025-12-13 05:22 |  |
+| LOAD SYNU0000518 | ACT | 2025-12-15 00:39 | 2025-12-15 01:06 |  |
+| LOAD SYNU0000523 | ACT | 2025-12-14 23:43 | 2025-12-15 01:46 |  |
+| LOAD SYNU0000502 | ACT | 2025-12-15 04:26 | 2025-12-15 04:35 |  |
+| DEPA | ACT | 2025-12-15 07:13 | 2025-12-15 08:04 |  |
+| ISSU | ACT | 2025-12-16 18:22 | 2025-12-16 18:29 |  |
+| ARRI | ACT | 2026-01-12 09:25 | 2026-01-12 11:25 |  |
+| DISC SYNU0000502 | ACT | 2026-01-12 19:03 | 2026-01-12 19:30 |  |
+| DISC SYNU0000523 | ACT | 2026-01-13 05:57 | 2026-01-13 06:06 |  |
+| RELS | ACT | 2026-01-14 03:52 | 2026-01-14 04:10 |  |
+| DISC SYNU0000518 | ACT | 2026-01-12 22:15 | 2026-01-14 13:45 | yes |
+| GTOT SYNU0000518 | ACT | 2026-01-15 14:36 | 2026-01-15 14:43 |  |
+| GTOT SYNU0000523 | ACT | 2026-01-15 06:12 | 2026-01-16 18:53 | yes |
+| GTOT SYNU0000502 | ACT | 2026-01-15 10:12 | 2026-01-17 01:21 | yes |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000001 | 2026-01-02 08:30 | other | BKG000100010 (other_shipment) | departed / 2026-01-12 10:00 | departed / 2026-01-12 10:00 |
+| ENQ-000009 | 2026-01-12 05:12 | delay | BKG000100024 (booking) | departed / 2026-01-12 10:00 | departed / 2026-01-12 10:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000001 | human_baseline | human ?: None / - (WRONG) | human ?: None / - (WRONG) | no / 0 | 3.7 | **out_of_scope** | S12 |
+| ENQ-000009 | agent_v1 | ai_agent BKG000100024: departed / 2026-01-12 10:00 (ok) | ai_agent BKG000100024: departed / 2026-01-12 10:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
+
+## BKG000100025 (CUS-00002) LBBEY -> EGPSD
+
+- Delay class: **long** (+39.2 h vs plan)
+- Planned: depart 2026-01-04 10:00, arrive 2026-01-22 10:00
+- Actual: depart 2026-01-04 12:34, arrive 2026-01-24 01:15, released 2026-01-24 23:59
+- Containers: SYNU0000539, SYNU0000544; BL SBL000500025 issued 2026-01-05 01:41
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-01-22 10:00 | 2025-12-15 01:53 |  |
+| DEPA | PLN | 2026-01-04 10:00 | 2025-12-15 01:53 |  |
+| CONF | ACT | 2025-12-15 01:53 | 2025-12-15 02:27 |  |
+| GTIN SYNU0000544 | ACT | 2026-01-01 22:41 | 2026-01-01 22:52 |  |
+| GTIN SYNU0000539 | ACT | 2026-01-02 05:08 | 2026-01-02 05:26 |  |
+| LOAD SYNU0000544 | ACT | 2026-01-04 05:21 | 2026-01-04 05:44 |  |
+| DEPA | ACT | 2026-01-04 12:34 | 2026-01-04 14:51 |  |
+| LOAD SYNU0000539 | ACT | 2026-01-04 05:22 | 2026-01-05 02:10 | yes |
+| ISSU | ACT | 2026-01-05 01:41 | 2026-01-05 02:18 |  |
+| ARRI | EST | 2026-01-23 00:00 | 2026-01-10 20:07 |  |
+| ARRI | EST | 2026-01-23 11:00 | 2026-01-18 11:06 |  |
+| ARRI | EST | 2026-01-24 00:00 | 2026-01-23 03:54 |  |
+| ARRI | ACT | 2026-01-24 01:15 | 2026-01-24 01:24 |  |
+| RELS | ACT | 2026-01-24 23:59 | 2026-01-25 01:07 |  |
+| DISC SYNU0000544 | ACT | 2026-01-25 00:48 | 2026-01-25 01:36 |  |
+| DISC SYNU0000539 | ACT | 2026-01-24 19:35 | 2026-01-25 02:03 | yes |
+| GTOT SYNU0000544 | ACT | 2026-01-25 12:08 | 2026-01-25 12:25 |  |
+| GTOT SYNU0000539 | ACT | 2026-01-25 14:38 | 2026-01-26 04:07 | yes |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000006 | 2026-01-10 14:57 | status | BKG000100025 (booking) | departed / 2026-01-22 10:00 | departed / 2026-01-22 10:00 |
+| ENQ-000018 | 2026-01-19 04:42 | delay (delay-driven) | SYNU0000539 (container) | departed / 2026-01-23 11:00 | departed / 2026-01-23 11:00 |
+| ENQ-000022 | 2026-01-21 16:13 | delay | BKG000100025 (booking, repeat of ENQ-000018) | departed / 2026-01-23 11:00 | departed / 2026-01-23 11:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000006 | human_baseline | human BKG000100025: departed / 2026-01-23 00:00 (ok) | human BKG000100025: departed / 2026-01-23 00:00 (ok) | no / 0 | 7.9 | **resolved** | S1 |
+| ENQ-000018 | agent_v1 | ai_agent BKG000100025: departed / 2026-01-23 11:00 (ok) | human BKG000100025: departed / 2026-01-23 11:00 (ok) | yes / 1 | 22.4 | **failed** rescued repeat | S10 |
+| ENQ-000022 | agent_v1 | ai_agent BKG000100025: departed / 2026-01-23 11:00 (ok) | human BKG000100025: departed / 2026-01-23 11:00 (ok) | yes / 1 | 21.7 | **failed** rescued | S10 |
+
+## BKG000100026 (CUS-00006) CNSHA -> AEJEA
+
+- Delay class: **none** (-1.8 h vs plan)
+- Planned: depart 2025-12-27 23:00, arrive 2026-02-05 23:00
+- Actual: depart 2025-12-28 02:32, arrive 2026-02-05 21:14, released 2026-02-08 01:24
+- Containers: SYNU0000550; BL SBL000500026 issued 2025-12-29 22:14
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-02-05 23:00 | 2025-12-17 17:31 |  |
+| DEPA | PLN | 2025-12-27 23:00 | 2025-12-17 17:31 |  |
+| CONF | ACT | 2025-12-17 17:31 | 2025-12-17 17:59 |  |
+| GTIN SYNU0000550 | ACT | 2025-12-25 09:29 | 2025-12-25 09:47 |  |
+| LOAD SYNU0000550 | ACT | 2025-12-27 20:46 | 2025-12-27 21:04 |  |
+| DEPA | ACT | 2025-12-28 02:32 | 2025-12-28 04:17 |  |
+| ISSU | ACT | 2025-12-29 22:14 | 2025-12-29 22:15 |  |
+| ARRI | EST | 2026-02-05 21:00 | 2026-01-16 07:43 |  |
+| ARRI | EST | 2026-02-05 21:00 | 2026-01-24 20:00 |  |
+| ARRI | ACT | 2026-02-05 21:14 | 2026-02-05 21:32 |  |
+| DISC SYNU0000550 | ACT | 2026-02-06 06:33 | 2026-02-07 16:09 | yes |
+| RELS | ACT | 2026-02-08 01:24 | 2026-02-08 01:33 |  |
+| GTOT SYNU0000550 | ACT | 2026-02-10 15:11 | 2026-02-10 15:34 |  |
+
+_No enquiries in the period._
+
+## BKG000100027 (CUS-00004) FRMRS -> NLRTM
+
+- Delay class: **none** (+1.0 h vs plan)
+- Planned: depart 2025-12-11 08:00, arrive 2026-01-17 08:00
+- Actual: depart 2025-12-11 06:55, arrive 2026-01-17 08:57, released 2026-01-18 07:43
+- Containers: SYNU0000565, SYNU0000570, SYNU0000586, SYNU0000591; BL SBL000500027 issued 2025-12-12 09:01
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-01-17 08:00 | 2025-12-02 02:13 |  |
+| DEPA | PLN | 2025-12-11 08:00 | 2025-12-02 02:13 |  |
+| CONF | ACT | 2025-12-02 02:13 | 2025-12-02 03:15 |  |
+| GTIN SYNU0000586 | ACT | 2025-12-08 14:26 | 2025-12-08 14:34 |  |
+| GTIN SYNU0000565 | ACT | 2025-12-08 22:19 | 2025-12-08 22:45 |  |
+| GTIN SYNU0000591 | ACT | 2025-12-09 09:08 | 2025-12-09 14:43 |  |
+| GTIN SYNU0000570 | ACT | 2025-12-10 03:57 | 2025-12-10 04:10 |  |
+| LOAD SYNU0000591 | ACT | 2025-12-10 19:30 | 2025-12-10 20:23 |  |
+| LOAD SYNU0000570 | ACT | 2025-12-11 03:34 | 2025-12-11 03:39 |  |
+| LOAD SYNU0000565 | ACT | 2025-12-11 04:01 | 2025-12-11 04:08 |  |
+| LOAD SYNU0000586 | ACT | 2025-12-11 04:48 | 2025-12-11 04:50 |  |
+| DEPA | ACT | 2025-12-11 06:55 | 2025-12-11 08:37 |  |
+| ISSU | ACT | 2025-12-12 09:01 | 2025-12-12 09:26 |  |
+| ARRI | EST | 2026-01-17 09:00 | 2025-12-15 15:51 |  |
+| ARRI | EST | 2026-01-17 10:00 | 2025-12-16 13:40 |  |
+| ARRI | EST | 2026-01-17 09:00 | 2025-12-28 22:08 |  |
+| ARRI | ACT | 2026-01-17 08:57 | 2026-01-17 10:04 |  |
+| DISC SYNU0000591 | ACT | 2026-01-17 20:07 | 2026-01-17 20:53 |  |
+| DISC SYNU0000586 | ACT | 2026-01-18 01:57 | 2026-01-18 02:39 |  |
+| DISC SYNU0000565 | ACT | 2026-01-18 06:25 | 2026-01-18 06:52 |  |
+| RELS | ACT | 2026-01-18 07:43 | 2026-01-18 08:09 |  |
+| DISC SYNU0000570 | ACT | 2026-01-18 05:20 | 2026-01-18 10:48 |  |
+| GTOT SYNU0000565 | ACT | 2026-01-19 18:20 | 2026-01-19 18:40 |  |
+| GTOT SYNU0000586 | ACT | 2026-01-20 07:29 | 2026-01-20 08:14 |  |
+| GTOT SYNU0000591 | ACT | 2026-01-20 10:04 | 2026-01-20 10:19 |  |
+| GTOT SYNU0000570 | ACT | 2026-01-20 02:01 | 2026-01-21 23:35 | yes |
+
+_No enquiries in the period._
+
+## BKG000100028 (CUS-00001) LBBEY -> SGSIN
+
+- Delay class: **short** (+4.5 h vs plan)
+- Planned: depart 2026-01-23 03:00, arrive 2026-02-12 03:00
+- Actual: depart 2026-01-23 00:32, arrive 2026-02-12 07:32, released 2026-02-13 23:19
+- Containers: SYNU0000605, SYNU0000610, SYNU0000626, SYNU0000631; BL SBL000500028 issued 2026-01-23 17:55
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-02-12 03:00 | 2026-01-16 00:47 |  |
+| DEPA | PLN | 2026-01-23 03:00 | 2026-01-16 00:47 |  |
+| CONF | ACT | 2026-01-16 00:47 | 2026-01-16 01:00 |  |
+| GTIN SYNU0000605 | ACT | 2026-01-20 03:22 | 2026-01-20 03:47 |  |
+| GTIN SYNU0000631 | ACT | 2026-01-20 03:35 | 2026-01-20 05:16 |  |
+| GTIN SYNU0000610 | ACT | 2026-01-20 23:59 | 2026-01-21 00:27 |  |
+| GTIN SYNU0000626 | ACT | 2026-01-21 09:51 | 2026-01-21 12:48 |  |
+| LOAD SYNU0000610 | ACT | 2026-01-22 14:59 | 2026-01-22 15:06 |  |
+| LOAD SYNU0000631 | ACT | 2026-01-22 16:31 | 2026-01-22 16:44 |  |
+| DEPA | ACT | 2026-01-23 00:32 | 2026-01-23 04:59 |  |
+| LOAD SYNU0000605 | ACT | 2026-01-22 20:22 | 2026-01-23 22:37 | yes |
+| LOAD SYNU0000626 | ACT | 2026-01-22 16:27 | 2026-01-24 11:23 | yes |
+| ISSU | ACT | 2026-01-23 17:55 | 2026-01-24 11:38 | yes |
+| ARRI | EST | 2026-02-12 03:00 | 2026-01-27 00:26 |  |
+| ARRI | EST | 2026-02-12 07:00 | 2026-02-04 21:50 |  |
+| ARRI | EST | 2026-02-12 08:00 | 2026-02-10 09:16 |  |
+| ARRI | ACT | 2026-02-12 07:32 | 2026-02-12 07:56 |  |
+| DISC SYNU0000626 | ACT | 2026-02-12 14:42 | 2026-02-12 14:48 |  |
+| DISC SYNU0000610 | ACT | 2026-02-12 22:57 | 2026-02-12 23:03 |  |
+| DISC SYNU0000605 | ACT | 2026-02-13 01:01 | 2026-02-13 01:56 |  |
+| DISC SYNU0000631 | ACT | 2026-02-12 22:27 | 2026-02-13 12:32 | yes |
+| RELS | ACT | 2026-02-13 23:19 | 2026-02-14 00:40 |  |
+| GTOT SYNU0000631 | ACT | 2026-02-15 00:19 | 2026-02-15 00:30 |  |
+| GTOT SYNU0000610 | ACT | 2026-02-15 05:30 | 2026-02-15 05:58 |  |
+| GTOT SYNU0000626 | ACT | 2026-02-15 10:23 | 2026-02-15 10:25 |  |
+| GTOT SYNU0000605 | ACT | 2026-02-15 16:34 | 2026-02-15 17:33 |  |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000041 | 2026-02-02 17:11 | delay | BKG000100628 (typo) | departed / 2026-02-12 03:00 | departed / 2026-02-12 03:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000041 | agent_v1 | human BKG000100028: departed / 2026-02-12 03:00 (ok) | human BKG000100028: departed / 2026-02-12 03:00 (ok) | no / 0 | 7.8 | **resolved** handoff | S1 |
+
+## BKG000100029 (CUS-00001) AEJEA -> CNSHA
+
+- Delay class: **none** (+0.9 h vs plan)
+- Planned: depart 2026-01-08 04:00, arrive 2026-02-14 04:00
+- Actual: depart 2026-01-08 01:21, arrive 2026-02-14 04:53, released 2026-02-15 19:57
+- Containers: SYNU0000647, SYNU0000652, SYNU0000668, SYNU0000673; BL SBL000500029 issued 2026-01-09 06:46
+
+| Event | Class | Happened / expected | Recorded | Stale |
+|---|---|---|---|---|
+| ARRI | PLN | 2026-02-14 04:00 | 2025-12-18 11:20 |  |
+| DEPA | PLN | 2026-01-08 04:00 | 2025-12-18 11:20 |  |
+| CONF | ACT | 2025-12-18 11:20 | 2025-12-18 11:30 |  |
+| GTIN SYNU0000652 | ACT | 2026-01-05 02:42 | 2026-01-05 02:55 |  |
+| GTIN SYNU0000647 | ACT | 2026-01-05 11:01 | 2026-01-05 11:52 |  |
+| GTIN SYNU0000673 | ACT | 2026-01-05 20:36 | 2026-01-05 20:46 |  |
+| GTIN SYNU0000668 | ACT | 2026-01-06 15:18 | 2026-01-06 15:52 |  |
+| LOAD SYNU0000652 | ACT | 2026-01-07 14:40 | 2026-01-07 15:02 |  |
+| LOAD SYNU0000668 | ACT | 2026-01-07 16:09 | 2026-01-07 16:25 |  |
+| LOAD SYNU0000647 | ACT | 2026-01-07 23:13 | 2026-01-07 23:41 |  |
+| DEPA | ACT | 2026-01-08 01:21 | 2026-01-08 02:57 |  |
+| LOAD SYNU0000673 | ACT | 2026-01-07 23:06 | 2026-01-08 14:04 | yes |
+| ISSU | ACT | 2026-01-09 06:46 | 2026-01-09 06:52 |  |
+| ARRI | ACT | 2026-02-14 04:53 | 2026-02-14 05:04 |  |
+| DISC SYNU0000668 | ACT | 2026-02-14 13:11 | 2026-02-14 14:22 |  |
+| DISC SYNU0000673 | ACT | 2026-02-14 15:46 | 2026-02-14 18:23 |  |
+| DISC SYNU0000647 | ACT | 2026-02-14 20:10 | 2026-02-14 21:37 |  |
+| DISC SYNU0000652 | ACT | 2026-02-15 00:54 | 2026-02-15 00:56 |  |
+| RELS | ACT | 2026-02-15 19:57 | 2026-02-15 21:49 |  |
+| GTOT SYNU0000647 | ACT | 2026-02-18 04:10 | 2026-02-18 04:37 |  |
+| GTOT SYNU0000652 | ACT | 2026-02-18 05:24 | 2026-02-18 05:28 |  |
+| GTOT SYNU0000668 | ACT | 2026-02-18 12:29 | 2026-02-18 12:45 |  |
+| GTOT SYNU0000673 | ACT | 2026-02-18 13:46 | 2026-02-18 14:57 |  |
+
+| Enquiry | Received | Type | Stated ref (kind) | Known status / ETA | Actual status / ETA |
+|---|---|---|---|---|---|
+| ENQ-000052 | 2026-02-13 22:13 | status | BKG000100029 (booking) | departed / 2026-02-14 04:00 | departed / 2026-02-14 04:00 |
+
+| Enquiry | Arm | First answer | Final answer | Escalation req / cases | Human min | Outcome | Scenario |
+|---|---|---|---|---|---|---|---|
+| ENQ-000052 | agent_v1 | ai_agent BKG000100029: departed / 2026-02-14 04:00 (ok) | ai_agent BKG000100029: departed / 2026-02-14 04:00 (ok) | no / 0 | 0.0 | **resolved** | S1 |
 

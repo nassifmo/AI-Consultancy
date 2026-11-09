@@ -185,6 +185,26 @@ At least one of enquiry_id or case_id must be present. Elapsed ticket time is NO
 
 Schema defined in datagen/config_schema.py (ServiceRules). Example in datagen/config/service_rules.yaml.
 
+### E14 responses (`responses.csv`)
+
+**Real source:** Interaction history (emails, chat and call transcripts) with the stated status/ETA extracted | **Owner:** Customer service / integrator
+
+Every message that gave the customer shipment information, from the AI agent or a human. claimed_status / claimed_eta are structured here; with real data they come from transcripts and their extraction must be validated separately.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `response_id` | string | yes | Unique message ID |
+| `enquiry_id` | string | yes | Enquiry answered (-> `enquiries.enquiry_id`) |
+| `case_id` | string | no | Case the message belongs to, if any (-> `cases.case_id`) |
+| `sent_at` | datetime | yes | When the message was sent |
+| `actor_type` | enum: `ai_agent`, `human` | yes | Who sent it |
+| `actor_id` | string | yes | Agent version or pseudonymized human ID |
+| `purpose` | enum: `answer`, `correction`, `case_update` | yes | Why it was sent |
+| `shipment_reference` | string | no | Booking reference the message is about, as linked by the sender |
+| `claimed_status` | string | no | Shipment status stated |
+| `claimed_eta` | datetime | no | ETA stated |
+| `message_text` | string | no | Message body |
+
 ### E13 staffing (`staffing.csv`)
 
 **Real source:** HR / finance records | **Owner:** HR / Finance | **Optional**
@@ -205,18 +225,26 @@ Only needed to support realized cash-savings claims.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `enquiry_id` | string | yes | Enquiry |
+| `in_population` | boolean | yes | Received inside the study period (evaluation population) |
+| `repeat_of` | string | no | Enquiry this one follows up, if generated as a repeat contact |
 | `true_booking_ref` | string | yes | Shipment the customer actually meant |
 | `arm` | string | yes | human_baseline or agent version |
 | `scenario_id` | string | yes | S1-S12 scenario planted |
 | `true_outcome` | enum: `resolved`, `escalated_open`, `failed`, `out_of_scope` | yes | True outcome |
 | `true_status_at_handling` | string | no | Latest recorded status at handling time |
 | `true_eta_at_handling` | datetime | no | Latest recorded ETA at handling time |
-| `info_correct` | boolean | no | Claim matched what was known at handling time |
+| `linked_correct_shipment` | boolean | no | First handler linked the right shipment |
+| `first_answer_correct` | boolean | no | First answer matched what was known when it was given |
+| `info_correct` | boolean | no | Final answer (after any correction) matched what was known when it was given |
+| `escalation_required` | boolean | no | Rules required an escalation case |
 | `required_actions_done` | boolean | no | All rule-required actions performed |
+| `handed_off` | boolean | yes | AI handed the enquiry to a human |
+| `self_report_false` | boolean | yes | AI reported success but the true outcome is not resolved |
 | `ai_only` | boolean | yes | Resolved with no human work |
 | `was_rescued` | boolean | yes | Human corrected or took over after AI |
 | `repeat_contact` | boolean | yes | Customer contacted again within window |
-| `true_human_seconds` | integer | yes | True active human effort |
+| `true_human_seconds` | integer | yes | True active human effort (handling, cases, rescue, follow-up) |
+| `true_ai_cost` | number | yes | True variable AI cost of this enquiry (tokens and voice) |
 | `expected_evaluator_state` | enum: `resolved`, `escalated_open`, `failed`, `unknown`, `out_of_scope` | yes | What a correct evaluator should output given the (possibly damaged) exports |
 
 ### planted_effects (`planted_effects.json`)

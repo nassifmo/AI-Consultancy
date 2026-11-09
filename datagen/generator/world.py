@@ -175,9 +175,10 @@ def build_events(cfg: GeneratorConfig, shipments: list[Shipment]) -> list[Tracki
     return events
 
 
-def build_world(cfg: GeneratorConfig) -> World:
+def build_world(cfg: GeneratorConfig, observation_window_days: float = 0.0) -> World:
     start, end = period_bounds(cfg)
     customers = build_customers(cfg)
     shipments = build_shipments(cfg, customers)
     events = build_events(cfg, shipments)
-    return World(customers=customers, shipments=shipments, events=events, period_start=start, period_end=end)
+    return World(customers=customers, shipments=shipments, events=events, period_start=start, period_end=end,
+                 data_cutoff=end + timedelta(days=observation_window_days))

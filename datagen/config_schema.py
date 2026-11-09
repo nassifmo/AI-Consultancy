@@ -118,6 +118,7 @@ class Enquiries(Strict):
     type_mix: dict[Literal["status", "delay", "documents", "other"], float]
     channel_mix: dict[Literal["voice", "email", "chat"], float]
     language_mix: dict[str, float]
+    min_days_between_contacts: float = Field(default=0.0, ge=0)
     wrong_reference_share: float = Probability
 
     @field_validator("type_mix", "channel_mix", "language_mix")
@@ -148,10 +149,15 @@ class Design(Strict):
 
 
 class Human(Strict):
+    queue_minutes: Skewed
     handle_minutes: Skewed
     acw_minutes: Skewed
     error_rate: float = Probability
     escalation_compliance: float = Probability
+    case_followup_compliance: float = Probability
+    case_minutes: Skewed
+    followup_minutes: Skewed
+    case_resolution_days: Skewed
 
 
 class AgentBehaviour(Strict):
@@ -170,10 +176,12 @@ class AgentBehaviour(Strict):
 class Rescue(Strict):
     rescue_minutes: Skewed
     detection_prob: float = Probability
+    delay_hours: NumRange
 
 
 class FollowUp(Strict):
     repeat_prob_if_failed: float = Probability
+    repeat_prob_if_open: float = Probability
     repeat_prob_if_resolved: float = Probability
 
 
@@ -232,6 +240,7 @@ class Defects(Strict):
 class GeneratorConfig(Strict):
     dataset_name: str
     seed: int
+    service_rules_file: str = "service_rules.yaml"
     period: Period
     world: World
     operations: Operations

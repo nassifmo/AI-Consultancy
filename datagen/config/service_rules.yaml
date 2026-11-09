@@ -22,13 +22,15 @@ information_check:
 
 resolution_definition:
   # An in-scope enquiry is RESOLVED only if all are true:
-  - shipment correctly identified
-  - information given matched what was known at handling time
-  - all required actions done (e.g. escalation when delay above threshold)
-  - no repeat contact on the same shipment within the repeat window
+  - "shipment correctly identified"
+  - "the final information given to the customer (after any human correction) matched what the carrier's systems showed at the moment it was given"
+  - "all required actions done - an escalation case opened within max_hours_to_escalate when the delay known at receipt exceeds the threshold (and the shipment has not arrived), and a customer update on that case within followup_deadline_hours"
+  - "no repeat contact by the same customer about the same shipment within the repeat window"
   # ESCALATED_OPEN: required escalation done correctly, case still open at the end of the observation window.
   # FAILED: any check above is violated.
   # UNKNOWN (evaluator output only): evidence needed for a check is missing.
+  # Population: in-scope enquiries received inside the study period. Exports run until
+  # period end + observation_window_days so every enquiry in the population can be judged.
 
 closure_codes:
   resolved: [resolved_info_provided, resolved_after_investigation]

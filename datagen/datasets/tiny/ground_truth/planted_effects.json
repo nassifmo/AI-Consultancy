@@ -1,0 +1,128 @@
+{
+ "dataset_name": "tiny",
+ "rule_version": "0.1.0-proposed",
+ "design": {
+  "type": "randomized_split",
+  "arms": [
+   {
+    "name": "human_baseline",
+    "share": 0.5
+   },
+   {
+    "name": "agent_v1",
+    "share": 0.5
+   }
+  ],
+  "rollout_date": null
+ },
+ "population": "in-scope enquiries received inside the study period",
+ "study_period": [
+  "2026-01-01T00:00:00+00:00",
+  "2026-02-01T00:00:00+00:00"
+ ],
+ "data_cutoff": "2026-02-15T00:00:00+00:00",
+ "agent_behaviour": {
+  "agent_v1": {
+   "lookup_success": 0.95,
+   "wrong_shipment_prob": 0.02,
+   "stale_cache_prob": 0.06,
+   "escalation_compliance": 0.8,
+   "unsupported_claim_prob": 0.03,
+   "handoff_prob": 0.15,
+   "false_success_report_prob": 0.5,
+   "tokens_in": {
+    "median": 2500.0,
+    "p95": 6000.0
+   },
+   "tokens_out": {
+    "median": 300.0,
+    "p95": 900.0
+   },
+   "voice_seconds": {
+    "median": 150.0,
+    "p95": 420.0
+   }
+  },
+  "agent_v2": {
+   "lookup_success": 0.97,
+   "wrong_shipment_prob": 0.01,
+   "stale_cache_prob": 0.01,
+   "escalation_compliance": 0.95,
+   "unsupported_claim_prob": 0.02,
+   "handoff_prob": 0.12,
+   "false_success_report_prob": 0.5,
+   "tokens_in": {
+    "median": 3200.0,
+    "p95": 7500.0
+   },
+   "tokens_out": {
+    "median": 320.0,
+    "p95": 950.0
+   },
+   "voice_seconds": {
+    "median": 140.0,
+    "p95": 400.0
+   }
+  }
+ },
+ "metrics_by_arm": {
+  "human_baseline": {
+   "n": 21,
+   "verified_resolution_rate": 0.8571,
+   "escalated_open_rate": 0.0,
+   "failed_rate": 0.1429,
+   "ai_only_rate": 0.0,
+   "first_answer_correct_rate": 1.0,
+   "handoff_rate": 0.0,
+   "rescue_rate": 0.0,
+   "repeat_contact_rate": 0.1429,
+   "false_self_report_rate": 0.0,
+   "human_minutes_per_enquiry": 9.107,
+   "human_cost_per_enquiry": 3.0357,
+   "ai_variable_cost_per_enquiry": 0.0,
+   "variable_cost_per_enquiry": 3.0357,
+   "variable_cost_per_verified_resolution": 3.5417
+  },
+  "agent_v1": {
+   "n": 16,
+   "verified_resolution_rate": 0.6875,
+   "escalated_open_rate": 0.0,
+   "failed_rate": 0.3125,
+   "ai_only_rate": 0.625,
+   "first_answer_correct_rate": 0.9375,
+   "handoff_rate": 0.125,
+   "rescue_rate": 0.125,
+   "repeat_contact_rate": 0.1875,
+   "false_self_report_rate": 0.125,
+   "human_minutes_per_enquiry": 4.758,
+   "human_cost_per_enquiry": 1.5861,
+   "ai_variable_cost_per_enquiry": 0.23938,
+   "variable_cost_per_enquiry": 1.8255,
+   "variable_cost_per_verified_resolution": 2.6553
+  }
+ },
+ "differences_vs_reference": {
+  "agent_v1_minus_human_baseline": {
+   "verified_resolution_rate": -0.1696,
+   "escalated_open_rate": 0.0,
+   "failed_rate": 0.1696,
+   "ai_only_rate": 0.625,
+   "first_answer_correct_rate": -0.0625,
+   "handoff_rate": 0.125,
+   "rescue_rate": 0.125,
+   "repeat_contact_rate": 0.0446,
+   "false_self_report_rate": 0.125,
+   "human_minutes_per_enquiry": -4.349,
+   "human_cost_per_enquiry": -1.4496,
+   "ai_variable_cost_per_enquiry": 0.23938,
+   "variable_cost_per_enquiry": -1.2102,
+   "variable_cost_per_verified_resolution": -0.8864
+  }
+ },
+ "realized_cash_savings": 0.0,
+ "notes": [
+  "Metrics are the true in-sample values; a correct evaluator should recover them from the exports.",
+  "Staffing is flat by design: released human capacity is NOT realized cash savings.",
+  "Variable cost = human active minutes x labor rate + AI token/voice usage; fixed costs are separate."
+ ]
+}

@@ -37,7 +37,7 @@ def test_dictionary_is_consistent(d):
 
 def test_dictionary_covers_all_partner_files(d):
     ids = {spec["id"] for spec in d["files"].values()}
-    assert ids == {f"E{i}" for i in range(1, 14)}
+    assert ids == {f"E{i}" for i in range(1, 15)}
 
 
 def test_dictionary_detects_broken_reference(d):
