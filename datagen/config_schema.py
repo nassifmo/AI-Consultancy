@@ -117,9 +117,10 @@ class Enquiries(Strict):
     delay_rate_multiplier: float = Field(ge=1)
     type_mix: dict[Literal["status", "delay", "documents", "other"], float]
     channel_mix: dict[Literal["voice", "email", "chat"], float]
+    language_mix: dict[str, float]
     wrong_reference_share: float = Probability
 
-    @field_validator("type_mix", "channel_mix")
+    @field_validator("type_mix", "channel_mix", "language_mix")
     @classmethod
     def _shares(cls, v, info):
         return _check_shares(v, info.field_name)

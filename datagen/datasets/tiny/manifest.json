@@ -1,0 +1,40 @@
+{
+  "dataset_name": "tiny",
+  "seed": 42,
+  "config_file": "datagen/config/tiny.yaml",
+  "config_sha256": "fc7845fb6d827c4e7ae686bce7600781e28f81af7bf30e05069cd7d7553d99a5",
+  "layers": [
+    "world",
+    "tracking",
+    "enquiries"
+  ],
+  "summary": {
+    "customers": 8,
+    "shipments": 20,
+    "tracking_events": 325,
+    "stale_events": 28,
+    "enquiries": 42,
+    "delay_class": {
+      "long": 2,
+      "none": 13,
+      "short": 5
+    },
+    "enquiry_type": {
+      "delay": 20,
+      "status": 18,
+      "documents": 4
+    },
+    "reference_kind": {
+      "container": 10,
+      "booking": 26,
+      "other_shipment": 3,
+      "typo": 1,
+      "bl": 2
+    },
+    "channel": {
+      "voice": 18,
+      "chat": 14,
+      "email": 10
+    }
+  }
+}

@@ -1,0 +1,116 @@
+# Generator configuration for the `tiny` dataset: about 50 enquiries, small enough to review
+# row by row (docs/SYNTHETIC_DATA_PLAN.md, section 6). Same assumptions as default.yaml, with
+# higher enquiry, stale-event and wrong-reference rates so every case appears at least a few times.
+
+dataset_name: tiny
+seed: 42
+
+period:
+  start: "2026-01-01"
+  months: 1
+  timezone: "UTC"
+
+world:
+  n_customers: 8
+  n_shipments: 20
+  segment_shares: {large_account: 0.2, mid_market: 0.4, small: 0.4}
+  containers_per_shipment: {min: 1, max: 4}
+  transit_days: {min: 10, max: 40}
+  ports: [LBBEY, AEJEA, SAJED, EGPSD, FRMRS, CNSHA, SGSIN, NLRTM]
+
+operations:
+  delay_mix:                     # share of shipments per delay class
+    none: 0.70
+    short: 0.20                  # under the escalation threshold
+    long: 0.10                   # over the escalation threshold
+  short_delay_hours: {min: 4, max: 20}
+  long_delay_hours: {min: 30, max: 120}
+  eta_revisions: {min: 0, max: 3}
+
+tracking:
+  recording_lag_minutes: {median: 30, p95: 240}   # event time -> recorded time
+  stale_lag_share: 0.10                            # share of events recorded very late (creates stale-status cases)
+  stale_lag_hours: {min: 6, max: 48}
+
+enquiries:
+  base_rate_per_shipment: 3.8    # expected baseline enquiries per shipment over its whole life
+                                 # (only those inside the study period are kept)
+  delay_rate_multiplier: 2.5     # enquiry rate multiplier after a delay/ETA change
+  type_mix: {status: 0.55, delay: 0.30, documents: 0.10, other: 0.05}
+  channel_mix: {voice: 0.5, email: 0.3, chat: 0.2}
+  language_mix: {en: 0.70, ar: 0.15, fr: 0.15}
+  wrong_reference_share: 0.08    # customer gives a wrong/partial reference
+
+design:
+  type: randomized_split         # randomized_split | staged_rollout | before_after_confounded
+  arms:                          # traffic shares must sum to 1
+    - {name: human_baseline, share: 0.5}
+    - {name: agent_v1, share: 0.5}
+  rollout_date: null             # used by staged_rollout / before_after_confounded
+
+human:
+  handle_minutes: {median: 6.0, p95: 18.0}       # lognormal
+  acw_minutes: {median: 1.5, p95: 5.0}
+  error_rate: 0.03
+  escalation_compliance: 0.95
+
+agents:
+  agent_v1:
+    lookup_success: 0.95
+    wrong_shipment_prob: 0.02
+    stale_cache_prob: 0.06       # agent answers from an old snapshot
+    escalation_compliance: 0.80
+    unsupported_claim_prob: 0.03 # states a status/ETA not supported by any record
+    handoff_prob: 0.15
+    false_success_report_prob: 0.50   # of failed runs, share self-reported as "resolved"
+    tokens_in: {median: 2500, p95: 6000}
+    tokens_out: {median: 300, p95: 900}
+    voice_seconds: {median: 150, p95: 420}
+  agent_v2:                      # "integrator enhancement": better escalation and freshness
+    lookup_success: 0.97
+    wrong_shipment_prob: 0.01
+    stale_cache_prob: 0.01
+    escalation_compliance: 0.95
+    unsupported_claim_prob: 0.02
+    handoff_prob: 0.12
+    false_success_report_prob: 0.50
+    tokens_in: {median: 3200, p95: 7500}
+    tokens_out: {median: 320, p95: 950}
+    voice_seconds: {median: 140, p95: 400}
+
+rescue:
+  rescue_minutes: {median: 9.0, p95: 25.0}       # human time to fix a bad AI outcome
+  detection_prob: 0.6                            # share of bad AI outcomes a human notices and fixes
+
+follow_up:
+  repeat_prob_if_failed: 0.55
+  repeat_prob_if_resolved: 0.05
+
+costs:
+  currency: USD
+  labor_rate_per_hour: 20.0
+  setup_cost: 30000.0
+  amortization_months: 24
+  platform_fee_month: 1500.0
+  maintenance_month: 1000.0
+  unit_prices:
+    voice_minutes: 0.10
+    llm_tokens_in: 0.000003
+    llm_tokens_out: 0.000015
+    runs: 0.0
+  staffing:
+    generate: true
+    baseline_headcount: 25
+
+defects:
+  enabled: true
+  rates:                         # share of rows affected in the target file
+    duplicate_row: 0.01
+    missing_field: 0.02
+    missing_snapshot: 0.02
+    timezone_shift: 0.005
+    id_typo: 0.005
+    orphan_record: 0.003
+    retry_row: 0.01
+    late_record: 0.01
+    conflicting_closure: 0.005

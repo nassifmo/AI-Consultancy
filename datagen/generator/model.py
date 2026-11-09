@@ -1,0 +1,97 @@
+"""In-memory records produced by the generator layers.
+
+Export fields (what a partner would give us) and truth fields (only the generator knows)
+live on the same objects; `export.py` decides what gets written where."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime
+
+
+@dataclass
+class Customer:
+    customer_id: str
+    segment: str
+    country: str
+    preferred_channel: str
+
+
+@dataclass
+class Shipment:
+    booking_ref: str
+    bl_ref: str
+    container_refs: list[str]
+    customer_id: str
+    origin: str
+    destination: str
+    planned_departure: datetime
+    planned_arrival: datetime
+    # truth: the actual journey
+    booked_at: datetime
+    actual_departure: datetime
+    actual_arrival: datetime
+    bl_issued_at: datetime
+    released_at: datetime
+    gated_out_at: datetime
+    delay_class: str  # none | short | long
+    delay_hours: float  # actual_arrival - planned_arrival
+
+
+@dataclass
+class TrackingEvent:
+    event_id: str
+    booking_ref: str
+    container_ref: str | None
+    event_type: str
+    event_type_code: str
+    classifier: str  # ACT | PLN | EST
+    event_datetime: datetime
+    event_created_datetime: datetime
+    location: str | None
+    # truth
+    stale: bool = False  # recorded unusually late
+
+
+@dataclass
+class Enquiry:
+    enquiry_id: str
+    customer_id: str
+    channel: str
+    received_at: datetime
+    stated_reference: str
+    enquiry_type: str
+    language: str
+    # truth
+    true_booking_ref: str
+    reference_kind: str  # booking | bl | container | typo | other_shipment
+    delay_driven: bool
+
+
+@dataclass
+class World:
+    customers: list[Customer] = field(default_factory=list)
+    shipments: list[Shipment] = field(default_factory=list)
+    events: list[TrackingEvent] = field(default_factory=list)
+    enquiries: list[Enquiry] = field(default_factory=list)
+    period_start: datetime | None = None
+    period_end: datetime | None = None
+
+    def shipment(self, booking_ref: str) -> Shipment:
+        return self._shipment_index()[booking_ref]
+
+    def events_for(self, booking_ref: str) -> list[TrackingEvent]:
+        return self._event_index().get(booking_ref, [])
+
+    def _shipment_index(self) -> dict[str, Shipment]:
+        if getattr(self, "_si", None) is None or len(self._si) != len(self.shipments):
+            self._si = {s.booking_ref: s for s in self.shipments}
+        return self._si
+
+    def _event_index(self) -> dict[str, list[TrackingEvent]]:
+        if getattr(self, "_ei", None) is None or self._ei_n != len(self.events):
+            idx: dict[str, list[TrackingEvent]] = {}
+            for e in self.events:
+                idx.setdefault(e.booking_ref, []).append(e)
+            self._ei, self._ei_n = idx, len(self.events)
+        return self._ei

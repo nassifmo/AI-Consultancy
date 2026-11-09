@@ -23,7 +23,7 @@ operations:
     none: 0.70
     short: 0.20                  # under the escalation threshold
     long: 0.10                   # over the escalation threshold
-  short_delay_hours: {min: 2, max: 20}
+  short_delay_hours: {min: 4, max: 20}
   long_delay_hours: {min: 30, max: 120}
   eta_revisions: {min: 0, max: 3}
 
@@ -33,10 +33,12 @@ tracking:
   stale_lag_hours: {min: 6, max: 48}
 
 enquiries:
-  base_rate_per_shipment: 1.2    # expected enquiries per shipment over its journey
+  base_rate_per_shipment: 1.2    # expected baseline enquiries per shipment over its whole life
+                                 # (only those inside the study period are kept)
   delay_rate_multiplier: 2.5     # enquiry rate multiplier after a delay/ETA change
   type_mix: {status: 0.55, delay: 0.30, documents: 0.10, other: 0.05}
   channel_mix: {voice: 0.5, email: 0.3, chat: 0.2}
+  language_mix: {en: 0.70, ar: 0.15, fr: 0.15}
   wrong_reference_share: 0.03    # customer gives a wrong/partial reference
 
 design:

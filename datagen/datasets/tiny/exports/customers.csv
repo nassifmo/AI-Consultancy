@@ -1,0 +1,9 @@
+customer_id,segment,country,preferred_channel
+CUS-00001,small,FR,voice
+CUS-00002,mid_market,SA,voice
+CUS-00003,mid_market,FR,email
+CUS-00004,mid_market,FR,voice
+CUS-00005,small,FR,email
+CUS-00006,small,LB,voice
+CUS-00007,large_account,SA,voice
+CUS-00008,mid_market,CN,chat
