@@ -1,0 +1,283 @@
+# Data dictionary: every file we generate synthetically AND request from partner companies.
+# One definition serves both purposes (see docs/SYNTHETIC_DATA_PLAN.md, section 1).
+#
+# Field types:
+#   string   - free text or identifier
+#   integer  - whole number
+#   number   - decimal number
+#   boolean  - true/false
+#   datetime - ISO 8601 with UTC offset, e.g. 2026-11-09T14:05:00+00:00
+#   date     - ISO 8601 date, e.g. 2026-11-09
+#   enum     - one of `values`
+#   list     - list of strings (CSV: semicolon-separated)
+#   object_list - list of objects with `item_fields` (JSON files only)
+#
+# `references: <file>.<field>` declares a link that must resolve (foreign key).
+# `partner_source` / `owner` describe where the real data would come from.
+# Enum value lists marked "subset" must be checked against the cited standard before real-data mapping.
+
+version: 0.1.0
+
+files:
+
+  customers:
+    id: E1
+    filename: customers.csv
+    format: csv
+    primary_key: customer_id
+    partner_source: CRM account records (pseudonymized)
+    owner: CRM admin
+    fields:
+      - {name: customer_id, type: string, required: true, description: "Pseudonymized customer/account ID"}
+      - {name: segment, type: enum, required: true, values: [large_account, mid_market, small], description: "Commercial segment"}
+      - {name: country, type: string, required: true, description: "ISO 3166-1 alpha-2 country code"}
+      - {name: preferred_channel, type: enum, required: false, values: [voice, email, chat], description: "Usual contact channel"}
+
+  shipments:
+    id: E2
+    filename: shipments.csv
+    format: csv
+    primary_key: booking_ref
+    partner_source: Booking system
+    owner: Operations
+    fields:
+      - {name: booking_ref, type: string, required: true, description: "Carrier booking reference"}
+      - {name: bl_ref, type: string, required: false, description: "Bill of lading number (issued later in the journey)"}
+      - {name: container_refs, type: list, required: true, description: "Container numbers (ISO 6346), semicolon-separated in CSV"}
+      - {name: customer_id, type: string, required: true, references: customers.customer_id, description: "Booking party"}
+      - {name: origin, type: string, required: true, description: "UN/LOCODE of port of loading"}
+      - {name: destination, type: string, required: true, description: "UN/LOCODE of port of discharge"}
+      - {name: planned_departure, type: datetime, required: true, description: "Planned departure at booking time"}
+      - {name: planned_arrival, type: datetime, required: true, description: "Planned arrival at booking time"}
+
+  tracking_events:
+    id: E3
+    filename: tracking_events.json
+    format: json
+    primary_key: event_id
+    partner_source: Carrier Track and Trace (DCSA T&T style API or export)
+    owner: Operations / IT
+    notes: >
+      event_created_datetime is essential: it tells us when the carrier system knew about the event,
+      which lets us rebuild what the agent could have known at handling time.
+      Field names follow DCSA T&T 2.x style; verify against the current DCSA spec.
+    fields:
+      - {name: event_id, type: string, required: true, description: "Unique event ID"}
+      - {name: booking_ref, type: string, required: true, references: shipments.booking_ref, description: "Booking the event belongs to"}
+      - {name: container_ref, type: string, required: false, description: "Container for EQUIPMENT events"}
+      - {name: event_type, type: enum, required: true, values: [EQUIPMENT, TRANSPORT, SHIPMENT], description: "DCSA event type"}
+      - {name: event_type_code, type: enum, required: true, values: [GTIN, GTOT, LOAD, DISC, ARRI, DEPA, RECE, CONF, ISSU, RELS, HOLD], description: "Event code (subset of DCSA codes; verify)"}
+      - {name: classifier, type: enum, required: true, values: [ACT, PLN, EST], description: "Actual, planned or estimated"}
+      - {name: event_datetime, type: datetime, required: true, description: "When it happened (ACT) or is expected to happen (PLN/EST)"}
+      - {name: event_created_datetime, type: datetime, required: true, description: "When the carrier system recorded the event"}
+      - {name: location, type: string, required: false, description: "UN/LOCODE"}
+
+  enquiries:
+    id: E4
+    filename: enquiries.csv
+    format: csv
+    primary_key: enquiry_id
+    partner_source: Customer service records (all in-scope channels)
+    owner: Customer service
+    fields:
+      - {name: enquiry_id, type: string, required: true, description: "Unique enquiry ID"}
+      - {name: customer_id, type: string, required: true, references: customers.customer_id, description: "Who contacted us"}
+      - {name: channel, type: enum, required: true, values: [voice, email, chat], description: "Contact channel"}
+      - {name: received_at, type: datetime, required: true, description: "When the enquiry arrived"}
+      - {name: stated_reference, type: string, required: false, description: "Reference as given by the customer (may be wrong or partial)"}
+      - {name: enquiry_type, type: enum, required: true, values: [status, delay, documents, other], description: "Classified enquiry type"}
+      - {name: language, type: string, required: false, description: "ISO 639-1 language code"}
+
+  agent_runs:
+    id: E5
+    filename: agent_runs.json
+    format: json
+    primary_key: run_id
+    partner_source: AI agent platform logs (e.g. HappyRobot runs / call logs) or LLM traces
+    owner: Integrator / agent vendor
+    fields:
+      - {name: run_id, type: string, required: true, description: "Unique agent run ID"}
+      - {name: enquiry_id, type: string, required: true, references: enquiries.enquiry_id, description: "Enquiry handled"}
+      - {name: agent_version, type: string, required: true, description: "Agent release identifier"}
+      - {name: started_at, type: datetime, required: true, description: "Run start"}
+      - {name: ended_at, type: datetime, required: true, description: "Run end"}
+      - name: steps
+        type: object_list
+        required: true
+        description: Ordered tool calls made by the agent
+        item_fields:
+          - {name: step_no, type: integer, required: true, description: "Order within the run"}
+          - {name: tool_name, type: enum, required: true, values: [lookup_shipment, get_tracking_status, create_case, escalate_case, send_message, handoff_to_human], description: "Tool called"}
+          - {name: tool_input, type: string, required: false, description: "Input (e.g. reference looked up)"}
+          - {name: tool_output, type: string, required: false, description: "Output summary"}
+          - {name: snapshot_time, type: datetime, required: false, description: "Time of the data the tool returned (for status lookups)"}
+          - {name: success, type: boolean, required: true, description: "Whether the tool call succeeded technically"}
+      - {name: claimed_status, type: string, required: false, description: "Shipment status stated to the customer (structured)"}
+      - {name: claimed_eta, type: datetime, required: false, description: "ETA stated to the customer"}
+      - {name: response_text, type: string, required: false, description: "Message sent to the customer"}
+      - {name: self_reported_outcome, type: enum, required: true, values: [resolved, escalated, handed_off, failed], description: "Outcome as reported by the agent itself (not trusted)"}
+      - {name: handoff_flag, type: boolean, required: true, description: "Run ended by handing to a human"}
+      - {name: tokens_in, type: integer, required: false, description: "LLM input tokens"}
+      - {name: tokens_out, type: integer, required: false, description: "LLM output tokens"}
+      - {name: voice_seconds, type: integer, required: false, description: "Billable voice seconds (voice channel)"}
+
+  cases:
+    id: E6
+    filename: cases.csv
+    format: csv
+    primary_key: case_id
+    partner_source: Case / ticket system
+    owner: Customer service / CRM admin
+    fields:
+      - {name: case_id, type: string, required: true, description: "Unique case ID"}
+      - {name: enquiry_id, type: string, required: true, references: enquiries.enquiry_id, description: "Originating enquiry"}
+      - {name: opened_at, type: datetime, required: true, description: "Case creation"}
+      - {name: reason, type: enum, required: true, values: [delay_investigation, wrong_information, callback_request, documents, other], description: "Why the case exists"}
+      - {name: owner_id, type: string, required: false, description: "Pseudonymized human owner"}
+      - {name: priority, type: enum, required: false, values: [low, normal, high], description: "Priority"}
+      - {name: closed_at, type: datetime, required: false, description: "Closure time (empty if open)"}
+      - {name: closure_code, type: enum, required: false, values: [resolved_info_provided, resolved_after_investigation, escalated_to_operations, customer_unreachable, duplicate, out_of_scope, cancelled], description: "Standardized closure reason"}
+
+  case_history:
+    id: E7
+    filename: case_history.csv
+    format: csv
+    primary_key: history_id
+    partner_source: Case field history (e.g. Salesforce CaseHistory2)
+    owner: CRM admin
+    fields:
+      - {name: history_id, type: string, required: true, description: "Unique change ID"}
+      - {name: case_id, type: string, required: true, references: cases.case_id, description: "Case changed"}
+      - {name: changed_at, type: datetime, required: true, description: "Time of change"}
+      - {name: field, type: enum, required: true, values: [status, owner], description: "Field that changed"}
+      - {name: old_value, type: string, required: false, description: "Previous value"}
+      - {name: new_value, type: string, required: true, description: "New value (status values new/open/escalated/pending_customer/closed)"}
+      - {name: changed_by, type: string, required: true, description: "Human ID, \"ai_agent\" or \"system\""}
+
+  agent_work:
+    id: E8
+    filename: agent_work.csv
+    format: csv
+    primary_key: work_id
+    partner_source: Human handling records (e.g. Salesforce Omni-Channel AgentWork) or timed sample
+    owner: Customer service / workforce management
+    notes: At least one of enquiry_id or case_id must be present. Elapsed ticket time is NOT effort.
+    fields:
+      - {name: work_id, type: string, required: true, description: "Unique work item ID"}
+      - {name: enquiry_id, type: string, required: false, references: enquiries.enquiry_id, description: "Enquiry worked"}
+      - {name: case_id, type: string, required: false, references: cases.case_id, description: "Case worked"}
+      - {name: agent_id, type: string, required: true, description: "Pseudonymized human agent"}
+      - {name: accepted_at, type: datetime, required: true, description: "Work accepted"}
+      - {name: closed_at, type: datetime, required: false, description: "Work closed"}
+      - {name: active_seconds, type: integer, required: false, description: "Time actively worked"}
+      - {name: handle_seconds, type: integer, required: false, description: "Accept to close"}
+      - {name: acw_seconds, type: integer, required: false, description: "After-conversation work"}
+      - {name: activity, type: enum, required: true, values: [handle_enquiry, handle_case, correct_ai_answer, follow_up], description: "Type of work"}
+      - {name: measurement_method, type: enum, required: true, values: [logged, timed, estimated], description: "How effort was measured"}
+
+  ai_invoice:
+    id: E9
+    filename: ai_invoice.csv
+    format: csv
+    primary_key: [period, line_item]
+    partner_source: AI vendor invoices
+    owner: Finance
+    fields:
+      - {name: period, type: string, required: true, description: "Billing month YYYY-MM"}
+      - {name: line_item, type: enum, required: true, values: [voice_minutes, llm_tokens_in, llm_tokens_out, runs, platform_fee], description: "Charge type"}
+      - {name: quantity, type: number, required: true, description: "Billed quantity"}
+      - {name: unit_price, type: number, required: true, description: "Price per unit"}
+      - {name: amount, type: number, required: true, description: "quantity x unit_price"}
+      - {name: currency, type: string, required: true, description: "ISO 4217"}
+
+  rollout_log:
+    id: E10
+    filename: rollout_log.csv
+    format: csv
+    primary_key: [date, agent_version]
+    partner_source: Integrator deployment log / release notes
+    owner: Integrator
+    fields:
+      - {name: date, type: date, required: true, description: "Effective date"}
+      - {name: agent_version, type: string, required: true, description: "Version deployed (or \"human_baseline\")"}
+      - {name: arm_assignment_rule, type: enum, required: true, values: [random_by_enquiry, by_region, all_traffic, none], description: "How traffic was assigned"}
+      - {name: traffic_share, type: number, required: true, description: "Share of in-scope traffic (0-1)"}
+      - {name: change_description, type: string, required: false, description: "What changed"}
+
+  cost_parameters:
+    id: E11
+    filename: cost_parameters.json
+    format: json_object
+    partner_source: Finance and integrator contract
+    owner: Finance
+    fields:
+      - {name: currency, type: string, required: true, description: "ISO 4217"}
+      - {name: labor_rate_per_hour, type: number, required: true, description: "Fully loaded human cost per hour (wage + benefits + overhead)"}
+      - {name: setup_cost, type: number, required: true, description: "One-off integration/setup cost"}
+      - {name: amortization_months, type: integer, required: true, description: "Months to spread setup cost over"}
+      - {name: platform_fee_month, type: number, required: false, description: "Fixed monthly platform fee"}
+      - {name: maintenance_month, type: number, required: false, description: "Monthly maintenance/integrator support"}
+      - {name: valid_from, type: date, required: true, description: "Date these parameters apply from"}
+
+  service_rules:
+    id: E12
+    filename: service_rules.yaml
+    format: yaml
+    partner_source: Workflow owner workshop + policy documents
+    owner: Workflow owner
+    notes: Schema defined in datagen/config_schema.py (ServiceRules). Example in datagen/config/service_rules.yaml.
+    fields: []
+
+  staffing:
+    id: E13
+    filename: staffing.csv
+    format: csv
+    optional: true
+    primary_key: month
+    partner_source: HR / finance records
+    owner: HR / Finance
+    notes: Only needed to support realized cash-savings claims.
+    fields:
+      - {name: month, type: string, required: true, description: "YYYY-MM"}
+      - {name: support_headcount, type: number, required: true, description: "FTE in scope"}
+      - {name: overtime_hours, type: number, required: false, description: "Paid overtime hours"}
+      - {name: outsourcing_spend, type: number, required: false, description: "Outsourced support spend"}
+
+# Ground truth: produced by the generator only. Never given to the evaluator.
+ground_truth:
+
+  true_outcome:
+    filename: true_outcome.csv
+    format: csv
+    primary_key: enquiry_id
+    fields:
+      - {name: enquiry_id, type: string, required: true, description: "Enquiry"}
+      - {name: true_booking_ref, type: string, required: true, description: "Shipment the customer actually meant"}
+      - {name: arm, type: string, required: true, description: "human_baseline or agent version"}
+      - {name: scenario_id, type: string, required: true, description: "S1-S12 scenario planted"}
+      - {name: true_outcome, type: enum, required: true, values: [resolved, escalated_open, failed, out_of_scope], description: "True outcome"}
+      - {name: true_status_at_handling, type: string, required: false, description: "Latest recorded status at handling time"}
+      - {name: true_eta_at_handling, type: datetime, required: false, description: "Latest recorded ETA at handling time"}
+      - {name: info_correct, type: boolean, required: false, description: "Claim matched what was known at handling time"}
+      - {name: required_actions_done, type: boolean, required: false, description: "All rule-required actions performed"}
+      - {name: ai_only, type: boolean, required: true, description: "Resolved with no human work"}
+      - {name: was_rescued, type: boolean, required: true, description: "Human corrected or took over after AI"}
+      - {name: repeat_contact, type: boolean, required: true, description: "Customer contacted again within window"}
+      - {name: true_human_seconds, type: integer, required: true, description: "True active human effort"}
+      - {name: expected_evaluator_state, type: enum, required: true, values: [resolved, escalated_open, failed, unknown, out_of_scope], description: "What a correct evaluator should output given the (possibly damaged) exports"}
+
+  planted_effects:
+    filename: planted_effects.json
+    format: json_object
+    fields: []
+
+  injected_defects:
+    filename: injected_defects.csv
+    format: csv
+    primary_key: defect_id
+    fields:
+      - {name: defect_id, type: string, required: true, description: "Unique defect"}
+      - {name: file, type: string, required: true, description: "Export file affected"}
+      - {name: record_id, type: string, required: true, description: "Affected record"}
+      - {name: defect_type, type: enum, required: true, values: [duplicate_row, missing_field, missing_snapshot, timezone_shift, id_typo, orphan_record, retry_row, late_record, conflicting_closure, false_self_report], description: "Defect injected"}
+      - {name: detail, type: string, required: false, description: "What was changed"}

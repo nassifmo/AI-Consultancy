@@ -1,0 +1,36 @@
+# Service rules for shipment-status and delay enquiries (E12).
+# PROPOSED values for development. They must be confirmed by the team, the advisor,
+# and later by the partner's workflow owner. Changing any value requires a new rule_version.
+
+rule_version: "0.1.0-proposed"
+
+in_scope_enquiry_types: [status, delay]   # documents/other are excluded with reason "out_of_scope"
+
+escalation:
+  # A delay is the gap between the latest recorded ETA and the original planned arrival.
+  escalate_if_delay_hours: 24             # delay above this -> agent must open/escalate a case
+  max_hours_to_escalate: 2                # case must exist within this time after the enquiry
+
+follow_up:
+  followup_deadline_hours: 48             # escalated case must get a customer update within this time
+  repeat_contact_window_days: 7           # same customer + same shipment contacts within this window count as repeats
+  observation_window_days: 14             # outcomes are judged this long after the enquiry
+
+information_check:
+  eta_tolerance_hours: 6                  # claimed ETA within this of the ETA known at handling time = correct
+  status_must_match_latest_recorded: true # claimed status must equal the latest status recorded before handling
+
+resolution_definition:
+  # An in-scope enquiry is RESOLVED only if all are true:
+  - shipment correctly identified
+  - information given matched what was known at handling time
+  - all required actions done (e.g. escalation when delay above threshold)
+  - no repeat contact on the same shipment within the repeat window
+  # ESCALATED_OPEN: required escalation done correctly, case still open at the end of the observation window.
+  # FAILED: any check above is violated.
+  # UNKNOWN (evaluator output only): evidence needed for a check is missing.
+
+closure_codes:
+  resolved: [resolved_info_provided, resolved_after_investigation]
+  not_resolved: [escalated_to_operations, customer_unreachable, cancelled]
+  excluded: [duplicate, out_of_scope]
