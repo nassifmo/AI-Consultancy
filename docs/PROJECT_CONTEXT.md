@@ -56,7 +56,7 @@ A company pilot is an extension, not a prerequisite.
 - Advisor wants a concise 5-10 page literature review showing our own judgment; he skims.
 - Word, black and white, 12pt minimum, page-number-only footer, "we" voice, polite advisor questions.
 - Research-question section is provisional and must be rewritten later.
-- Latest deliverable: 3-page advisor brief with shipment-enquiry architecture.
+- Latest deliverable: 3-page advisor brief with shipment-enquiry architecture (see `docs/ARCHITECTURE_PLAN.md`).
 
 ## Note
 Earlier reports, research notes and scripts live on Bahaa's machine (`C:/Users/user/Documents/FYP AI value/`),
@@ -64,3 +64,4 @@ not in this repo yet.
 
 ## Decisions log
 - 2026-11: Scope set to AI customer-service agent; workflow = shipment-status/delay enquiries; CMA CGM first pilot target.
+- 2026-11-03: Workflow and architecture plan concluded (see `docs/ARCHITECTURE_PLAN.md`); stack Python/SQLite/FastAPI/Streamlit.

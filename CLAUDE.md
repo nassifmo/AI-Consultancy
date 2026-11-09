@@ -1,6 +1,6 @@
 # FYP: Independent AI Value Evaluator
 
-Read `docs/PROJECT_CONTEXT.md` before doing any work. It holds the agreed scope, decisions and preferences.
+Read `docs/PROJECT_CONTEXT.md` and `docs/ARCHITECTURE_PLAN.md` before doing any work.
 
 Working rules:
 - Base claims on trusted, checked sources (papers, official docs, reputable institutions). Never invent facts or sources.
