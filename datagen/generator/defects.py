@@ -14,7 +14,7 @@ can be restored from export metadata, IDs recoverable through another link) leav
 | timezone_shift | local-time files | yes (offset from export_metadata.json) | none |
 | orphan_record | agent_work | yes (ignore unknown enquiry) | none |
 | id_typo | cases.enquiry_id, agent_work.enquiry_id | cases via responses.case_id; work rows only partly | none (human time may be undercounted) |
-| missing_field | responses claimed ETA/status | no | unknown if it hits the final answer |
+| missing_field | responses claimed ETA/status | AI answers: yes (agent_runs); human: no | unknown if it hits a human final answer |
 | missing_field | agent_work.active_seconds | no | none (human time unknown for that row) |
 | missing_field | cases.closed_at | yes (case history) | none |
 | missing_snapshot | tracking_events (whole shipment) | no | unknown for in-scope enquiries on it |
@@ -98,8 +98,11 @@ class Injector:
                 fld = self.rng.choice(["claimed_eta", "claimed_status"])
                 r[fld] = None
                 is_final = self.final_response.get(r["enquiry_id"]) == r["response_id"]
-                self.record("missing_field", "responses.csv", r["response_id"], fld, "blanked",
-                            [r["enquiry_id"]] if is_final else [])
+                # An AI answer's claim is also in agent_runs, so only a human message loses the evidence.
+                lost = is_final and r["actor_type"] == "human"
+                detail = "blanked" if r["actor_type"] == "human" else "blanked; claim still in agent_runs"
+                self.record("missing_field", "responses.csv", r["response_id"], fld, detail,
+                            [r["enquiry_id"]] if lost else [])
         for r in self.t["agent_work"]:
             if self.hit("missing_field"):
                 r["active_seconds"] = None

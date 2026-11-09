@@ -1,0 +1,64 @@
+# Shared fixtures for the scenario library. Written BY HAND from the service rules,
+# independently of the generator code. All times UTC unless an offset says otherwise.
+#
+# Shipments (all planned: depart 2026-03-01 10:00, arrive 2026-03-15 10:00, except OTHER):
+#   BKG-T-ONTIME  departs 03-01 10:30, no ETA revision, arrives 03-15 09:30
+#   BKG-T-DELAY   departs 03-01 11:00, ETA revised on 03-08 08:00 to 03-17 12:00 (+50h), arrives 03-17 11:30
+#   BKG-T-D24     ETA revised on 03-08 08:00 to 03-16 10:00 (exactly +24h)
+#   BKG-T-D24P    ETA revised on 03-08 08:00 to 03-16 10:01 (+24h 1min)
+#   BKG-T-STALE   departs 03-01 11:00 but the departure was RECORDED late, on 03-03 11:00
+#   BKG-T-OTHER   same customer, another shipment (planned 03-03 -> 03-20)
+
+customers:
+  - {customer_id: CUS-T1, segment: mid_market, country: LB, preferred_channel: voice}
+
+shipments:
+  - {booking_ref: BKG-T-ONTIME, bl_ref: SBL-T-ONTIME, container_refs: SYNU9000001, customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: "2026-03-01T10:00:00+00:00", planned_arrival: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-DELAY, bl_ref: SBL-T-DELAY, container_refs: SYNU9000002, customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: "2026-03-01T10:00:00+00:00", planned_arrival: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-D24, bl_ref: SBL-T-D24, container_refs: SYNU9000003, customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: "2026-03-01T10:00:00+00:00", planned_arrival: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-D24P, bl_ref: SBL-T-D24P, container_refs: SYNU9000004, customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: "2026-03-01T10:00:00+00:00", planned_arrival: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-STALE, bl_ref: SBL-T-STALE, container_refs: SYNU9000005, customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: "2026-03-01T10:00:00+00:00", planned_arrival: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-OTHER, bl_ref: SBL-T-OTHER, container_refs: SYNU9000006, customer_id: CUS-T1, origin: LBBEY, destination: FRMRS, planned_departure: "2026-03-03T10:00:00+00:00", planned_arrival: "2026-03-20T10:00:00+00:00"}
+
+# event_id, booking_ref, event_type, code, classifier, event_datetime, event_created_datetime
+tracking_events:
+  - [E-O1, BKG-T-ONTIME, SHIPMENT, CONF, ACT, "2026-02-15T09:00:00+00:00", "2026-02-15T09:05:00+00:00"]
+  - [E-O2, BKG-T-ONTIME, TRANSPORT, DEPA, PLN, "2026-03-01T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-O3, BKG-T-ONTIME, TRANSPORT, ARRI, PLN, "2026-03-15T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-O4, BKG-T-ONTIME, TRANSPORT, DEPA, ACT, "2026-03-01T10:30:00+00:00", "2026-03-01T10:45:00+00:00"]
+  - [E-O5, BKG-T-ONTIME, TRANSPORT, ARRI, ACT, "2026-03-15T09:30:00+00:00", "2026-03-15T09:45:00+00:00"]
+
+  - [E-D1, BKG-T-DELAY, SHIPMENT, CONF, ACT, "2026-02-15T09:00:00+00:00", "2026-02-15T09:05:00+00:00"]
+  - [E-D2, BKG-T-DELAY, TRANSPORT, DEPA, PLN, "2026-03-01T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-D3, BKG-T-DELAY, TRANSPORT, ARRI, PLN, "2026-03-15T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-D4, BKG-T-DELAY, TRANSPORT, DEPA, ACT, "2026-03-01T11:00:00+00:00", "2026-03-01T11:20:00+00:00"]
+  - [E-D5, BKG-T-DELAY, TRANSPORT, ARRI, EST, "2026-03-17T12:00:00+00:00", "2026-03-08T08:00:00+00:00"]
+  - [E-D6, BKG-T-DELAY, TRANSPORT, ARRI, ACT, "2026-03-17T11:30:00+00:00", "2026-03-17T11:50:00+00:00"]
+
+  - [E-24A, BKG-T-D24, TRANSPORT, ARRI, PLN, "2026-03-15T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-24B, BKG-T-D24, TRANSPORT, DEPA, ACT, "2026-03-01T11:00:00+00:00", "2026-03-01T11:20:00+00:00"]
+  - [E-24C, BKG-T-D24, TRANSPORT, ARRI, EST, "2026-03-16T10:00:00+00:00", "2026-03-08T08:00:00+00:00"]
+
+  - [E-25A, BKG-T-D24P, TRANSPORT, ARRI, PLN, "2026-03-15T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-25B, BKG-T-D24P, TRANSPORT, DEPA, ACT, "2026-03-01T11:00:00+00:00", "2026-03-01T11:20:00+00:00"]
+  - [E-25C, BKG-T-D24P, TRANSPORT, ARRI, EST, "2026-03-16T10:01:00+00:00", "2026-03-08T08:00:00+00:00"]
+
+  - [E-S1, BKG-T-STALE, SHIPMENT, CONF, ACT, "2026-02-15T09:00:00+00:00", "2026-02-15T09:05:00+00:00"]
+  - [E-S2, BKG-T-STALE, TRANSPORT, ARRI, PLN, "2026-03-15T10:00:00+00:00", "2026-02-15T09:00:00+00:00"]
+  - [E-S3, BKG-T-STALE, TRANSPORT, DEPA, ACT, "2026-03-01T11:00:00+00:00", "2026-03-03T11:00:00+00:00"]
+
+  - [E-X1, BKG-T-OTHER, SHIPMENT, CONF, ACT, "2026-02-20T09:00:00+00:00", "2026-02-20T09:05:00+00:00"]
+  - [E-X2, BKG-T-OTHER, TRANSPORT, ARRI, PLN, "2026-03-20T10:00:00+00:00", "2026-02-20T09:00:00+00:00"]
+  - [E-X3, BKG-T-OTHER, TRANSPORT, DEPA, ACT, "2026-03-03T10:00:00+00:00", "2026-03-03T10:10:00+00:00"]
+
+# Independent expectations for "what the carrier's systems showed at time t" (rule: latest recorded
+# status; ETA = latest issued estimate, the plan until an estimate exists, the actual once recorded).
+state_checks:
+  - {booking_ref: BKG-T-ONTIME, at: "2026-03-05T09:01:00+00:00", status: departed, eta: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-DELAY, at: "2026-03-08T07:00:00+00:00", status: departed, eta: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-DELAY, at: "2026-03-09T09:01:00+00:00", status: departed, eta: "2026-03-17T12:00:00+00:00"}
+  - {booking_ref: BKG-T-DELAY, at: "2026-03-17T11:40:00+00:00", status: departed, eta: "2026-03-17T12:00:00+00:00"}  # arrival not recorded yet
+  - {booking_ref: BKG-T-DELAY, at: "2026-03-17T12:00:00+00:00", status: arrived, eta: "2026-03-17T11:30:00+00:00"}
+  - {booking_ref: BKG-T-STALE, at: "2026-03-02T09:00:00+00:00", status: booked, eta: "2026-03-15T10:00:00+00:00"}  # departed, but not recorded yet
+  - {booking_ref: BKG-T-STALE, at: "2026-03-03T12:00:00+00:00", status: departed, eta: "2026-03-15T10:00:00+00:00"}
+  - {booking_ref: BKG-T-ONTIME, at: "2026-02-15T09:01:00+00:00", status: null, eta: "2026-03-15T10:00:00+00:00"}  # booked, confirmation not recorded yet

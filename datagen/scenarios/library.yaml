@@ -1,0 +1,493 @@
+# Scenario library: hand-written golden cases with expected evaluator results.
+#
+# Written from datagen/config/service_rules.yaml (rule_version 0.1.0-proposed) and the boundary
+# interpretation documented there, NOT from the generator code. Each scenario is its own small
+# dataset in partner export format (built by datagen/scenario_library.py on top of base.yaml).
+# Review status and open questions: docs/SCENARIO_REVIEW.md.
+#
+# Compact keys (expanded by the loader):
+#   runs:      enquiry, start, end, linked, status, eta, self, [version=agent_v1] [snapshot=end]
+#              [escalated] [handoff] [retry] [response_override]
+#              -> one agent_runs row; unless handoff/retry, also an AI "answer" row in responses at `end`
+#   responses: explicit human messages: enquiry, at, actor, purpose, [ref] [status] [eta] [case]
+#   cases:     case_id, enquiry, opened, reason, owner, [closed, code]
+#   history:   [case_id, at, field, old, new, by]
+#   work:      enquiry, agent, at, active, activity, [case]
+#   expected:  per enquiry. Times in UTC.
+
+scenarios:
+
+  # ------------------------------------------------------------------ S1-S12
+
+  - id: S1
+    title: Normal status enquiry answered correctly by the AI
+    tests: AI-only resolution
+    enquiries:
+      - {enquiry_id: ENQ-S01, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S01, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S01: {state: resolved, first_answer_correct: true, info_correct: true, escalation_required: false, required_actions_done: true, ai_only: true, rescued: false, handed_off: false, repeat_contact: false, self_report_false: false, human_seconds: 0}
+
+  - id: S2
+    title: Delay over threshold, AI escalates, human updates customer and closes the case in time
+    tests: required escalation done; human case work counted
+    enquiries:
+      - {enquiry_id: ENQ-S02, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S02, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-S02, enquiry: ENQ-S02, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-12T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-S02, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-S02, "2026-03-09T09:01:30+00:00", owner, null, HUM-T1, system]
+      - [CAS-S02, "2026-03-09T09:02:30+00:00", status, new, escalated, ai_agent]
+      - [CAS-S02, "2026-03-09T15:00:00+00:00", status, escalated, open, HUM-T1]
+      - [CAS-S02, "2026-03-12T10:00:00+00:00", status, open, closed, HUM-T1]
+    work:
+      - {enquiry: ENQ-S02, case: CAS-S02, agent: HUM-T1, at: "2026-03-09T09:30:00+00:00", active: 900, activity: handle_case}
+      - {enquiry: ENQ-S02, case: CAS-S02, agent: HUM-T1, at: "2026-03-09T14:55:00+00:00", active: 240, activity: follow_up}
+    responses:
+      - {enquiry: ENQ-S02, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-S02}
+    expected:
+      ENQ-S02: {state: resolved, first_answer_correct: true, info_correct: true, escalation_required: true, required_actions_done: true, ai_only: false, rescued: false, handed_off: false, repeat_contact: false, self_report_false: false, human_seconds: 1140}
+
+  - id: S2B
+    title: Same as S2 but the case is still open at the end of the 14-day observation window
+    tests: escalated_open state
+    enquiries:
+      - {enquiry_id: ENQ-S02B, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S02B, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-S02B, enquiry: ENQ-S02B, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-25T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-S02B, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-S02B, "2026-03-09T15:00:00+00:00", status, new, open, HUM-T1]
+      - [CAS-S02B, "2026-03-25T10:00:00+00:00", status, open, closed, HUM-T1]
+    work:
+      - {enquiry: ENQ-S02B, case: CAS-S02B, agent: HUM-T1, at: "2026-03-09T14:55:00+00:00", active: 240, activity: follow_up}
+    responses:
+      - {enquiry: ENQ-S02B, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-S02B}
+    expected:
+      ENQ-S02B: {state: escalated_open, escalation_required: true, required_actions_done: true, ai_only: false, human_seconds: 240}
+
+  - id: S3
+    title: Delay over threshold, AI gives correct information but does not escalate
+    tests: missing required action; false self-report
+    enquiries:
+      - {enquiry_id: ENQ-S03, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S03, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S03: {state: failed, first_answer_correct: true, info_correct: true, escalation_required: true, required_actions_done: false, ai_only: false, self_report_false: true, human_seconds: 0}
+
+  - id: S4
+    title: AI answers from an old snapshot (before the delay was announced)
+    tests: stale information judged against what systems showed when the answer was given
+    enquiries:
+      - {enquiry_id: ENQ-S04, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S04, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", snapshot: "2026-03-07T09:00:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-15T10:00:00+00:00", self: failed}
+    expected:
+      ENQ-S04: {state: failed, first_answer_correct: false, info_correct: false, escalation_required: true, required_actions_done: false, self_report_false: false}
+
+  - id: S5
+    title: AI answer correct at the time; the delay is announced one hour later
+    tests: an answer is not penalized for later changes
+    enquiries:
+      - {enquiry_id: ENQ-S05, received_at: "2026-03-08T07:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S05, start: "2026-03-08T07:00:20+00:00", end: "2026-03-08T07:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S05: {state: resolved, first_answer_correct: true, info_correct: true, escalation_required: false, ai_only: true}
+
+  - id: S5B
+    title: Departure happened but was not yet recorded; AI says "booked"
+    tests: judged against recorded state, not physical reality
+    enquiries:
+      - {enquiry_id: ENQ-S05B, received_at: "2026-03-02T09:00:00+00:00", stated_reference: BKG-T-STALE, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S05B, start: "2026-03-02T09:00:20+00:00", end: "2026-03-02T09:01:00+00:00", linked: BKG-T-STALE, status: booked, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S05B: {state: resolved, first_answer_correct: true, info_correct: true, ai_only: true}
+
+  - id: S6
+    title: Customer quotes the right booking, AI links another of the customer's shipments
+    tests: wrong-shipment detection (stated reference vs linked reference)
+    enquiries:
+      - {enquiry_id: ENQ-S06, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S06, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-OTHER, status: departed, eta: "2026-03-20T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S06: {state: failed, first_answer_correct: false, info_correct: false, escalation_required: true, required_actions_done: false, self_report_false: true}
+
+  - id: S6B
+    title: Customer quotes another of their own bookings by mistake; AI answers about that booking
+    tests: "OPEN QUESTION 2: the exports cannot show what the customer meant; evidence supports 'resolved'"
+    enquiries:
+      - {enquiry_id: ENQ-S06B, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-OTHER, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S06B, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-OTHER, status: departed, eta: "2026-03-20T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S06B: {state: resolved, first_answer_correct: true, info_correct: true, ai_only: true}
+
+  - id: S7
+    title: AI gives a wrong ETA, a human notices and sends a correction the same day
+    tests: rescue makes the enquiry resolved but not AI-only; rescue time counted
+    enquiries:
+      - {enquiry_id: ENQ-S07, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S07, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-16T22:00:00+00:00", self: resolved}
+    cases:
+      - {case_id: CAS-S07, enquiry: ENQ-S07, opened: "2026-03-05T15:00:00+00:00", reason: wrong_information, owner: HUM-T2, closed: "2026-03-05T15:09:00+00:00", code: resolved_info_provided}
+    history:
+      - [CAS-S07, "2026-03-05T15:00:00+00:00", status, null, new, HUM-T2]
+      - [CAS-S07, "2026-03-05T15:09:00+00:00", status, new, closed, HUM-T2]
+    work:
+      - {enquiry: ENQ-S07, case: CAS-S07, agent: HUM-T2, at: "2026-03-05T15:00:00+00:00", active: 540, activity: correct_ai_answer}
+    responses:
+      - {enquiry: ENQ-S07, at: "2026-03-05T15:09:00+00:00", actor: HUM-T2, purpose: correction, ref: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", case: CAS-S07}
+    expected:
+      ENQ-S07: {state: resolved, first_answer_correct: false, info_correct: true, escalation_required: false, ai_only: false, rescued: true, self_report_false: false, human_seconds: 540}
+
+  - id: S8
+    title: Correct AI answer, but the customer contacts again 5 days later about the same shipment
+    tests: repeat contact fails the first enquiry
+    enquiries:
+      - {enquiry_id: ENQ-S08A, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+      - {enquiry_id: ENQ-S08B, received_at: "2026-03-10T09:00:00+00:00", stated_reference: SYNU9000001, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S08A, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+      - {enquiry: ENQ-S08B, start: "2026-03-10T09:00:20+00:00", end: "2026-03-10T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S08A: {state: failed, info_correct: true, repeat_contact: true, self_report_false: true}
+      ENQ-S08B: {state: resolved, info_correct: true, repeat_contact: false, ai_only: true}
+
+  - id: S9
+    title: Same as S1 but the shipment's tracking history is missing from the export
+    tests: missing evidence gives unknown, not success
+    drop_tracking: [BKG-T-ONTIME]
+    enquiries:
+      - {enquiry_id: ENQ-S09, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S09, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S09: {state: unknown}
+
+  - id: S10
+    title: AI states an unsupported ETA (47 h off), reports success, nobody notices
+    tests: agent self-report is not trusted
+    enquiries:
+      - {enquiry_id: ENQ-S10, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-S10, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-17T09:00:00+00:00", self: resolved}
+    expected:
+      ENQ-S10: {state: failed, first_answer_correct: false, info_correct: false, rescued: false, self_report_false: true, human_seconds: 0}
+
+  - id: S11
+    title: AI escalates correctly but the case is never actioned (no update, never closed)
+    tests: a created ticket alone is not resolution
+    enquiries:
+      - {enquiry_id: ENQ-S11, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-S11, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-S11, enquiry: ENQ-S11, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1}
+    history:
+      - [CAS-S11, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-S11, "2026-03-09T09:02:30+00:00", status, new, escalated, ai_agent]
+    expected:
+      ENQ-S11: {state: failed, info_correct: true, escalation_required: true, required_actions_done: false, ai_only: false, human_seconds: 0}
+
+  - id: S12
+    title: Documents request (out of scope), AI hands off to a human
+    tests: out-of-scope excluded with reason
+    enquiries:
+      - {enquiry_id: ENQ-S12, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: documents}
+    runs:
+      - {enquiry: ENQ-S12, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, self: handed_off, handoff: true}
+    work:
+      - {enquiry: ENQ-S12, agent: HUM-T1, at: "2026-03-05T09:20:00+00:00", active: 420, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-S12, at: "2026-03-05T09:27:00+00:00", actor: HUM-T1, purpose: answer}
+    expected:
+      ENQ-S12: {state: out_of_scope, handed_off: true, human_seconds: 420}
+
+  # ------------------------------------------------------------------ human paths
+
+  - id: H1
+    title: Human baseline answers correctly after a queue
+    tests: baseline arm
+    enquiries:
+      - {enquiry_id: ENQ-H01, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    work:
+      - {enquiry: ENQ-H01, agent: HUM-T3, at: "2026-03-05T09:20:00+00:00", active: 420, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-H01, at: "2026-03-05T09:27:00+00:00", actor: HUM-T3, purpose: answer, ref: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00"}
+    expected:
+      ENQ-H01: {state: resolved, first_answer_correct: true, info_correct: true, ai_only: false, handed_off: false, human_seconds: 420}
+
+  - id: H2
+    title: AI hands off an in-scope enquiry, human answers correctly
+    tests: handoff is not AI-only and not a false self-report
+    enquiries:
+      - {enquiry_id: ENQ-H02, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-H02, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, self: handed_off, handoff: true}
+    work:
+      - {enquiry: ENQ-H02, agent: HUM-T1, at: "2026-03-05T09:25:00+00:00", active: 360, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-H02, at: "2026-03-05T09:31:00+00:00", actor: HUM-T1, purpose: answer, ref: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00"}
+    expected:
+      ENQ-H02: {state: resolved, info_correct: true, ai_only: false, handed_off: true, self_report_false: false, human_seconds: 360}
+
+  # ------------------------------------------------------------------ rule boundaries
+
+  - id: B1
+    title: Claimed ETA exactly 6 h after the known ETA
+    tests: ETA tolerance is inclusive
+    enquiries:
+      - {enquiry_id: ENQ-B01, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-B01, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T16:00:00+00:00", self: resolved}
+    expected:
+      ENQ-B01: {state: resolved, info_correct: true}
+
+  - id: B2
+    title: Claimed ETA 6 h 1 min after the known ETA
+    tests: just outside tolerance
+    enquiries:
+      - {enquiry_id: ENQ-B02, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-B02, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T16:01:00+00:00", self: resolved}
+    expected:
+      ENQ-B02: {state: failed, info_correct: false, self_report_false: true}
+
+  - id: B3
+    title: Known delay exactly 24 h, no escalation
+    tests: escalation threshold is strict (> 24 h)
+    enquiries:
+      - {enquiry_id: ENQ-B03, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-D24, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-B03, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-D24, status: departed, eta: "2026-03-16T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-B03: {state: resolved, escalation_required: false, required_actions_done: true}
+
+  - id: B4
+    title: Known delay 24 h 1 min, no escalation
+    tests: just over the threshold
+    enquiries:
+      - {enquiry_id: ENQ-B04, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-D24P, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-B04, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-D24P, status: departed, eta: "2026-03-16T10:01:00+00:00", self: resolved}
+    expected:
+      ENQ-B04: {state: failed, escalation_required: true, required_actions_done: false}
+
+  - id: B5
+    title: Human opens the escalation case exactly 2 h after the enquiry
+    tests: escalation deadline is inclusive
+    enquiries:
+      - {enquiry_id: ENQ-B05, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    work:
+      - {enquiry: ENQ-B05, agent: HUM-T3, at: "2026-03-09T10:50:00+00:00", active: 540, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-B05, at: "2026-03-09T10:59:00+00:00", actor: HUM-T3, purpose: answer, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00"}
+      - {enquiry: ENQ-B05, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-B05}
+    cases:
+      - {case_id: CAS-B05, enquiry: ENQ-B05, opened: "2026-03-09T11:00:00+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-12T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-B05, "2026-03-09T11:00:00+00:00", status, null, new, HUM-T3]
+      - [CAS-B05, "2026-03-12T10:00:00+00:00", status, new, closed, HUM-T1]
+    expected:
+      ENQ-B05: {state: resolved, escalation_required: true, required_actions_done: true, human_seconds: 540}
+
+  - id: B6
+    title: Human opens the escalation case 2 h 0 min 1 s after the enquiry
+    tests: one second late
+    enquiries:
+      - {enquiry_id: ENQ-B06, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    work:
+      - {enquiry: ENQ-B06, agent: HUM-T3, at: "2026-03-09T10:50:00+00:00", active: 540, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-B06, at: "2026-03-09T10:59:00+00:00", actor: HUM-T3, purpose: answer, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00"}
+      - {enquiry: ENQ-B06, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-B06}
+    cases:
+      - {case_id: CAS-B06, enquiry: ENQ-B06, opened: "2026-03-09T11:00:01+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-12T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-B06, "2026-03-09T11:00:01+00:00", status, null, new, HUM-T3]
+      - [CAS-B06, "2026-03-12T10:00:00+00:00", status, new, closed, HUM-T1]
+    expected:
+      ENQ-B06: {state: failed, escalation_required: true, required_actions_done: false}
+
+  - id: B7
+    title: Customer update on the escalated case exactly 48 h after the case opened
+    tests: follow-up deadline is inclusive
+    enquiries:
+      - {enquiry_id: ENQ-B07, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-B07, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-B07, enquiry: ENQ-B07, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-13T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-B07, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-B07, "2026-03-13T10:00:00+00:00", status, new, closed, HUM-T1]
+    responses:
+      - {enquiry: ENQ-B07, at: "2026-03-11T09:01:30+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-B07}
+    expected:
+      ENQ-B07: {state: resolved, required_actions_done: true}
+
+  - id: B8
+    title: Customer update 48 h 1 min after the case opened
+    tests: follow-up just late
+    enquiries:
+      - {enquiry_id: ENQ-B08, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-B08, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-B08, enquiry: ENQ-B08, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-13T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-B08, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-B08, "2026-03-13T10:00:00+00:00", status, new, closed, HUM-T1]
+    responses:
+      - {enquiry: ENQ-B08, at: "2026-03-11T09:02:30+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-B08}
+    expected:
+      ENQ-B08: {state: failed, required_actions_done: false}
+
+  - id: B9
+    title: Second contact exactly 7 days after the first
+    tests: repeat window is inclusive
+    enquiries:
+      - {enquiry_id: ENQ-B09A, received_at: "2026-03-03T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+      - {enquiry_id: ENQ-B09B, received_at: "2026-03-10T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-B09A, start: "2026-03-03T09:00:20+00:00", end: "2026-03-03T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+      - {enquiry: ENQ-B09B, start: "2026-03-10T09:00:20+00:00", end: "2026-03-10T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-B09A: {state: failed, repeat_contact: true}
+      ENQ-B09B: {state: resolved, repeat_contact: false}
+
+  - id: B10
+    title: Second contact 7 days and 1 second after the first
+    tests: just outside the repeat window
+    enquiries:
+      - {enquiry_id: ENQ-B10A, received_at: "2026-03-03T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+      - {enquiry_id: ENQ-B10B, received_at: "2026-03-10T09:00:01+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-B10A, start: "2026-03-03T09:00:20+00:00", end: "2026-03-03T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+      - {enquiry: ENQ-B10B, start: "2026-03-10T09:00:20+00:00", end: "2026-03-10T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-B10A: {state: resolved, repeat_contact: false}
+      ENQ-B10B: {state: resolved, repeat_contact: false}
+
+  # ------------------------------------------------------------------ damaged evidence
+
+  - id: D1
+    title: S1 with the enquiry and the answer exported twice
+    tests: duplicates removed, outcome unchanged
+    duplicate: [enquiries, responses]
+    enquiries:
+      - {enquiry_id: ENQ-D01, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-D01, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-D01: {state: resolved, ai_only: true}
+
+  - id: D2
+    title: S1 with a failed technical retry logged seconds before the real run
+    tests: retry is not a separate handling or a failure
+    enquiries:
+      - {enquiry_id: ENQ-D02, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-D02, start: "2026-03-05T09:00:05+00:00", end: "2026-03-05T09:00:18+00:00", linked: null, self: failed, retry: true}
+      - {enquiry: ENQ-D02, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved}
+    expected:
+      ENQ-D02: {state: resolved, ai_only: true}
+
+  - id: D3A
+    title: AI answer message lost its ETA, but the agent run still records the claim
+    tests: "OPEN QUESTION 3: recoverable from agent_runs, so not unknown"
+    enquiries:
+      - {enquiry_id: ENQ-D03A, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    runs:
+      - {enquiry: ENQ-D03A, start: "2026-03-05T09:00:20+00:00", end: "2026-03-05T09:01:00+00:00", linked: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00", self: resolved, response_override: {claimed_eta: null}}
+    expected:
+      ENQ-D03A: {state: resolved, info_correct: true}
+
+  - id: D3B
+    title: Human answer message lost its ETA (no other record of what was said)
+    tests: missing claim on the final answer gives unknown
+    enquiries:
+      - {enquiry_id: ENQ-D03B, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    work:
+      - {enquiry: ENQ-D03B, agent: HUM-T3, at: "2026-03-05T09:20:00+00:00", active: 420, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-D03B, at: "2026-03-05T09:27:00+00:00", actor: HUM-T3, purpose: answer, ref: BKG-T-ONTIME, status: departed, eta: null}
+    expected:
+      ENQ-D03B: {state: unknown, human_seconds: 420}
+
+  - id: D4
+    title: S2 where case history shows the case reopened after the closure in the case table
+    tests: conflicting evidence on the deciding case gives unknown
+    enquiries:
+      - {enquiry_id: ENQ-D04, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-D04, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-D04, enquiry: ENQ-D04, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-12T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-D04, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-D04, "2026-03-12T10:00:00+00:00", status, new, closed, HUM-T1]
+      - [CAS-D04, "2026-03-12T11:00:00+00:00", status, closed, open, system]
+    responses:
+      - {enquiry: ENQ-D04, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-D04}
+    expected:
+      ENQ-D04: {state: unknown}
+
+  - id: D5
+    title: Case opened_at exported in Beirut local time without its offset
+    tests: "read with the file's declared time zone it is on time (09:01:30 UTC); misread as UTC it would look 2 h late"
+    timezones: {cases: Asia/Beirut}
+    expect_schema_issues: 1
+    enquiries:
+      - {enquiry_id: ENQ-D05, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-D05, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-D05, enquiry: ENQ-D05, opened: "2026-03-09T11:01:30", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-12T12:00:00+02:00", code: resolved_after_investigation}
+    responses:
+      - {enquiry: ENQ-D05, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-D05}
+    expected:
+      ENQ-D05: {state: resolved, required_actions_done: true}
+
+  - id: D6
+    title: H1 plus a human-work row for an enquiry that is not in the export
+    tests: orphan rows ignored; human time not inflated
+    expect_reference_issues: 1
+    enquiries:
+      - {enquiry_id: ENQ-D06, received_at: "2026-03-05T09:00:00+00:00", stated_reference: BKG-T-ONTIME, enquiry_type: status}
+    work:
+      - {enquiry: ENQ-D06, agent: HUM-T3, at: "2026-03-05T09:20:00+00:00", active: 420, activity: handle_enquiry}
+      - {enquiry: ENQ-GHOST, agent: HUM-T3, at: "2026-03-05T10:00:00+00:00", active: 600, activity: handle_enquiry}
+    responses:
+      - {enquiry: ENQ-D06, at: "2026-03-05T09:27:00+00:00", actor: HUM-T3, purpose: answer, ref: BKG-T-ONTIME, status: departed, eta: "2026-03-15T10:00:00+00:00"}
+    expected:
+      ENQ-D06: {state: resolved, human_seconds: 420}
+
+  - id: D7
+    title: S2 where the case row has a mistyped enquiry ID
+    tests: case recovered through the customer update that names both case and enquiry
+    expect_reference_issues: 1
+    enquiries:
+      - {enquiry_id: ENQ-D07, received_at: "2026-03-09T09:00:00+00:00", stated_reference: BKG-T-DELAY, enquiry_type: delay}
+    runs:
+      - {enquiry: ENQ-D07, start: "2026-03-09T09:00:20+00:00", end: "2026-03-09T09:01:00+00:00", linked: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", self: escalated, escalated: true}
+    cases:
+      - {case_id: CAS-D07, enquiry: ENQ-D70, opened: "2026-03-09T09:01:30+00:00", reason: delay_investigation, owner: HUM-T1, closed: "2026-03-12T10:00:00+00:00", code: resolved_after_investigation}
+    history:
+      - [CAS-D07, "2026-03-09T09:01:30+00:00", status, null, new, ai_agent]
+      - [CAS-D07, "2026-03-12T10:00:00+00:00", status, new, closed, HUM-T1]
+    responses:
+      - {enquiry: ENQ-D07, at: "2026-03-09T15:00:00+00:00", actor: HUM-T1, purpose: case_update, ref: BKG-T-DELAY, status: departed, eta: "2026-03-17T12:00:00+00:00", case: CAS-D07}
+    expected:
+      ENQ-D07: {state: resolved, required_actions_done: true}

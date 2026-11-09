@@ -45,6 +45,14 @@ Plan: `docs/SYNTHETIC_DATA_PLAN.md`. Human-readable field list: `docs/DATA_DICTI
   case closure) set `expected_evaluator_state` to `unknown`. The true outcome itself never changes.
 - `tiny` has defects disabled (clean, for review). `default` uses light rates; heavy sets come in step 6.
 
+## Step 5 (done, pending review): scenario library
+- `scenarios/base.yaml`: hand-written shipments and tracking timelines, plus "what systems showed at time t"
+  checks that the tests compare with `generator/state.py`.
+- `scenarios/library.yaml`: 35 golden cases (S1-S12, human paths, rule boundaries B1-B10, damaged evidence D1-D7)
+  with expected evaluator results, written from the service rules, not the generator code.
+- `scenario_library.py`: builds each case into partner-format tables and validates it.
+- Review checklist and open questions: `docs/SCENARIO_REVIEW.md`.
+
 ## Commands
 ```bash
 pip install -r requirements.txt
@@ -53,4 +61,5 @@ python -m datagen.dictionary_tools check
 python -m datagen.dictionary_tools render   # regenerates docs/DATA_DICTIONARY.md
 python -m datagen.generate --config datagen/config/tiny.yaml     # -> datagen/datasets/tiny
 python -m datagen.generate --config datagen/config/default.yaml  # -> datagen/datasets/dev (not committed)
+python -m datagen.scenario_library --write                       # -> datagen/datasets/scenarios/<id> (not committed)
 ```
