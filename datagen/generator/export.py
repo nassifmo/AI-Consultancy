@@ -100,8 +100,9 @@ FILENAMES = {
     "staffing": "staffing.csv",
     "true_outcome": "true_outcome.csv",
     "planted_effects": "planted_effects.json",
+    "injected_defects": "injected_defects.csv",
 }
-GROUND_TRUTH = {"true_outcome", "planted_effects"}
+GROUND_TRUTH = {"true_outcome", "planted_effects", "injected_defects"}
 JSON_OBJECTS = {"cost_parameters", "planted_effects"}
 
 
@@ -207,13 +208,41 @@ def handling_tables(h) -> dict[str, list[dict]]:
     }
 
 
-def write_csv(path: Path, rows: list[dict]) -> None:
+def datetime_fields(file_key: str, d: dict) -> list[str]:
+    spec = {**d["files"], **d.get("ground_truth", {})}[file_key]
+    return [f["name"] for f in spec.get("fields", []) if f["type"] == "datetime"]
+
+
+def localize(tables: dict, files: list[str], tz_name: str, d: dict) -> None:
+    """Render datetime fields of the given files in a local time zone (offset kept, so still exact)."""
+    from zoneinfo import ZoneInfo
+
+    tz = ZoneInfo(tz_name)
+    for key in files:
+        fields = datetime_fields(key, d)
+        for row in tables.get(key, []):
+            for f in fields:
+                if row.get(f):
+                    row[f] = datetime.fromisoformat(row[f]).astimezone(tz).isoformat()
+
+
+def write_csv(path: Path, rows: list[dict], fieldnames: list[str] | None = None) -> None:
+    """Write rows; an empty table still gets its header (from `fieldnames`)."""
     with open(path, "w", newline="", encoding="utf-8") as f:
-        if not rows:
+        names = list(rows[0]) if rows else fieldnames
+        if not names:
             return
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(f, fieldnames=names)
         writer.writeheader()
         writer.writerows({k: ("" if v is None else v) for k, v in r.items()} for r in rows)
+
+
+def _dictionary_fields(key: str) -> list[str]:
+    from datagen.dictionary_tools import load_dictionary
+
+    d = load_dictionary()
+    spec = {**d["files"], **d.get("ground_truth", {})}.get(key, {})
+    return [f["name"] for f in spec.get("fields", [])]
 
 
 def write_exports(tables: dict, out_dir: Path) -> list[Path]:
@@ -229,6 +258,6 @@ def write_exports(tables: dict, out_dir: Path) -> list[Path]:
             payload = rows[0] if key in JSON_OBJECTS else rows
             path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
         else:
-            write_csv(path, rows)
+            write_csv(path, rows, _dictionary_fields(key))
         written.append(path)
     return written

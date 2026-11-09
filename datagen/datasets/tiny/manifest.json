@@ -2,7 +2,7 @@
   "dataset_name": "tiny",
   "seed": 42,
   "config_file": "datagen/config/tiny.yaml",
-  "config_sha256": "61f8ffd8e4480d64035d37208164dec7df37cd3398f31968f50e83e0b330c63b",
+  "config_sha256": "ea87ddd15879428f7717b512b93c088055acfdf68c1c8be8dea0b7c47f26b9ef",
   "rule_version": "0.1.0-proposed",
   "study_period": [
     "2026-01-01T00:00:00+00:00",
@@ -16,7 +16,9 @@
     "handling",
     "follow_up",
     "costs",
-    "ground_truth"
+    "ground_truth",
+    "rendering",
+    "defects"
   ],
   "summary": {
     "customers": 8,
@@ -47,6 +49,8 @@
     "agent_runs": 24,
     "cases": 9,
     "human_work_items": 45,
-    "responses": 59
+    "responses": 59,
+    "defects_injected": {},
+    "expected_unknown": 0
   }
 }

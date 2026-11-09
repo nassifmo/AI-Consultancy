@@ -60,8 +60,10 @@ info_correct, required_actions_done, was_rescued, true_human_minutes), `planted_
 8. **Export rendering**: render each layer into partner-shaped files (E1 to E13), with realistic formats
    (timezones, string IDs, nested JSON for runs).
 9. **Defect injection** (logged in `injected_defects.csv`): duplicates, missing fields, missing tracking
-   snapshots, timezone mix-ups, ID typos, orphan cases, retries, late-arriving records, conflicting closure codes,
-   agent self-reporting success on failed cases.
+   history, dropped UTC offsets, ID typos, orphan rows, technical retries, out-of-order rows, conflicting case
+   closure. (Agents self-reporting success on failed cases is generated in layer 4 as behaviour, not as a defect.)
+   Recoverable defects keep the expected result; evidence-removing ones make it `unknown`.
+   Full table in `datagen/generator/defects.py`.
 
 Everything is driven by one config file and a random seed, so any dataset can be regenerated exactly.
 

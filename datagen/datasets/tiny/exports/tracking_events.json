@@ -7,7 +7,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2025-12-29T03:00:00+00:00",
-  "event_created_datetime": "2025-11-23T11:11:09.401384+00:00",
+  "event_created_datetime": "2025-11-23T11:11:09+00:00",
   "location": "LBBEY"
  },
  {
@@ -18,7 +18,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-14T03:00:00+00:00",
-  "event_created_datetime": "2025-11-23T11:11:09.401384+00:00",
+  "event_created_datetime": "2025-11-23T11:11:09+00:00",
   "location": "CNSHA"
  },
  {
@@ -28,8 +28,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-11-23T11:11:09.401384+00:00",
-  "event_created_datetime": "2025-11-23T11:17:09.401384+00:00",
+  "event_datetime": "2025-11-23T11:11:09+00:00",
+  "event_created_datetime": "2025-11-23T11:17:09+00:00",
   "location": "CNSHA"
  },
  {
@@ -40,7 +40,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-18T05:00:00+00:00",
-  "event_created_datetime": "2025-11-25T04:50:02.260388+00:00",
+  "event_created_datetime": "2025-11-25T04:50:02+00:00",
   "location": "SAJED"
  },
  {
@@ -51,7 +51,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-09T05:00:00+00:00",
-  "event_created_datetime": "2025-11-25T04:50:02.260388+00:00",
+  "event_created_datetime": "2025-11-25T04:50:02+00:00",
   "location": "CNSHA"
  },
  {
@@ -61,8 +61,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-11-25T04:50:02.260388+00:00",
-  "event_created_datetime": "2025-11-25T05:07:02.260388+00:00",
+  "event_datetime": "2025-11-25T04:50:02+00:00",
+  "event_created_datetime": "2025-11-25T05:07:02+00:00",
   "location": "CNSHA"
  },
  {
@@ -73,7 +73,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-12T10:00:00+00:00",
-  "event_created_datetime": "2025-11-26T06:05:51.170139+00:00",
+  "event_created_datetime": "2025-11-26T06:05:51+00:00",
   "location": "AEJEA"
  },
  {
@@ -84,7 +84,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-15T10:00:00+00:00",
-  "event_created_datetime": "2025-11-26T06:05:51.170139+00:00",
+  "event_created_datetime": "2025-11-26T06:05:51+00:00",
   "location": "LBBEY"
  },
  {
@@ -94,8 +94,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-11-26T06:05:51.170139+00:00",
-  "event_created_datetime": "2025-11-26T06:50:51.170139+00:00",
+  "event_datetime": "2025-11-26T06:05:51+00:00",
+  "event_created_datetime": "2025-11-26T06:50:51+00:00",
   "location": "LBBEY"
  },
  {
@@ -106,7 +106,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2025-12-31T09:00:00+00:00",
-  "event_created_datetime": "2025-11-26T21:01:02.319672+00:00",
+  "event_created_datetime": "2025-11-26T21:01:02+00:00",
   "location": "AEJEA"
  },
  {
@@ -117,7 +117,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-07T09:00:00+00:00",
-  "event_created_datetime": "2025-11-26T21:01:02.319672+00:00",
+  "event_created_datetime": "2025-11-26T21:01:02+00:00",
   "location": "SAJED"
  },
  {
@@ -127,8 +127,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-11-26T21:01:02.319672+00:00",
-  "event_created_datetime": "2025-11-26T21:23:02.319672+00:00",
+  "event_datetime": "2025-11-26T21:01:02+00:00",
+  "event_created_datetime": "2025-11-26T21:23:02+00:00",
   "location": "SAJED"
  },
  {
@@ -139,7 +139,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-11T07:00:00+00:00",
-  "event_created_datetime": "2025-11-27T11:13:29.229053+00:00",
+  "event_created_datetime": "2025-11-27T11:13:29+00:00",
   "location": "AEJEA"
  },
  {
@@ -150,7 +150,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-09T07:00:00+00:00",
-  "event_created_datetime": "2025-11-27T11:13:29.229053+00:00",
+  "event_created_datetime": "2025-11-27T11:13:29+00:00",
   "location": "FRMRS"
  },
  {
@@ -160,8 +160,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-11-27T11:13:29.229053+00:00",
-  "event_created_datetime": "2025-11-27T11:19:29.229053+00:00",
+  "event_datetime": "2025-11-27T11:13:29+00:00",
+  "event_created_datetime": "2025-11-27T11:19:29+00:00",
   "location": "FRMRS"
  },
  {
@@ -172,7 +172,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-10T20:00:00+00:00",
-  "event_created_datetime": "2025-11-27T12:16:41.515409+00:00",
+  "event_created_datetime": "2025-11-27T12:16:42+00:00",
   "location": "CNSHA"
  },
  {
@@ -183,7 +183,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-10T20:00:00+00:00",
-  "event_created_datetime": "2025-11-27T12:16:41.515409+00:00",
+  "event_created_datetime": "2025-11-27T12:16:42+00:00",
   "location": "AEJEA"
  },
  {
@@ -193,8 +193,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-11-27T12:16:41.515409+00:00",
-  "event_created_datetime": "2025-11-27T12:32:41.515409+00:00",
+  "event_datetime": "2025-11-27T12:16:42+00:00",
+  "event_created_datetime": "2025-11-27T12:32:42+00:00",
   "location": "AEJEA"
  },
  {
@@ -205,7 +205,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-17T08:00:00+00:00",
-  "event_created_datetime": "2025-12-02T02:13:08.694322+00:00",
+  "event_created_datetime": "2025-12-02T02:13:09+00:00",
   "location": "NLRTM"
  },
  {
@@ -216,7 +216,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-11T08:00:00+00:00",
-  "event_created_datetime": "2025-12-02T02:13:08.694322+00:00",
+  "event_created_datetime": "2025-12-02T02:13:09+00:00",
   "location": "FRMRS"
  },
  {
@@ -226,8 +226,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-02T02:13:08.694322+00:00",
-  "event_created_datetime": "2025-12-02T03:15:08.694322+00:00",
+  "event_datetime": "2025-12-02T02:13:09+00:00",
+  "event_created_datetime": "2025-12-02T03:15:09+00:00",
   "location": "FRMRS"
  },
  {
@@ -237,8 +237,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-04T14:38:59.362282+00:00",
-  "event_created_datetime": "2025-12-04T14:39:59.362282+00:00",
+  "event_datetime": "2025-12-04T14:39:00+00:00",
+  "event_created_datetime": "2025-12-04T14:40:00+00:00",
   "location": "SAJED"
  },
  {
@@ -248,8 +248,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-04T12:43:41.824390+00:00",
-  "event_created_datetime": "2025-12-04T17:58:41.824390+00:00",
+  "event_datetime": "2025-12-04T12:43:42+00:00",
+  "event_created_datetime": "2025-12-04T17:58:42+00:00",
   "location": "SAJED"
  },
  {
@@ -259,8 +259,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-05T06:07:00.961503+00:00",
-  "event_created_datetime": "2025-12-05T06:48:00.961503+00:00",
+  "event_datetime": "2025-12-05T06:07:01+00:00",
+  "event_created_datetime": "2025-12-05T06:48:01+00:00",
   "location": "SAJED"
  },
  {
@@ -270,8 +270,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-05T23:11:46.559409+00:00",
-  "event_created_datetime": "2025-12-05T23:48:46.559409+00:00",
+  "event_datetime": "2025-12-05T23:11:47+00:00",
+  "event_created_datetime": "2025-12-05T23:48:47+00:00",
   "location": "SAJED"
  },
  {
@@ -281,8 +281,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-06T07:52:45.979749+00:00",
-  "event_created_datetime": "2025-12-06T10:36:45.979749+00:00",
+  "event_datetime": "2025-12-06T07:52:46+00:00",
+  "event_created_datetime": "2025-12-06T10:36:46+00:00",
   "location": "FRMRS"
  },
  {
@@ -292,8 +292,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-06T12:15:23.786797+00:00",
-  "event_created_datetime": "2025-12-06T13:00:23.786797+00:00",
+  "event_datetime": "2025-12-06T12:15:24+00:00",
+  "event_created_datetime": "2025-12-06T13:00:24+00:00",
   "location": "FRMRS"
  },
  {
@@ -303,8 +303,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-06T18:20:53.281062+00:00",
-  "event_created_datetime": "2025-12-06T18:32:53.281062+00:00",
+  "event_datetime": "2025-12-06T18:20:54+00:00",
+  "event_created_datetime": "2025-12-06T18:32:54+00:00",
   "location": "SAJED"
  },
  {
@@ -314,8 +314,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-06T23:05:22.827410+00:00",
-  "event_created_datetime": "2025-12-07T00:14:22.827410+00:00",
+  "event_datetime": "2025-12-06T23:05:23+00:00",
+  "event_created_datetime": "2025-12-07T00:14:23+00:00",
   "location": "CNSHA"
  },
  {
@@ -325,8 +325,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-07T00:33:48.661268+00:00",
-  "event_created_datetime": "2025-12-07T01:28:48.661268+00:00",
+  "event_datetime": "2025-12-07T00:33:49+00:00",
+  "event_created_datetime": "2025-12-07T01:28:49+00:00",
   "location": "SAJED"
  },
  {
@@ -336,8 +336,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-07T03:29:31.035802+00:00",
-  "event_created_datetime": "2025-12-07T03:32:31.035802+00:00",
+  "event_datetime": "2025-12-07T03:29:31+00:00",
+  "event_created_datetime": "2025-12-07T03:32:31+00:00",
   "location": "SAJED"
  },
  {
@@ -347,8 +347,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-07T01:13:58.203624+00:00",
-  "event_created_datetime": "2025-12-07T05:23:58.203624+00:00",
+  "event_datetime": "2025-12-07T01:13:58+00:00",
+  "event_created_datetime": "2025-12-07T05:23:58+00:00",
   "location": "SAJED"
  },
  {
@@ -358,8 +358,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-07T06:04:49.730256+00:00",
-  "event_created_datetime": "2025-12-07T06:11:49.730256+00:00",
+  "event_datetime": "2025-12-07T06:04:50+00:00",
+  "event_created_datetime": "2025-12-07T06:11:50+00:00",
   "location": "SAJED"
  },
  {
@@ -370,7 +370,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-05T14:00:00+00:00",
-  "event_created_datetime": "2025-12-07T06:40:10.563238+00:00",
+  "event_created_datetime": "2025-12-07T06:40:11+00:00",
   "location": "AEJEA"
  },
  {
@@ -381,7 +381,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-14T14:00:00+00:00",
-  "event_created_datetime": "2025-12-07T06:40:10.563238+00:00",
+  "event_created_datetime": "2025-12-07T06:40:11+00:00",
   "location": "SAJED"
  },
  {
@@ -392,7 +392,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2025-12-27T17:00:00+00:00",
-  "event_created_datetime": "2025-12-07T21:57:03.362582+00:00",
+  "event_created_datetime": "2025-12-07T21:57:03+00:00",
   "location": "EGPSD"
  },
  {
@@ -403,7 +403,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-15T17:00:00+00:00",
-  "event_created_datetime": "2025-12-07T21:57:03.362582+00:00",
+  "event_created_datetime": "2025-12-07T21:57:03+00:00",
   "location": "FRMRS"
  },
  {
@@ -413,8 +413,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-07T21:57:03.362582+00:00",
-  "event_created_datetime": "2025-12-07T22:02:03.362582+00:00",
+  "event_datetime": "2025-12-07T21:57:03+00:00",
+  "event_created_datetime": "2025-12-07T22:02:03+00:00",
   "location": "FRMRS"
  },
  {
@@ -424,8 +424,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T03:40:18.718652+00:00",
-  "event_created_datetime": "2025-12-08T04:00:18.718652+00:00",
+  "event_datetime": "2025-12-08T03:40:19+00:00",
+  "event_created_datetime": "2025-12-08T04:00:19+00:00",
   "location": "AEJEA"
  },
  {
@@ -435,8 +435,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-07T06:40:10.563238+00:00",
-  "event_created_datetime": "2025-12-08T11:51:33.468262+00:00",
+  "event_datetime": "2025-12-07T06:40:11+00:00",
+  "event_created_datetime": "2025-12-08T11:51:34+00:00",
   "location": "SAJED"
  },
  {
@@ -446,8 +446,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T14:26:34.224358+00:00",
-  "event_created_datetime": "2025-12-08T14:34:34.224358+00:00",
+  "event_datetime": "2025-12-08T14:26:34+00:00",
+  "event_created_datetime": "2025-12-08T14:34:34+00:00",
   "location": "FRMRS"
  },
  {
@@ -457,8 +457,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T20:50:32.173816+00:00",
-  "event_created_datetime": "2025-12-08T21:08:32.173816+00:00",
+  "event_datetime": "2025-12-08T20:50:32+00:00",
+  "event_created_datetime": "2025-12-08T21:08:32+00:00",
   "location": "CNSHA"
  },
  {
@@ -468,8 +468,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T21:22:05.435774+00:00",
-  "event_created_datetime": "2025-12-08T21:25:05.435774+00:00",
+  "event_datetime": "2025-12-08T21:22:06+00:00",
+  "event_created_datetime": "2025-12-08T21:25:06+00:00",
   "location": "AEJEA"
  },
  {
@@ -479,8 +479,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T21:53:17.890062+00:00",
-  "event_created_datetime": "2025-12-08T22:07:17.890062+00:00",
+  "event_datetime": "2025-12-08T21:53:18+00:00",
+  "event_created_datetime": "2025-12-08T22:07:18+00:00",
   "location": "FRMRS"
  },
  {
@@ -490,8 +490,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T22:19:45.054778+00:00",
-  "event_created_datetime": "2025-12-08T22:45:45.054778+00:00",
+  "event_datetime": "2025-12-08T22:19:45+00:00",
+  "event_created_datetime": "2025-12-08T22:45:45+00:00",
   "location": "FRMRS"
  },
  {
@@ -501,8 +501,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T23:22:34.580716+00:00",
-  "event_created_datetime": "2025-12-08T23:34:34.580716+00:00",
+  "event_datetime": "2025-12-08T23:22:35+00:00",
+  "event_created_datetime": "2025-12-08T23:34:35+00:00",
   "location": "SAJED"
  },
  {
@@ -512,8 +512,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T23:42:19.679373+00:00",
-  "event_created_datetime": "2025-12-08T23:51:19.679373+00:00",
+  "event_datetime": "2025-12-08T23:42:20+00:00",
+  "event_created_datetime": "2025-12-08T23:51:20+00:00",
   "location": "FRMRS"
  },
  {
@@ -524,7 +524,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2025-12-31T09:00:00+00:00",
-  "event_created_datetime": "2025-12-09T05:18:40.730256+00:00",
+  "event_created_datetime": "2025-12-09T05:18:41+00:00",
   "location": "AEJEA"
  },
  {
@@ -534,8 +534,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T01:00:02.749589+00:00",
-  "event_created_datetime": "2025-12-09T05:18:47.355975+00:00",
+  "event_datetime": "2025-12-08T01:00:03+00:00",
+  "event_created_datetime": "2025-12-09T05:18:48+00:00",
   "location": "FRMRS"
  },
  {
@@ -545,8 +545,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-09T08:11:35.030606+00:00",
-  "event_created_datetime": "2025-12-09T08:37:35.030606+00:00",
+  "event_datetime": "2025-12-09T08:11:35+00:00",
+  "event_created_datetime": "2025-12-09T08:37:35+00:00",
   "location": "CNSHA"
  },
  {
@@ -556,8 +556,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-09T06:08:21.782730+00:00",
-  "event_created_datetime": "2025-12-09T10:10:21.782730+00:00",
+  "event_datetime": "2025-12-09T06:08:22+00:00",
+  "event_created_datetime": "2025-12-09T10:10:22+00:00",
   "location": "FRMRS"
  },
  {
@@ -567,8 +567,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-09T09:08:48.709278+00:00",
-  "event_created_datetime": "2025-12-09T14:43:48.709278+00:00",
+  "event_datetime": "2025-12-09T09:08:49+00:00",
+  "event_created_datetime": "2025-12-09T14:43:49+00:00",
   "location": "FRMRS"
  },
  {
@@ -578,8 +578,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T18:04:23.428568+00:00",
-  "event_created_datetime": "2025-12-09T18:46:44.673146+00:00",
+  "event_datetime": "2025-12-08T18:04:24+00:00",
+  "event_created_datetime": "2025-12-09T18:46:45+00:00",
   "location": "AEJEA"
  },
  {
@@ -589,8 +589,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T03:57:53.449989+00:00",
-  "event_created_datetime": "2025-12-10T04:10:53.449989+00:00",
+  "event_datetime": "2025-12-10T03:57:54+00:00",
+  "event_created_datetime": "2025-12-10T04:10:54+00:00",
   "location": "FRMRS"
  },
  {
@@ -600,8 +600,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-08T13:13:08.447123+00:00",
-  "event_created_datetime": "2025-12-10T04:40:02.414229+00:00",
+  "event_datetime": "2025-12-08T13:13:09+00:00",
+  "event_created_datetime": "2025-12-10T04:40:03+00:00",
   "location": "AEJEA"
  },
  {
@@ -611,8 +611,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T06:22:25.525056+00:00",
-  "event_created_datetime": "2025-12-10T07:03:25.525056+00:00",
+  "event_datetime": "2025-12-10T06:22:26+00:00",
+  "event_created_datetime": "2025-12-10T07:03:26+00:00",
   "location": "AEJEA"
  },
  {
@@ -622,8 +622,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T07:52:04.543419+00:00",
-  "event_created_datetime": "2025-12-10T08:51:04.543419+00:00",
+  "event_datetime": "2025-12-10T07:52:05+00:00",
+  "event_created_datetime": "2025-12-10T08:51:05+00:00",
   "location": "AEJEA"
  },
  {
@@ -633,8 +633,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T12:58:58.084420+00:00",
-  "event_created_datetime": "2025-12-10T13:03:58.084420+00:00",
+  "event_datetime": "2025-12-10T12:58:58+00:00",
+  "event_created_datetime": "2025-12-10T13:03:58+00:00",
   "location": "AEJEA"
  },
  {
@@ -644,8 +644,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-09T03:53:59.744795+00:00",
-  "event_created_datetime": "2025-12-10T13:15:44.885977+00:00",
+  "event_datetime": "2025-12-09T03:54:00+00:00",
+  "event_created_datetime": "2025-12-10T13:15:45+00:00",
   "location": "FRMRS"
  },
  {
@@ -655,8 +655,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-09T15:13:54.168085+00:00",
-  "event_created_datetime": "2025-12-10T14:32:12.806697+00:00",
+  "event_datetime": "2025-12-09T15:13:54+00:00",
+  "event_created_datetime": "2025-12-10T14:32:13+00:00",
   "location": "FRMRS"
  },
  {
@@ -666,8 +666,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T14:34:38.983738+00:00",
-  "event_created_datetime": "2025-12-10T15:22:38.983738+00:00",
+  "event_datetime": "2025-12-10T14:34:39+00:00",
+  "event_created_datetime": "2025-12-10T15:22:39+00:00",
   "location": "AEJEA"
  },
  {
@@ -677,8 +677,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T12:25:04.348845+00:00",
-  "event_created_datetime": "2025-12-10T16:34:04.348845+00:00",
+  "event_datetime": "2025-12-10T12:25:04+00:00",
+  "event_created_datetime": "2025-12-10T16:34:04+00:00",
   "location": "CNSHA"
  },
  {
@@ -688,8 +688,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T17:07:36.737490+00:00",
-  "event_created_datetime": "2025-12-10T19:36:36.737490+00:00",
+  "event_datetime": "2025-12-10T17:07:37+00:00",
+  "event_created_datetime": "2025-12-10T19:36:37+00:00",
   "location": "AEJEA"
  },
  {
@@ -699,8 +699,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-10T19:30:12.103005+00:00",
-  "event_created_datetime": "2025-12-10T20:23:12.103005+00:00",
+  "event_datetime": "2025-12-10T19:30:12+00:00",
+  "event_created_datetime": "2025-12-10T20:23:12+00:00",
   "location": "FRMRS"
  },
  {
@@ -711,7 +711,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-18T04:00:00+00:00",
-  "event_created_datetime": "2025-12-10T22:44:18.030606+00:00",
+  "event_created_datetime": "2025-12-10T22:44:18+00:00",
   "location": "SAJED"
  },
  {
@@ -721,8 +721,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T03:34:13.676331+00:00",
-  "event_created_datetime": "2025-12-11T03:39:13.676331+00:00",
+  "event_datetime": "2025-12-11T03:34:14+00:00",
+  "event_created_datetime": "2025-12-11T03:39:14+00:00",
   "location": "FRMRS"
  },
  {
@@ -732,8 +732,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T04:01:37.348622+00:00",
-  "event_created_datetime": "2025-12-11T04:08:37.348622+00:00",
+  "event_datetime": "2025-12-11T04:01:38+00:00",
+  "event_created_datetime": "2025-12-11T04:08:38+00:00",
   "location": "FRMRS"
  },
  {
@@ -743,8 +743,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T04:48:53.275290+00:00",
-  "event_created_datetime": "2025-12-11T04:50:53.275290+00:00",
+  "event_datetime": "2025-12-11T04:48:54+00:00",
+  "event_created_datetime": "2025-12-11T04:50:54+00:00",
   "location": "FRMRS"
  },
  {
@@ -754,8 +754,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T05:14:49.604251+00:00",
-  "event_created_datetime": "2025-12-11T05:36:49.604251+00:00",
+  "event_datetime": "2025-12-11T05:14:50+00:00",
+  "event_created_datetime": "2025-12-11T05:36:50+00:00",
   "location": "CNSHA"
  },
  {
@@ -765,8 +765,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T06:55:43.738577+00:00",
-  "event_created_datetime": "2025-12-11T08:37:43.738577+00:00",
+  "event_datetime": "2025-12-11T06:55:44+00:00",
+  "event_created_datetime": "2025-12-11T08:37:44+00:00",
   "location": "FRMRS"
  },
  {
@@ -776,8 +776,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T16:56:28.406817+00:00",
-  "event_created_datetime": "2025-12-11T17:17:28.406817+00:00",
+  "event_datetime": "2025-12-11T16:56:29+00:00",
+  "event_created_datetime": "2025-12-11T17:17:29+00:00",
   "location": "AEJEA"
  },
  {
@@ -787,8 +787,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-11T22:49:46.258611+00:00",
-  "event_created_datetime": "2025-12-11T23:06:46.258611+00:00",
+  "event_datetime": "2025-12-11T22:49:46+00:00",
+  "event_created_datetime": "2025-12-11T23:06:46+00:00",
   "location": "CNSHA"
  },
  {
@@ -798,8 +798,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-12T09:01:13.682539+00:00",
-  "event_created_datetime": "2025-12-12T09:26:13.682539+00:00",
+  "event_datetime": "2025-12-12T09:01:14+00:00",
+  "event_created_datetime": "2025-12-12T09:26:14+00:00",
   "location": "FRMRS"
  },
  {
@@ -810,7 +810,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-11T09:00:00+00:00",
-  "event_created_datetime": "2025-12-12T11:29:51.782730+00:00",
+  "event_created_datetime": "2025-12-12T11:29:52+00:00",
   "location": "AEJEA"
  },
  {
@@ -820,8 +820,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-12T14:25:17.509777+00:00",
-  "event_created_datetime": "2025-12-12T16:13:17.509777+00:00",
+  "event_datetime": "2025-12-12T14:25:18+00:00",
+  "event_created_datetime": "2025-12-12T16:13:18+00:00",
   "location": "LBBEY"
  },
  {
@@ -832,7 +832,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-31T01:00:00+00:00",
-  "event_created_datetime": "2025-12-12T16:31:38.559485+00:00",
+  "event_created_datetime": "2025-12-12T16:31:39+00:00",
   "location": "SGSIN"
  },
  {
@@ -843,7 +843,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-31T01:00:00+00:00",
-  "event_created_datetime": "2025-12-12T16:31:38.559485+00:00",
+  "event_created_datetime": "2025-12-12T16:31:39+00:00",
   "location": "AEJEA"
  },
  {
@@ -853,8 +853,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-12T16:31:38.559485+00:00",
-  "event_created_datetime": "2025-12-12T16:37:38.559485+00:00",
+  "event_datetime": "2025-12-12T16:31:39+00:00",
+  "event_created_datetime": "2025-12-12T16:37:39+00:00",
   "location": "AEJEA"
  },
  {
@@ -864,8 +864,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-12T19:11:45.941291+00:00",
-  "event_created_datetime": "2025-12-12T20:22:45.941291+00:00",
+  "event_datetime": "2025-12-12T19:11:46+00:00",
+  "event_created_datetime": "2025-12-12T20:22:46+00:00",
   "location": "LBBEY"
  },
  {
@@ -875,8 +875,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-13T04:34:51.940666+00:00",
-  "event_created_datetime": "2025-12-13T05:22:51.940666+00:00",
+  "event_datetime": "2025-12-13T04:34:52+00:00",
+  "event_created_datetime": "2025-12-13T05:22:52+00:00",
   "location": "LBBEY"
  },
  {
@@ -887,7 +887,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-08T22:00:00+00:00",
-  "event_created_datetime": "2025-12-13T08:35:54.717388+00:00",
+  "event_created_datetime": "2025-12-13T08:35:55+00:00",
   "location": "SGSIN"
  },
  {
@@ -898,7 +898,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-30T22:00:00+00:00",
-  "event_created_datetime": "2025-12-13T08:35:54.717388+00:00",
+  "event_created_datetime": "2025-12-13T08:35:55+00:00",
   "location": "CNSHA"
  },
  {
@@ -908,8 +908,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-13T08:35:54.717388+00:00",
-  "event_created_datetime": "2025-12-13T08:51:54.717388+00:00",
+  "event_datetime": "2025-12-13T08:35:55+00:00",
+  "event_created_datetime": "2025-12-13T08:51:55+00:00",
   "location": "CNSHA"
  },
  {
@@ -919,8 +919,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-13T18:39:32.097263+00:00",
-  "event_created_datetime": "2025-12-13T18:49:32.097263+00:00",
+  "event_datetime": "2025-12-13T18:39:32+00:00",
+  "event_created_datetime": "2025-12-13T18:49:32+00:00",
   "location": "SAJED"
  },
  {
@@ -930,8 +930,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-13T15:25:18.193258+00:00",
-  "event_created_datetime": "2025-12-13T19:37:18.193258+00:00",
+  "event_datetime": "2025-12-13T15:25:18+00:00",
+  "event_created_datetime": "2025-12-13T19:37:18+00:00",
   "location": "CNSHA"
  },
  {
@@ -941,8 +941,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-13T19:58:56.494158+00:00",
-  "event_created_datetime": "2025-12-13T22:24:56.494158+00:00",
+  "event_datetime": "2025-12-13T19:58:56+00:00",
+  "event_created_datetime": "2025-12-13T22:24:56+00:00",
   "location": "CNSHA"
  },
  {
@@ -952,8 +952,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-14T03:02:43.005033+00:00",
-  "event_created_datetime": "2025-12-14T03:08:43.005033+00:00",
+  "event_datetime": "2025-12-14T03:02:43+00:00",
+  "event_created_datetime": "2025-12-14T03:08:43+00:00",
   "location": "FRMRS"
  },
  {
@@ -963,8 +963,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-14T07:09:50.309031+00:00",
-  "event_created_datetime": "2025-12-14T07:42:50.309031+00:00",
+  "event_datetime": "2025-12-14T07:09:50+00:00",
+  "event_created_datetime": "2025-12-14T07:42:50+00:00",
   "location": "SAJED"
  },
  {
@@ -974,8 +974,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-14T08:22:58.742184+00:00",
-  "event_created_datetime": "2025-12-14T09:02:58.742184+00:00",
+  "event_datetime": "2025-12-14T08:22:59+00:00",
+  "event_created_datetime": "2025-12-14T09:02:59+00:00",
   "location": "SAJED"
  },
  {
@@ -985,8 +985,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-13T15:44:28.438981+00:00",
-  "event_created_datetime": "2025-12-14T12:34:58.627551+00:00",
+  "event_datetime": "2025-12-13T15:44:29+00:00",
+  "event_created_datetime": "2025-12-14T12:34:59+00:00",
   "location": "SAJED"
  },
  {
@@ -996,8 +996,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-14T19:00:56.904162+00:00",
-  "event_created_datetime": "2025-12-14T19:49:56.904162+00:00",
+  "event_datetime": "2025-12-14T19:00:57+00:00",
+  "event_created_datetime": "2025-12-14T19:49:57+00:00",
   "location": "SAJED"
  },
  {
@@ -1007,8 +1007,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T00:39:35.044443+00:00",
-  "event_created_datetime": "2025-12-15T01:06:35.044443+00:00",
+  "event_datetime": "2025-12-15T00:39:35+00:00",
+  "event_created_datetime": "2025-12-15T01:06:35+00:00",
   "location": "LBBEY"
  },
  {
@@ -1018,8 +1018,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-14T23:43:07.806288+00:00",
-  "event_created_datetime": "2025-12-15T01:46:07.806288+00:00",
+  "event_datetime": "2025-12-14T23:43:08+00:00",
+  "event_created_datetime": "2025-12-15T01:46:08+00:00",
   "location": "LBBEY"
  },
  {
@@ -1030,7 +1030,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-22T10:00:00+00:00",
-  "event_created_datetime": "2025-12-15T01:53:29.531464+00:00",
+  "event_created_datetime": "2025-12-15T01:53:30+00:00",
   "location": "EGPSD"
  },
  {
@@ -1041,7 +1041,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-04T10:00:00+00:00",
-  "event_created_datetime": "2025-12-15T01:53:29.531464+00:00",
+  "event_created_datetime": "2025-12-15T01:53:30+00:00",
   "location": "LBBEY"
  },
  {
@@ -1051,8 +1051,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T01:53:29.531464+00:00",
-  "event_created_datetime": "2025-12-15T02:27:29.531464+00:00",
+  "event_datetime": "2025-12-15T01:53:30+00:00",
+  "event_created_datetime": "2025-12-15T02:27:30+00:00",
   "location": "LBBEY"
  },
  {
@@ -1062,8 +1062,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T04:26:22.669962+00:00",
-  "event_created_datetime": "2025-12-15T04:35:22.669962+00:00",
+  "event_datetime": "2025-12-15T04:26:23+00:00",
+  "event_created_datetime": "2025-12-15T04:35:23+00:00",
   "location": "LBBEY"
  },
  {
@@ -1073,8 +1073,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T07:13:11.558912+00:00",
-  "event_created_datetime": "2025-12-15T08:04:11.558912+00:00",
+  "event_datetime": "2025-12-15T07:13:12+00:00",
+  "event_created_datetime": "2025-12-15T08:04:12+00:00",
   "location": "LBBEY"
  },
  {
@@ -1084,8 +1084,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T10:44:49.441943+00:00",
-  "event_created_datetime": "2025-12-15T12:02:49.441943+00:00",
+  "event_datetime": "2025-12-15T10:44:49+00:00",
+  "event_created_datetime": "2025-12-15T12:02:49+00:00",
   "location": "FRMRS"
  },
  {
@@ -1095,8 +1095,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-14T03:01:05.086125+00:00",
-  "event_created_datetime": "2025-12-15T15:30:13.067457+00:00",
+  "event_datetime": "2025-12-14T03:01:05+00:00",
+  "event_created_datetime": "2025-12-15T15:30:13+00:00",
   "location": "CNSHA"
  },
  {
@@ -1106,8 +1106,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T15:32:39.151916+00:00",
-  "event_created_datetime": "2025-12-15T15:42:39.151916+00:00",
+  "event_datetime": "2025-12-15T15:32:39+00:00",
+  "event_created_datetime": "2025-12-15T15:42:39+00:00",
   "location": "CNSHA"
  },
  {
@@ -1118,7 +1118,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-17T09:00:00+00:00",
-  "event_created_datetime": "2025-12-15T15:51:23.738577+00:00",
+  "event_created_datetime": "2025-12-15T15:51:24+00:00",
   "location": "NLRTM"
  },
  {
@@ -1128,8 +1128,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-15T20:16:15.077902+00:00",
-  "event_created_datetime": "2025-12-15T20:43:15.077902+00:00",
+  "event_datetime": "2025-12-15T20:16:15+00:00",
+  "event_created_datetime": "2025-12-15T20:43:15+00:00",
   "location": "FRMRS"
  },
  {
@@ -1139,8 +1139,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-16T00:49:40.197748+00:00",
-  "event_created_datetime": "2025-12-16T01:20:40.197748+00:00",
+  "event_datetime": "2025-12-16T00:49:40+00:00",
+  "event_created_datetime": "2025-12-16T01:20:40+00:00",
   "location": "SAJED"
  },
  {
@@ -1150,8 +1150,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-16T05:21:15.826744+00:00",
-  "event_created_datetime": "2025-12-16T06:04:15.826744+00:00",
+  "event_datetime": "2025-12-16T05:21:16+00:00",
+  "event_created_datetime": "2025-12-16T06:04:16+00:00",
   "location": "FRMRS"
  },
  {
@@ -1162,7 +1162,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-04T23:00:00+00:00",
-  "event_created_datetime": "2025-12-16T13:13:06.876806+00:00",
+  "event_created_datetime": "2025-12-16T13:13:07+00:00",
   "location": "SAJED"
  },
  {
@@ -1173,7 +1173,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-30T23:00:00+00:00",
-  "event_created_datetime": "2025-12-16T13:13:06.876806+00:00",
+  "event_created_datetime": "2025-12-16T13:13:07+00:00",
   "location": "EGPSD"
  },
  {
@@ -1183,8 +1183,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-16T13:13:06.876806+00:00",
-  "event_created_datetime": "2025-12-16T13:15:06.876806+00:00",
+  "event_datetime": "2025-12-16T13:13:07+00:00",
+  "event_created_datetime": "2025-12-16T13:15:07+00:00",
   "location": "EGPSD"
  },
  {
@@ -1195,7 +1195,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-17T10:00:00+00:00",
-  "event_created_datetime": "2025-12-16T13:40:30.738577+00:00",
+  "event_created_datetime": "2025-12-16T13:40:31+00:00",
   "location": "NLRTM"
  },
  {
@@ -1205,8 +1205,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-16T18:22:34.859674+00:00",
-  "event_created_datetime": "2025-12-16T18:29:34.859674+00:00",
+  "event_datetime": "2025-12-16T18:22:35+00:00",
+  "event_created_datetime": "2025-12-16T18:29:35+00:00",
   "location": "LBBEY"
  },
  {
@@ -1217,7 +1217,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-11T15:00:00+00:00",
-  "event_created_datetime": "2025-12-17T10:33:22.782730+00:00",
+  "event_created_datetime": "2025-12-17T10:33:23+00:00",
   "location": "AEJEA"
  },
  {
@@ -1228,7 +1228,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-05T23:00:00+00:00",
-  "event_created_datetime": "2025-12-17T17:31:44.424734+00:00",
+  "event_created_datetime": "2025-12-17T17:31:44+00:00",
   "location": "AEJEA"
  },
  {
@@ -1239,7 +1239,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-27T23:00:00+00:00",
-  "event_created_datetime": "2025-12-17T17:31:44.424734+00:00",
+  "event_created_datetime": "2025-12-17T17:31:44+00:00",
   "location": "CNSHA"
  },
  {
@@ -1249,8 +1249,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-17T17:31:44.424734+00:00",
-  "event_created_datetime": "2025-12-17T17:59:44.424734+00:00",
+  "event_datetime": "2025-12-17T17:31:44+00:00",
+  "event_created_datetime": "2025-12-17T17:59:44+00:00",
   "location": "CNSHA"
  },
  {
@@ -1261,7 +1261,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-14T04:00:00+00:00",
-  "event_created_datetime": "2025-12-18T11:20:59.392434+00:00",
+  "event_created_datetime": "2025-12-18T11:20:59+00:00",
   "location": "CNSHA"
  },
  {
@@ -1272,7 +1272,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-08T04:00:00+00:00",
-  "event_created_datetime": "2025-12-18T11:20:59.392434+00:00",
+  "event_created_datetime": "2025-12-18T11:20:59+00:00",
   "location": "AEJEA"
  },
  {
@@ -1282,8 +1282,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-18T11:20:59.392434+00:00",
-  "event_created_datetime": "2025-12-18T11:30:59.392434+00:00",
+  "event_datetime": "2025-12-18T11:20:59+00:00",
+  "event_created_datetime": "2025-12-18T11:30:59+00:00",
   "location": "AEJEA"
  },
  {
@@ -1294,7 +1294,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-25T19:00:00+00:00",
-  "event_created_datetime": "2025-12-20T16:03:27.713937+00:00",
+  "event_created_datetime": "2025-12-20T16:03:28+00:00",
   "location": "FRMRS"
  },
  {
@@ -1305,7 +1305,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2025-12-28T19:00:00+00:00",
-  "event_created_datetime": "2025-12-20T16:03:27.713937+00:00",
+  "event_created_datetime": "2025-12-20T16:03:28+00:00",
   "location": "LBBEY"
  },
  {
@@ -1315,8 +1315,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-20T16:03:27.713937+00:00",
-  "event_created_datetime": "2025-12-20T17:24:27.713937+00:00",
+  "event_datetime": "2025-12-20T16:03:28+00:00",
+  "event_created_datetime": "2025-12-20T17:24:28+00:00",
   "location": "LBBEY"
  },
  {
@@ -1327,7 +1327,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-06T13:00:00+00:00",
-  "event_created_datetime": "2025-12-22T15:53:35.389593+00:00",
+  "event_created_datetime": "2025-12-22T15:53:35+00:00",
   "location": "LBBEY"
  },
  {
@@ -1338,7 +1338,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-05T13:00:00+00:00",
-  "event_created_datetime": "2025-12-22T15:53:35.389593+00:00",
+  "event_created_datetime": "2025-12-22T15:53:35+00:00",
   "location": "EGPSD"
  },
  {
@@ -1348,8 +1348,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-22T15:53:35.389593+00:00",
-  "event_created_datetime": "2025-12-22T16:42:35.389593+00:00",
+  "event_datetime": "2025-12-22T15:53:35+00:00",
+  "event_created_datetime": "2025-12-22T16:42:35+00:00",
   "location": "EGPSD"
  },
  {
@@ -1360,7 +1360,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-04T17:00:00+00:00",
-  "event_created_datetime": "2025-12-23T10:56:52.417188+00:00",
+  "event_created_datetime": "2025-12-23T10:56:52+00:00",
   "location": "SGSIN"
  },
  {
@@ -1371,7 +1371,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-12T17:00:00+00:00",
-  "event_created_datetime": "2025-12-23T10:56:52.417188+00:00",
+  "event_created_datetime": "2025-12-23T10:56:52+00:00",
   "location": "FRMRS"
  },
  {
@@ -1382,7 +1382,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-05T14:00:00+00:00",
-  "event_created_datetime": "2025-12-24T01:54:34.904162+00:00",
+  "event_created_datetime": "2025-12-24T01:54:35+00:00",
   "location": "AEJEA"
  },
  {
@@ -1393,7 +1393,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-23T18:00:00+00:00",
-  "event_created_datetime": "2025-12-24T15:56:53.276305+00:00",
+  "event_created_datetime": "2025-12-24T15:56:53+00:00",
   "location": "SGSIN"
  },
  {
@@ -1404,7 +1404,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-04T18:00:00+00:00",
-  "event_created_datetime": "2025-12-24T15:56:53.276305+00:00",
+  "event_created_datetime": "2025-12-24T15:56:53+00:00",
   "location": "FRMRS"
  },
  {
@@ -1414,8 +1414,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-23T10:56:52.417188+00:00",
-  "event_created_datetime": "2025-12-24T16:07:06.527923+00:00",
+  "event_datetime": "2025-12-23T10:56:52+00:00",
+  "event_created_datetime": "2025-12-24T16:07:06+00:00",
   "location": "FRMRS"
  },
  {
@@ -1425,8 +1425,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-24T15:56:53.276305+00:00",
-  "event_created_datetime": "2025-12-24T16:19:53.276305+00:00",
+  "event_datetime": "2025-12-24T15:56:53+00:00",
+  "event_created_datetime": "2025-12-24T16:19:53+00:00",
   "location": "FRMRS"
  },
  {
@@ -1436,8 +1436,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-25T09:29:58.169520+00:00",
-  "event_created_datetime": "2025-12-25T09:47:58.169520+00:00",
+  "event_datetime": "2025-12-25T09:29:58+00:00",
+  "event_created_datetime": "2025-12-25T09:47:58+00:00",
   "location": "CNSHA"
  },
  {
@@ -1448,7 +1448,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-05T18:00:00+00:00",
-  "event_created_datetime": "2025-12-25T16:23:13.904162+00:00",
+  "event_created_datetime": "2025-12-25T16:23:14+00:00",
   "location": "AEJEA"
  },
  {
@@ -1459,7 +1459,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-08T07:00:00+00:00",
-  "event_created_datetime": "2025-12-26T11:51:57.575689+00:00",
+  "event_created_datetime": "2025-12-26T11:51:58+00:00",
   "location": "SGSIN"
  },
  {
@@ -1470,7 +1470,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-04T07:00:00+00:00",
-  "event_created_datetime": "2025-12-26T11:51:57.575689+00:00",
+  "event_created_datetime": "2025-12-26T11:51:58+00:00",
   "location": "FRMRS"
  },
  {
@@ -1480,8 +1480,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-26T11:51:57.575689+00:00",
-  "event_created_datetime": "2025-12-27T08:46:41.891095+00:00",
+  "event_datetime": "2025-12-26T11:51:58+00:00",
+  "event_created_datetime": "2025-12-27T08:46:42+00:00",
   "location": "FRMRS"
  },
  {
@@ -1492,7 +1492,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2025-12-29T04:00:00+00:00",
-  "event_created_datetime": "2025-12-27T12:44:58.086125+00:00",
+  "event_created_datetime": "2025-12-27T12:44:58+00:00",
   "location": "LBBEY"
  },
  {
@@ -1502,8 +1502,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-27T13:25:14.949103+00:00",
-  "event_created_datetime": "2025-12-27T14:24:14.949103+00:00",
+  "event_datetime": "2025-12-27T13:25:15+00:00",
+  "event_created_datetime": "2025-12-27T14:24:15+00:00",
   "location": "LBBEY"
  },
  {
@@ -1513,8 +1513,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-26T08:03:20.463214+00:00",
-  "event_created_datetime": "2025-12-27T16:32:33.128459+00:00",
+  "event_datetime": "2025-12-26T08:03:21+00:00",
+  "event_created_datetime": "2025-12-27T16:32:34+00:00",
   "location": "LBBEY"
  },
  {
@@ -1524,8 +1524,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2025-12-27T17:52:59.765302+00:00",
-  "event_created_datetime": "2025-12-27T20:28:59.765302+00:00",
+  "event_datetime": "2025-12-27T17:53:00+00:00",
+  "event_created_datetime": "2025-12-27T20:29:00+00:00",
   "location": "EGPSD"
  },
  {
@@ -1535,8 +1535,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-27T20:46:36.841617+00:00",
-  "event_created_datetime": "2025-12-27T21:04:36.841617+00:00",
+  "event_datetime": "2025-12-27T20:46:37+00:00",
+  "event_created_datetime": "2025-12-27T21:04:37+00:00",
   "location": "CNSHA"
  },
  {
@@ -1547,7 +1547,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-10T21:00:00+00:00",
-  "event_created_datetime": "2025-12-28T03:40:06.737490+00:00",
+  "event_created_datetime": "2025-12-28T03:40:07+00:00",
   "location": "CNSHA"
  },
  {
@@ -1557,8 +1557,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T02:32:32.336984+00:00",
-  "event_created_datetime": "2025-12-28T04:17:32.336984+00:00",
+  "event_datetime": "2025-12-28T02:32:32+00:00",
+  "event_created_datetime": "2025-12-28T04:17:32+00:00",
   "location": "CNSHA"
  },
  {
@@ -1568,8 +1568,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T07:51:08.766502+00:00",
-  "event_created_datetime": "2025-12-28T08:16:08.766502+00:00",
+  "event_datetime": "2025-12-28T07:51:09+00:00",
+  "event_created_datetime": "2025-12-28T08:16:09+00:00",
   "location": "CNSHA"
  },
  {
@@ -1579,8 +1579,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T08:10:36.323150+00:00",
-  "event_created_datetime": "2025-12-28T08:43:36.323150+00:00",
+  "event_datetime": "2025-12-28T08:10:37+00:00",
+  "event_created_datetime": "2025-12-28T08:43:37+00:00",
   "location": "AEJEA"
  },
  {
@@ -1590,8 +1590,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T12:53:11.224071+00:00",
-  "event_created_datetime": "2025-12-28T13:02:11.224071+00:00",
+  "event_datetime": "2025-12-28T12:53:12+00:00",
+  "event_created_datetime": "2025-12-28T13:02:12+00:00",
   "location": "LBBEY"
  },
  {
@@ -1601,8 +1601,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T16:57:32.642631+00:00",
-  "event_created_datetime": "2025-12-28T17:02:32.642631+00:00",
+  "event_datetime": "2025-12-28T16:57:33+00:00",
+  "event_created_datetime": "2025-12-28T17:02:33+00:00",
   "location": "LBBEY"
  },
  {
@@ -1612,8 +1612,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T14:56:01.377129+00:00",
-  "event_created_datetime": "2025-12-28T17:31:01.377129+00:00",
+  "event_datetime": "2025-12-28T14:56:02+00:00",
+  "event_created_datetime": "2025-12-28T17:31:02+00:00",
   "location": "EGPSD"
  },
  {
@@ -1624,7 +1624,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-17T09:00:00+00:00",
-  "event_created_datetime": "2025-12-28T22:08:19.738577+00:00",
+  "event_created_datetime": "2025-12-28T22:08:20+00:00",
   "location": "NLRTM"
  },
  {
@@ -1634,8 +1634,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T21:34:41.959790+00:00",
-  "event_created_datetime": "2025-12-28T22:08:41.959790+00:00",
+  "event_datetime": "2025-12-28T21:34:42+00:00",
+  "event_created_datetime": "2025-12-28T22:08:42+00:00",
   "location": "AEJEA"
  },
  {
@@ -1645,8 +1645,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T21:18:26.580985+00:00",
-  "event_created_datetime": "2025-12-28T23:00:26.580985+00:00",
+  "event_datetime": "2025-12-28T21:18:26+00:00",
+  "event_created_datetime": "2025-12-28T23:00:26+00:00",
   "location": "EGPSD"
  },
  {
@@ -1656,8 +1656,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T00:17:34.027367+00:00",
-  "event_created_datetime": "2025-12-29T01:06:34.027367+00:00",
+  "event_datetime": "2025-12-29T00:17:34+00:00",
+  "event_created_datetime": "2025-12-29T01:06:34+00:00",
   "location": "EGPSD"
  },
  {
@@ -1667,8 +1667,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T23:19:50.868475+00:00",
-  "event_created_datetime": "2025-12-29T01:31:50.868475+00:00",
+  "event_datetime": "2025-12-28T23:19:51+00:00",
+  "event_created_datetime": "2025-12-29T01:31:51+00:00",
   "location": "AEJEA"
  },
  {
@@ -1678,8 +1678,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T03:38:20.480128+00:00",
-  "event_created_datetime": "2025-12-29T04:03:20.480128+00:00",
+  "event_datetime": "2025-12-29T03:38:20+00:00",
+  "event_created_datetime": "2025-12-29T04:03:20+00:00",
   "location": "LBBEY"
  },
  {
@@ -1690,7 +1690,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-15T00:00:00+00:00",
-  "event_created_datetime": "2025-12-29T05:50:11.122877+00:00",
+  "event_created_datetime": "2025-12-29T05:50:11+00:00",
   "location": "LBBEY"
  },
  {
@@ -1701,7 +1701,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-08T00:00:00+00:00",
-  "event_created_datetime": "2025-12-29T05:50:11.122877+00:00",
+  "event_created_datetime": "2025-12-29T05:50:11+00:00",
   "location": "FRMRS"
  },
  {
@@ -1711,8 +1711,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T05:50:11.122877+00:00",
-  "event_created_datetime": "2025-12-29T06:22:11.122877+00:00",
+  "event_datetime": "2025-12-29T05:50:11+00:00",
+  "event_created_datetime": "2025-12-29T06:22:11+00:00",
   "location": "FRMRS"
  },
  {
@@ -1722,8 +1722,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T08:23:01.514113+00:00",
-  "event_created_datetime": "2025-12-29T08:35:01.514113+00:00",
+  "event_datetime": "2025-12-29T08:23:01+00:00",
+  "event_created_datetime": "2025-12-29T08:35:01+00:00",
   "location": "LBBEY"
  },
  {
@@ -1733,8 +1733,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-28T13:49:09.594613+00:00",
-  "event_created_datetime": "2025-12-29T12:20:33.138164+00:00",
+  "event_datetime": "2025-12-28T13:49:10+00:00",
+  "event_created_datetime": "2025-12-29T12:20:34+00:00",
   "location": "LBBEY"
  },
  {
@@ -1744,8 +1744,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T14:09:48.099179+00:00",
-  "event_created_datetime": "2025-12-29T14:11:48.099179+00:00",
+  "event_datetime": "2025-12-29T14:09:48+00:00",
+  "event_created_datetime": "2025-12-29T14:11:48+00:00",
   "location": "LBBEY"
  },
  {
@@ -1755,8 +1755,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T14:38:52.126359+00:00",
-  "event_created_datetime": "2025-12-29T15:45:52.126359+00:00",
+  "event_datetime": "2025-12-29T14:38:52+00:00",
+  "event_created_datetime": "2025-12-29T15:45:52+00:00",
   "location": "EGPSD"
  },
  {
@@ -1766,8 +1766,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T22:14:15.484408+00:00",
-  "event_created_datetime": "2025-12-29T22:15:15.484408+00:00",
+  "event_datetime": "2025-12-29T22:14:15+00:00",
+  "event_created_datetime": "2025-12-29T22:15:15+00:00",
   "location": "CNSHA"
  },
  {
@@ -1777,8 +1777,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-29T23:10:33.265286+00:00",
-  "event_created_datetime": "2025-12-29T23:19:33.265286+00:00",
+  "event_datetime": "2025-12-29T23:10:33+00:00",
+  "event_created_datetime": "2025-12-29T23:19:33+00:00",
   "location": "EGPSD"
  },
  {
@@ -1789,7 +1789,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-05T18:00:00+00:00",
-  "event_created_datetime": "2025-12-30T02:06:56.904162+00:00",
+  "event_created_datetime": "2025-12-30T02:06:57+00:00",
   "location": "AEJEA"
  },
  {
@@ -1799,8 +1799,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T12:39:08.996236+00:00",
-  "event_created_datetime": "2025-12-30T14:09:08.996236+00:00",
+  "event_datetime": "2025-12-30T12:39:09+00:00",
+  "event_created_datetime": "2025-12-30T14:09:09+00:00",
   "location": "CNSHA"
  },
  {
@@ -1811,7 +1811,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-02T01:00:00+00:00",
-  "event_created_datetime": "2025-12-30T14:42:44.304653+00:00",
+  "event_created_datetime": "2025-12-30T14:42:44+00:00",
   "location": "CNSHA"
  },
  {
@@ -1822,7 +1822,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-15T01:00:00+00:00",
-  "event_created_datetime": "2025-12-30T14:42:44.304653+00:00",
+  "event_created_datetime": "2025-12-30T14:42:44+00:00",
   "location": "NLRTM"
  },
  {
@@ -1832,8 +1832,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T14:42:44.304653+00:00",
-  "event_created_datetime": "2025-12-30T15:19:44.304653+00:00",
+  "event_datetime": "2025-12-30T14:42:44+00:00",
+  "event_created_datetime": "2025-12-30T15:19:44+00:00",
   "location": "NLRTM"
  },
  {
@@ -1843,8 +1843,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T16:53:57.011702+00:00",
-  "event_created_datetime": "2025-12-30T17:01:57.011702+00:00",
+  "event_datetime": "2025-12-30T16:53:57+00:00",
+  "event_created_datetime": "2025-12-30T17:01:57+00:00",
   "location": "LBBEY"
  },
  {
@@ -1854,8 +1854,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T17:44:37.189579+00:00",
-  "event_created_datetime": "2025-12-30T17:55:37.189579+00:00",
+  "event_datetime": "2025-12-30T17:44:38+00:00",
+  "event_created_datetime": "2025-12-30T17:55:38+00:00",
   "location": "AEJEA"
  },
  {
@@ -1865,8 +1865,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T19:11:03.159889+00:00",
-  "event_created_datetime": "2025-12-30T19:31:03.159889+00:00",
+  "event_datetime": "2025-12-30T19:11:03+00:00",
+  "event_created_datetime": "2025-12-30T19:31:03+00:00",
   "location": "CNSHA"
  },
  {
@@ -1876,8 +1876,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T17:20:10.183495+00:00",
-  "event_created_datetime": "2025-12-30T21:37:10.183495+00:00",
+  "event_datetime": "2025-12-30T17:20:10+00:00",
+  "event_created_datetime": "2025-12-30T21:37:10+00:00",
   "location": "EGPSD"
  },
  {
@@ -1887,8 +1887,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T21:46:34.715779+00:00",
-  "event_created_datetime": "2025-12-30T21:50:34.715779+00:00",
+  "event_datetime": "2025-12-30T21:46:35+00:00",
+  "event_created_datetime": "2025-12-30T21:50:35+00:00",
   "location": "AEJEA"
  },
  {
@@ -1898,8 +1898,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T21:26:37.592316+00:00",
-  "event_created_datetime": "2025-12-30T21:50:37.592316+00:00",
+  "event_datetime": "2025-12-30T21:26:38+00:00",
+  "event_created_datetime": "2025-12-30T21:50:38+00:00",
   "location": "AEJEA"
  },
  {
@@ -1910,7 +1910,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-15T23:00:00+00:00",
-  "event_created_datetime": "2025-12-30T23:02:36.419103+00:00",
+  "event_created_datetime": "2025-12-30T23:02:36+00:00",
   "location": "EGPSD"
  },
  {
@@ -1921,7 +1921,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-10T23:00:00+00:00",
-  "event_created_datetime": "2025-12-30T23:02:36.419103+00:00",
+  "event_created_datetime": "2025-12-30T23:02:36+00:00",
   "location": "FRMRS"
  },
  {
@@ -1931,8 +1931,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T23:24:51.893245+00:00",
-  "event_created_datetime": "2025-12-30T23:26:51.893245+00:00",
+  "event_datetime": "2025-12-30T23:24:52+00:00",
+  "event_created_datetime": "2025-12-30T23:26:52+00:00",
   "location": "EGPSD"
  },
  {
@@ -1942,8 +1942,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T23:02:36.419103+00:00",
-  "event_created_datetime": "2025-12-30T23:39:36.419103+00:00",
+  "event_datetime": "2025-12-30T23:02:36+00:00",
+  "event_created_datetime": "2025-12-30T23:39:36+00:00",
   "location": "FRMRS"
  },
  {
@@ -1953,8 +1953,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T01:51:17.222567+00:00",
-  "event_created_datetime": "2025-12-31T02:17:17.222567+00:00",
+  "event_datetime": "2025-12-31T01:51:17+00:00",
+  "event_created_datetime": "2025-12-31T02:17:17+00:00",
   "location": "EGPSD"
  },
  {
@@ -1964,8 +1964,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T01:20:14.971435+00:00",
-  "event_created_datetime": "2025-12-31T04:09:14.971435+00:00",
+  "event_datetime": "2025-12-31T01:20:15+00:00",
+  "event_created_datetime": "2025-12-31T04:09:15+00:00",
   "location": "AEJEA"
  },
  {
@@ -1975,8 +1975,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T03:47:25.575818+00:00",
-  "event_created_datetime": "2025-12-31T04:16:25.575818+00:00",
+  "event_datetime": "2025-12-31T03:47:26+00:00",
+  "event_created_datetime": "2025-12-31T04:16:26+00:00",
   "location": "AEJEA"
  },
  {
@@ -1986,8 +1986,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2025-12-30T01:37:46.759392+00:00",
-  "event_created_datetime": "2025-12-31T05:03:38.234011+00:00",
+  "event_datetime": "2025-12-30T01:37:47+00:00",
+  "event_created_datetime": "2025-12-31T05:03:38+00:00",
   "location": "AEJEA"
  },
  {
@@ -1997,8 +1997,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T05:19:37.399647+00:00",
-  "event_created_datetime": "2025-12-31T05:40:37.399647+00:00",
+  "event_datetime": "2025-12-31T05:19:37+00:00",
+  "event_created_datetime": "2025-12-31T05:40:37+00:00",
   "location": "LBBEY"
  },
  {
@@ -2008,8 +2008,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T09:00:32.268274+00:00",
-  "event_created_datetime": "2025-12-31T09:10:32.268274+00:00",
+  "event_datetime": "2025-12-31T09:00:32+00:00",
+  "event_created_datetime": "2025-12-31T09:10:32+00:00",
   "location": "EGPSD"
  },
  {
@@ -2019,8 +2019,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T09:09:20.852744+00:00",
-  "event_created_datetime": "2025-12-31T09:45:20.852744+00:00",
+  "event_datetime": "2025-12-31T09:09:21+00:00",
+  "event_created_datetime": "2025-12-31T09:45:21+00:00",
   "location": "AEJEA"
  },
  {
@@ -2030,8 +2030,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T12:36:58.659377+00:00",
-  "event_created_datetime": "2025-12-31T13:11:58.659377+00:00",
+  "event_datetime": "2025-12-31T12:36:58+00:00",
+  "event_created_datetime": "2025-12-31T13:11:58+00:00",
   "location": "CNSHA"
  },
  {
@@ -2041,8 +2041,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T22:31:59.640420+00:00",
-  "event_created_datetime": "2025-12-31T22:56:59.640420+00:00",
+  "event_datetime": "2025-12-31T22:32:00+00:00",
+  "event_created_datetime": "2025-12-31T22:57:00+00:00",
   "location": "AEJEA"
  },
  {
@@ -2052,8 +2052,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T23:22:13.140502+00:00",
-  "event_created_datetime": "2025-12-31T23:31:13.140502+00:00",
+  "event_datetime": "2025-12-31T23:22:13+00:00",
+  "event_created_datetime": "2025-12-31T23:31:13+00:00",
   "location": "AEJEA"
  },
  {
@@ -2063,8 +2063,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2025-12-31T23:48:20.609396+00:00",
-  "event_created_datetime": "2026-01-01T00:11:20.609396+00:00",
+  "event_datetime": "2025-12-31T23:48:21+00:00",
+  "event_created_datetime": "2026-01-01T00:11:21+00:00",
   "location": "AEJEA"
  },
  {
@@ -2074,8 +2074,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-01T02:41:28.774397+00:00",
-  "event_created_datetime": "2026-01-01T02:57:28.774397+00:00",
+  "event_datetime": "2026-01-01T02:41:29+00:00",
+  "event_created_datetime": "2026-01-01T02:57:29+00:00",
   "location": "AEJEA"
  },
  {
@@ -2086,7 +2086,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-01-26T03:00:00+00:00",
-  "event_created_datetime": "2026-01-01T17:41:49.707890+00:00",
+  "event_created_datetime": "2026-01-01T17:41:50+00:00",
   "location": "FRMRS"
  },
  {
@@ -2097,7 +2097,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-12T03:00:00+00:00",
-  "event_created_datetime": "2026-01-01T17:41:49.707890+00:00",
+  "event_created_datetime": "2026-01-01T17:41:50+00:00",
   "location": "EGPSD"
  },
  {
@@ -2107,8 +2107,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-01T17:41:49.707890+00:00",
-  "event_created_datetime": "2026-01-01T17:50:49.707890+00:00",
+  "event_datetime": "2026-01-01T17:41:50+00:00",
+  "event_created_datetime": "2026-01-01T17:50:50+00:00",
   "location": "EGPSD"
  },
  {
@@ -2118,8 +2118,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-01T19:12:01.516033+00:00",
-  "event_created_datetime": "2026-01-01T19:35:01.516033+00:00",
+  "event_datetime": "2026-01-01T19:12:02+00:00",
+  "event_created_datetime": "2026-01-01T19:35:02+00:00",
   "location": "AEJEA"
  },
  {
@@ -2129,8 +2129,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-01T22:41:52.923537+00:00",
-  "event_created_datetime": "2026-01-01T22:52:52.923537+00:00",
+  "event_datetime": "2026-01-01T22:41:53+00:00",
+  "event_created_datetime": "2026-01-01T22:52:53+00:00",
   "location": "LBBEY"
  },
  {
@@ -2140,8 +2140,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T05:08:04.961584+00:00",
-  "event_created_datetime": "2026-01-02T05:26:04.961584+00:00",
+  "event_datetime": "2026-01-02T05:08:05+00:00",
+  "event_created_datetime": "2026-01-02T05:26:05+00:00",
   "location": "LBBEY"
  },
  {
@@ -2151,8 +2151,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T06:21:23.090946+00:00",
-  "event_created_datetime": "2026-01-02T06:50:23.090946+00:00",
+  "event_datetime": "2026-01-02T06:21:22+00:00",
+  "event_created_datetime": "2026-01-02T06:50:22+00:00",
   "location": "LBBEY"
  },
  {
@@ -2162,8 +2162,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T08:34:27.316903+00:00",
-  "event_created_datetime": "2026-01-02T08:53:27.316903+00:00",
+  "event_datetime": "2026-01-02T08:34:28+00:00",
+  "event_created_datetime": "2026-01-02T08:53:28+00:00",
   "location": "AEJEA"
  },
  {
@@ -2173,8 +2173,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T12:26:46.593550+00:00",
-  "event_created_datetime": "2026-01-02T13:24:46.593550+00:00",
+  "event_datetime": "2026-01-02T12:26:46+00:00",
+  "event_created_datetime": "2026-01-02T13:24:46+00:00",
   "location": "LBBEY"
  },
  {
@@ -2185,7 +2185,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-31T02:00:00+00:00",
-  "event_created_datetime": "2026-01-02T15:49:35.575818+00:00",
+  "event_created_datetime": "2026-01-02T15:49:36+00:00",
   "location": "SGSIN"
  },
  {
@@ -2195,8 +2195,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T15:30:10.254329+00:00",
-  "event_created_datetime": "2026-01-02T16:24:10.254329+00:00",
+  "event_datetime": "2026-01-02T15:30:10+00:00",
+  "event_created_datetime": "2026-01-02T16:24:10+00:00",
   "location": "FRMRS"
  },
  {
@@ -2206,8 +2206,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T22:35:35.109251+00:00",
-  "event_created_datetime": "2026-01-02T22:42:35.109251+00:00",
+  "event_datetime": "2026-01-02T22:35:35+00:00",
+  "event_created_datetime": "2026-01-02T22:42:35+00:00",
   "location": "FRMRS"
  },
  {
@@ -2217,8 +2217,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T23:55:33.793009+00:00",
-  "event_created_datetime": "2026-01-03T00:32:33.793009+00:00",
+  "event_datetime": "2026-01-02T23:55:34+00:00",
+  "event_created_datetime": "2026-01-03T00:32:34+00:00",
   "location": "FRMRS"
  },
  {
@@ -2228,8 +2228,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T03:57:44.807805+00:00",
-  "event_created_datetime": "2026-01-03T04:17:44.807805+00:00",
+  "event_datetime": "2026-01-03T03:57:45+00:00",
+  "event_created_datetime": "2026-01-03T04:17:45+00:00",
   "location": "FRMRS"
  },
  {
@@ -2239,8 +2239,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T03:59:12.240666+00:00",
-  "event_created_datetime": "2026-01-03T04:35:12.240666+00:00",
+  "event_datetime": "2026-01-03T03:59:12+00:00",
+  "event_created_datetime": "2026-01-03T04:35:12+00:00",
   "location": "FRMRS"
  },
  {
@@ -2250,8 +2250,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T10:21:06.067661+00:00",
-  "event_created_datetime": "2026-01-03T11:06:06.067661+00:00",
+  "event_datetime": "2026-01-03T10:21:07+00:00",
+  "event_created_datetime": "2026-01-03T11:06:07+00:00",
   "location": "AEJEA"
  },
  {
@@ -2261,8 +2261,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T11:05:06.372992+00:00",
-  "event_created_datetime": "2026-01-03T11:13:06.372992+00:00",
+  "event_datetime": "2026-01-03T11:05:07+00:00",
+  "event_created_datetime": "2026-01-03T11:13:07+00:00",
   "location": "AEJEA"
  },
  {
@@ -2272,8 +2272,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T12:00:06.027750+00:00",
-  "event_created_datetime": "2026-01-03T12:23:06.027750+00:00",
+  "event_datetime": "2026-01-03T12:00:07+00:00",
+  "event_created_datetime": "2026-01-03T12:23:07+00:00",
   "location": "AEJEA"
  },
  {
@@ -2283,8 +2283,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-02T23:14:37.225394+00:00",
-  "event_created_datetime": "2026-01-03T13:09:31.875436+00:00",
+  "event_datetime": "2026-01-02T23:14:37+00:00",
+  "event_created_datetime": "2026-01-03T13:09:32+00:00",
   "location": "EGPSD"
  },
  {
@@ -2294,8 +2294,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T14:45:04.852521+00:00",
-  "event_created_datetime": "2026-01-03T16:39:04.852521+00:00",
+  "event_datetime": "2026-01-03T14:45:06+00:00",
+  "event_created_datetime": "2026-01-03T16:39:06+00:00",
   "location": "AEJEA"
  },
  {
@@ -2305,8 +2305,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T19:40:22.063049+00:00",
-  "event_created_datetime": "2026-01-03T20:01:22.063049+00:00",
+  "event_datetime": "2026-01-03T19:40:22+00:00",
+  "event_created_datetime": "2026-01-03T20:01:22+00:00",
   "location": "FRMRS"
  },
  {
@@ -2316,8 +2316,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-03T23:14:13.082807+00:00",
-  "event_created_datetime": "2026-01-03T23:58:13.082807+00:00",
+  "event_datetime": "2026-01-03T23:14:13+00:00",
+  "event_created_datetime": "2026-01-03T23:58:13+00:00",
   "location": "FRMRS"
  },
  {
@@ -2327,8 +2327,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T05:21:35.895510+00:00",
-  "event_created_datetime": "2026-01-04T05:44:35.895510+00:00",
+  "event_datetime": "2026-01-04T05:21:36+00:00",
+  "event_created_datetime": "2026-01-04T05:44:36+00:00",
   "location": "LBBEY"
  },
  {
@@ -2338,8 +2338,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T05:36:28.204590+00:00",
-  "event_created_datetime": "2026-01-04T06:26:28.204590+00:00",
+  "event_datetime": "2026-01-04T05:36:28+00:00",
+  "event_created_datetime": "2026-01-04T06:26:28+00:00",
   "location": "FRMRS"
  },
  {
@@ -2349,8 +2349,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T12:06:36.523666+00:00",
-  "event_created_datetime": "2026-01-04T13:07:36.523666+00:00",
+  "event_datetime": "2026-01-04T12:06:36+00:00",
+  "event_created_datetime": "2026-01-04T13:07:36+00:00",
   "location": "FRMRS"
  },
  {
@@ -2360,8 +2360,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T13:59:26.998878+00:00",
-  "event_created_datetime": "2026-01-04T14:22:26.998878+00:00",
+  "event_datetime": "2026-01-04T13:59:27+00:00",
+  "event_created_datetime": "2026-01-04T14:22:27+00:00",
   "location": "FRMRS"
  },
  {
@@ -2371,8 +2371,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T12:34:11.078390+00:00",
-  "event_created_datetime": "2026-01-04T14:51:11.078390+00:00",
+  "event_datetime": "2026-01-04T12:34:11+00:00",
+  "event_created_datetime": "2026-01-04T14:51:11+00:00",
   "location": "LBBEY"
  },
  {
@@ -2382,8 +2382,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T17:48:35.161195+00:00",
-  "event_created_datetime": "2026-01-04T18:40:35.161195+00:00",
+  "event_datetime": "2026-01-04T17:48:35+00:00",
+  "event_created_datetime": "2026-01-04T18:40:35+00:00",
   "location": "FRMRS"
  },
  {
@@ -2393,8 +2393,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T22:49:11.112298+00:00",
-  "event_created_datetime": "2026-01-04T23:05:11.112298+00:00",
+  "event_datetime": "2026-01-04T22:49:11+00:00",
+  "event_created_datetime": "2026-01-04T23:05:11+00:00",
   "location": "FRMRS"
  },
  {
@@ -2404,8 +2404,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T23:54:30.302518+00:00",
-  "event_created_datetime": "2026-01-05T00:11:30.302518+00:00",
+  "event_datetime": "2026-01-04T23:54:30+00:00",
+  "event_created_datetime": "2026-01-05T00:11:30+00:00",
   "location": "FRMRS"
  },
  {
@@ -2415,8 +2415,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-04T05:22:42.184783+00:00",
-  "event_created_datetime": "2026-01-05T02:10:56.965675+00:00",
+  "event_datetime": "2026-01-04T05:22:42+00:00",
+  "event_created_datetime": "2026-01-05T02:10:57+00:00",
   "location": "LBBEY"
  },
  {
@@ -2426,8 +2426,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T01:41:30.178415+00:00",
-  "event_created_datetime": "2026-01-05T02:18:30.178415+00:00",
+  "event_datetime": "2026-01-05T01:41:30+00:00",
+  "event_created_datetime": "2026-01-05T02:18:30+00:00",
   "location": "LBBEY"
  },
  {
@@ -2437,8 +2437,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T02:42:58.968926+00:00",
-  "event_created_datetime": "2026-01-05T02:55:58.968926+00:00",
+  "event_datetime": "2026-01-05T02:42:59+00:00",
+  "event_created_datetime": "2026-01-05T02:55:59+00:00",
   "location": "AEJEA"
  },
  {
@@ -2448,8 +2448,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T11:01:26.565739+00:00",
-  "event_created_datetime": "2026-01-05T11:52:26.565739+00:00",
+  "event_datetime": "2026-01-05T11:01:27+00:00",
+  "event_created_datetime": "2026-01-05T11:52:27+00:00",
   "location": "AEJEA"
  },
  {
@@ -2460,7 +2460,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-13T22:00:00+00:00",
-  "event_created_datetime": "2026-01-05T18:08:28.849091+00:00",
+  "event_created_datetime": "2026-01-05T18:08:29+00:00",
   "location": "CNSHA"
  },
  {
@@ -2471,7 +2471,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-12T22:00:00+00:00",
-  "event_created_datetime": "2026-01-05T18:08:28.849091+00:00",
+  "event_created_datetime": "2026-01-05T18:08:29+00:00",
   "location": "NLRTM"
  },
  {
@@ -2481,8 +2481,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T18:08:28.849091+00:00",
-  "event_created_datetime": "2026-01-05T18:22:28.849091+00:00",
+  "event_datetime": "2026-01-05T18:08:29+00:00",
+  "event_created_datetime": "2026-01-05T18:22:29+00:00",
   "location": "NLRTM"
  },
  {
@@ -2492,8 +2492,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T19:22:24.963224+00:00",
-  "event_created_datetime": "2026-01-05T20:20:24.963224+00:00",
+  "event_datetime": "2026-01-05T19:22:25+00:00",
+  "event_created_datetime": "2026-01-05T20:20:25+00:00",
   "location": "AEJEA"
  },
  {
@@ -2503,8 +2503,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T20:36:55.293497+00:00",
-  "event_created_datetime": "2026-01-05T20:46:55.293497+00:00",
+  "event_datetime": "2026-01-05T20:36:55+00:00",
+  "event_created_datetime": "2026-01-05T20:46:55+00:00",
   "location": "AEJEA"
  },
  {
@@ -2514,8 +2514,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T02:34:07.570425+00:00",
-  "event_created_datetime": "2026-01-05T20:56:40.059138+00:00",
+  "event_datetime": "2026-01-05T02:34:08+00:00",
+  "event_created_datetime": "2026-01-05T20:56:40+00:00",
   "location": "EGPSD"
  },
  {
@@ -2525,8 +2525,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T04:04:47.020875+00:00",
-  "event_created_datetime": "2026-01-06T04:15:47.020875+00:00",
+  "event_datetime": "2026-01-06T04:04:47+00:00",
+  "event_created_datetime": "2026-01-06T04:15:47+00:00",
   "location": "AEJEA"
  },
  {
@@ -2536,8 +2536,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T10:49:49.867010+00:00",
-  "event_created_datetime": "2026-01-06T11:19:49.867010+00:00",
+  "event_datetime": "2026-01-06T10:49:50+00:00",
+  "event_created_datetime": "2026-01-06T11:19:50+00:00",
   "location": "EGPSD"
  },
  {
@@ -2547,8 +2547,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T10:19:59.001152+00:00",
-  "event_created_datetime": "2026-01-06T11:35:59.001152+00:00",
+  "event_datetime": "2026-01-06T10:19:59+00:00",
+  "event_created_datetime": "2026-01-06T11:35:59+00:00",
   "location": "FRMRS"
  },
  {
@@ -2558,8 +2558,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-05T10:37:49.020146+00:00",
-  "event_created_datetime": "2026-01-06T13:24:43.700708+00:00",
+  "event_datetime": "2026-01-05T10:37:49+00:00",
+  "event_created_datetime": "2026-01-06T13:24:44+00:00",
   "location": "EGPSD"
  },
  {
@@ -2569,8 +2569,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T15:18:09.515950+00:00",
-  "event_created_datetime": "2026-01-06T15:52:09.515950+00:00",
+  "event_datetime": "2026-01-06T15:18:10+00:00",
+  "event_created_datetime": "2026-01-06T15:52:10+00:00",
   "location": "AEJEA"
  },
  {
@@ -2580,8 +2580,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T16:20:56.696258+00:00",
-  "event_created_datetime": "2026-01-06T17:00:56.696258+00:00",
+  "event_datetime": "2026-01-06T16:20:56+00:00",
+  "event_created_datetime": "2026-01-06T17:00:56+00:00",
   "location": "FRMRS"
  },
  {
@@ -2591,8 +2591,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T17:34:02.625206+00:00",
-  "event_created_datetime": "2026-01-06T18:59:02.625206+00:00",
+  "event_datetime": "2026-01-06T17:34:02+00:00",
+  "event_created_datetime": "2026-01-06T18:59:02+00:00",
   "location": "FRMRS"
  },
  {
@@ -2602,8 +2602,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-06T19:10:04.196629+00:00",
-  "event_created_datetime": "2026-01-06T19:28:04.196629+00:00",
+  "event_datetime": "2026-01-06T19:10:04+00:00",
+  "event_created_datetime": "2026-01-06T19:28:04+00:00",
   "location": "AEJEA"
  },
  {
@@ -2613,8 +2613,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T14:40:08.805428+00:00",
-  "event_created_datetime": "2026-01-07T15:02:08.805428+00:00",
+  "event_datetime": "2026-01-07T14:40:09+00:00",
+  "event_created_datetime": "2026-01-07T15:02:09+00:00",
   "location": "AEJEA"
  },
  {
@@ -2624,8 +2624,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T16:09:43.870588+00:00",
-  "event_created_datetime": "2026-01-07T16:25:43.870588+00:00",
+  "event_datetime": "2026-01-07T16:09:44+00:00",
+  "event_created_datetime": "2026-01-07T16:25:44+00:00",
   "location": "AEJEA"
  },
  {
@@ -2635,8 +2635,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T17:03:07.950849+00:00",
-  "event_created_datetime": "2026-01-07T17:12:07.950849+00:00",
+  "event_datetime": "2026-01-07T17:03:07+00:00",
+  "event_created_datetime": "2026-01-07T17:12:07+00:00",
   "location": "FRMRS"
  },
  {
@@ -2646,8 +2646,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T18:25:31.348363+00:00",
-  "event_created_datetime": "2026-01-07T18:30:31.348363+00:00",
+  "event_datetime": "2026-01-07T18:25:31+00:00",
+  "event_created_datetime": "2026-01-07T18:30:31+00:00",
   "location": "FRMRS"
  },
  {
@@ -2657,8 +2657,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T20:23:51.481096+00:00",
-  "event_created_datetime": "2026-01-07T21:00:51.481096+00:00",
+  "event_datetime": "2026-01-07T20:23:52+00:00",
+  "event_created_datetime": "2026-01-07T21:00:52+00:00",
   "location": "AEJEA"
  },
  {
@@ -2668,8 +2668,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T22:10:31.459626+00:00",
-  "event_created_datetime": "2026-01-07T22:24:31.459626+00:00",
+  "event_datetime": "2026-01-07T22:10:31+00:00",
+  "event_created_datetime": "2026-01-07T22:24:31+00:00",
   "location": "FRMRS"
  },
  {
@@ -2679,8 +2679,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T23:13:23.992008+00:00",
-  "event_created_datetime": "2026-01-07T23:41:23.992008+00:00",
+  "event_datetime": "2026-01-07T23:13:24+00:00",
+  "event_created_datetime": "2026-01-07T23:41:24+00:00",
   "location": "AEJEA"
  },
  {
@@ -2690,8 +2690,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-08T01:21:11.991117+00:00",
-  "event_created_datetime": "2026-01-08T02:57:11.991117+00:00",
+  "event_datetime": "2026-01-08T01:21:12+00:00",
+  "event_created_datetime": "2026-01-08T02:57:12+00:00",
   "location": "AEJEA"
  },
  {
@@ -2701,8 +2701,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-07T23:06:47.087749+00:00",
-  "event_created_datetime": "2026-01-08T14:04:54.876485+00:00",
+  "event_datetime": "2026-01-07T23:06:47+00:00",
+  "event_created_datetime": "2026-01-08T14:04:55+00:00",
   "location": "AEJEA"
  },
  {
@@ -2713,7 +2713,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-11T18:00:00+00:00",
-  "event_created_datetime": "2026-01-08T19:24:23.782730+00:00",
+  "event_created_datetime": "2026-01-08T19:24:24+00:00",
   "location": "AEJEA"
  },
  {
@@ -2724,7 +2724,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-25T22:00:00+00:00",
-  "event_created_datetime": "2026-01-09T05:11:47.642631+00:00",
+  "event_created_datetime": "2026-01-09T05:11:47+00:00",
   "location": "FRMRS"
  },
  {
@@ -2734,8 +2734,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T05:48:16.742366+00:00",
-  "event_created_datetime": "2026-01-09T06:15:16.742366+00:00",
+  "event_datetime": "2026-01-09T05:48:16+00:00",
+  "event_created_datetime": "2026-01-09T06:15:16+00:00",
   "location": "FRMRS"
  },
  {
@@ -2745,8 +2745,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T06:46:53.560785+00:00",
-  "event_created_datetime": "2026-01-09T06:52:53.560785+00:00",
+  "event_datetime": "2026-01-09T06:46:54+00:00",
+  "event_created_datetime": "2026-01-09T06:52:54+00:00",
   "location": "AEJEA"
  },
  {
@@ -2756,8 +2756,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T10:09:36.746831+00:00",
-  "event_created_datetime": "2026-01-09T10:17:36.746831+00:00",
+  "event_datetime": "2026-01-09T10:09:36+00:00",
+  "event_created_datetime": "2026-01-09T10:17:36+00:00",
   "location": "FRMRS"
  },
  {
@@ -2767,8 +2767,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T14:14:56.439905+00:00",
-  "event_created_datetime": "2026-01-09T14:37:56.439905+00:00",
+  "event_datetime": "2026-01-09T14:14:56+00:00",
+  "event_created_datetime": "2026-01-09T14:37:56+00:00",
   "location": "EGPSD"
  },
  {
@@ -2778,8 +2778,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T17:14:29.600029+00:00",
-  "event_created_datetime": "2026-01-09T17:19:29.600029+00:00",
+  "event_datetime": "2026-01-09T17:14:29+00:00",
+  "event_created_datetime": "2026-01-09T17:19:29+00:00",
   "location": "EGPSD"
  },
  {
@@ -2789,8 +2789,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T18:35:43.890445+00:00",
-  "event_created_datetime": "2026-01-09T21:53:43.890445+00:00",
+  "event_datetime": "2026-01-09T18:35:44+00:00",
+  "event_created_datetime": "2026-01-09T21:53:44+00:00",
   "location": "AEJEA"
  },
  {
@@ -2800,8 +2800,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T17:33:39.887012+00:00",
-  "event_created_datetime": "2026-01-09T23:48:01.222017+00:00",
+  "event_datetime": "2026-01-09T17:33:40+00:00",
+  "event_created_datetime": "2026-01-09T23:48:01+00:00",
   "location": "AEJEA"
  },
  {
@@ -2811,8 +2811,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-09T23:47:40.402256+00:00",
-  "event_created_datetime": "2026-01-09T23:52:40.402256+00:00",
+  "event_datetime": "2026-01-09T23:47:41+00:00",
+  "event_created_datetime": "2026-01-09T23:52:41+00:00",
   "location": "FRMRS"
  },
  {
@@ -2822,8 +2822,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-10T07:00:33.935038+00:00",
-  "event_created_datetime": "2026-01-10T07:08:33.935038+00:00",
+  "event_datetime": "2026-01-10T07:00:34+00:00",
+  "event_created_datetime": "2026-01-10T07:08:34+00:00",
   "location": "NLRTM"
  },
  {
@@ -2833,8 +2833,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-10T07:45:34.596258+00:00",
-  "event_created_datetime": "2026-01-10T08:18:34.596258+00:00",
+  "event_datetime": "2026-01-10T07:45:35+00:00",
+  "event_created_datetime": "2026-01-10T08:18:35+00:00",
   "location": "NLRTM"
  },
  {
@@ -2844,8 +2844,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-10T18:20:03.557202+00:00",
-  "event_created_datetime": "2026-01-10T18:31:03.557202+00:00",
+  "event_datetime": "2026-01-10T18:20:03+00:00",
+  "event_created_datetime": "2026-01-10T18:31:03+00:00",
   "location": "EGPSD"
  },
  {
@@ -2855,8 +2855,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-10T19:30:40.945632+00:00",
-  "event_created_datetime": "2026-01-10T20:01:40.945632+00:00",
+  "event_datetime": "2026-01-10T19:30:41+00:00",
+  "event_created_datetime": "2026-01-10T20:01:41+00:00",
   "location": "FRMRS"
  },
  {
@@ -2867,7 +2867,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-23T00:00:00+00:00",
-  "event_created_datetime": "2026-01-10T20:07:30.078390+00:00",
+  "event_created_datetime": "2026-01-10T20:07:30+00:00",
   "location": "EGPSD"
  },
  {
@@ -2878,7 +2878,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-03T09:00:00+00:00",
-  "event_created_datetime": "2026-01-10T23:28:58.893321+00:00",
+  "event_created_datetime": "2026-01-10T23:28:59+00:00",
   "location": "FRMRS"
  },
  {
@@ -2889,7 +2889,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-20T09:00:00+00:00",
-  "event_created_datetime": "2026-01-10T23:28:58.893321+00:00",
+  "event_created_datetime": "2026-01-10T23:28:59+00:00",
   "location": "CNSHA"
  },
  {
@@ -2899,8 +2899,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T00:35:09.354243+00:00",
-  "event_created_datetime": "2026-01-11T01:53:09.354243+00:00",
+  "event_datetime": "2026-01-11T00:35:09+00:00",
+  "event_created_datetime": "2026-01-11T01:53:09+00:00",
   "location": "FRMRS"
  },
  {
@@ -2910,8 +2910,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-10T23:28:58.893321+00:00",
-  "event_created_datetime": "2026-01-11T02:00:58.893321+00:00",
+  "event_datetime": "2026-01-10T23:28:59+00:00",
+  "event_created_datetime": "2026-01-11T02:00:59+00:00",
   "location": "CNSHA"
  },
  {
@@ -2921,8 +2921,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-10T20:33:03.917813+00:00",
-  "event_created_datetime": "2026-01-11T02:19:03.917813+00:00",
+  "event_datetime": "2026-01-10T20:33:04+00:00",
+  "event_created_datetime": "2026-01-11T02:19:04+00:00",
   "location": "CNSHA"
  },
  {
@@ -2932,8 +2932,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T01:09:00.309152+00:00",
-  "event_created_datetime": "2026-01-11T02:21:00.309152+00:00",
+  "event_datetime": "2026-01-11T01:09:00+00:00",
+  "event_created_datetime": "2026-01-11T02:21:00+00:00",
   "location": "CNSHA"
  },
  {
@@ -2943,8 +2943,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T03:34:06.115490+00:00",
-  "event_created_datetime": "2026-01-11T03:57:06.115490+00:00",
+  "event_datetime": "2026-01-11T03:34:06+00:00",
+  "event_created_datetime": "2026-01-11T03:57:06+00:00",
   "location": "CNSHA"
  },
  {
@@ -2954,8 +2954,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T03:22:38.527077+00:00",
-  "event_created_datetime": "2026-01-11T04:15:38.527077+00:00",
+  "event_datetime": "2026-01-11T03:22:39+00:00",
+  "event_created_datetime": "2026-01-11T04:15:39+00:00",
   "location": "CNSHA"
  },
  {
@@ -2965,8 +2965,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T05:01:34.628280+00:00",
-  "event_created_datetime": "2026-01-11T11:55:34.628280+00:00",
+  "event_datetime": "2026-01-11T05:01:35+00:00",
+  "event_created_datetime": "2026-01-11T11:55:35+00:00",
   "location": "CNSHA"
  },
  {
@@ -2976,8 +2976,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T17:16:54.807759+00:00",
-  "event_created_datetime": "2026-01-11T17:19:54.807759+00:00",
+  "event_datetime": "2026-01-11T17:16:55+00:00",
+  "event_created_datetime": "2026-01-11T17:19:55+00:00",
   "location": "AEJEA"
  },
  {
@@ -2987,8 +2987,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T19:51:02.324352+00:00",
-  "event_created_datetime": "2026-01-11T19:55:02.324352+00:00",
+  "event_datetime": "2026-01-11T19:51:02+00:00",
+  "event_created_datetime": "2026-01-11T19:55:02+00:00",
   "location": "FRMRS"
  },
  {
@@ -2998,8 +2998,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T21:22:21.094872+00:00",
-  "event_created_datetime": "2026-01-11T21:39:21.094872+00:00",
+  "event_datetime": "2026-01-11T21:22:21+00:00",
+  "event_created_datetime": "2026-01-11T21:39:21+00:00",
   "location": "EGPSD"
  },
  {
@@ -3009,8 +3009,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T21:33:57.820934+00:00",
-  "event_created_datetime": "2026-01-11T22:07:57.820934+00:00",
+  "event_datetime": "2026-01-11T21:33:58+00:00",
+  "event_created_datetime": "2026-01-11T22:07:58+00:00",
   "location": "NLRTM"
  },
  {
@@ -3020,8 +3020,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T21:45:18.631568+00:00",
-  "event_created_datetime": "2026-01-11T22:15:18.631568+00:00",
+  "event_datetime": "2026-01-11T21:45:19+00:00",
+  "event_created_datetime": "2026-01-11T22:15:19+00:00",
   "location": "AEJEA"
  },
  {
@@ -3031,8 +3031,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T20:42:08.831131+00:00",
-  "event_created_datetime": "2026-01-11T22:19:08.831131+00:00",
+  "event_datetime": "2026-01-11T20:42:09+00:00",
+  "event_created_datetime": "2026-01-11T22:19:09+00:00",
   "location": "CNSHA"
  },
  {
@@ -3042,8 +3042,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T22:07:01.430148+00:00",
-  "event_created_datetime": "2026-01-11T22:35:01.430148+00:00",
+  "event_datetime": "2026-01-11T22:07:01+00:00",
+  "event_created_datetime": "2026-01-11T22:35:01+00:00",
   "location": "EGPSD"
  },
  {
@@ -3053,8 +3053,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T00:51:43.614186+00:00",
-  "event_created_datetime": "2026-01-12T01:08:43.614186+00:00",
+  "event_datetime": "2026-01-12T00:51:44+00:00",
+  "event_created_datetime": "2026-01-12T01:08:44+00:00",
   "location": "AEJEA"
  },
  {
@@ -3065,7 +3065,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-03-01T14:00:00+00:00",
-  "event_created_datetime": "2026-01-12T05:27:17.445174+00:00",
+  "event_created_datetime": "2026-01-12T05:27:17+00:00",
   "location": "SAJED"
  },
  {
@@ -3076,7 +3076,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-21T14:00:00+00:00",
-  "event_created_datetime": "2026-01-12T05:27:17.445174+00:00",
+  "event_created_datetime": "2026-01-12T05:27:17+00:00",
   "location": "NLRTM"
  },
  {
@@ -3086,8 +3086,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T05:27:17.445174+00:00",
-  "event_created_datetime": "2026-01-12T06:09:17.445174+00:00",
+  "event_datetime": "2026-01-12T05:27:17+00:00",
+  "event_created_datetime": "2026-01-12T06:09:17+00:00",
   "location": "NLRTM"
  },
  {
@@ -3097,8 +3097,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T07:10:32.183554+00:00",
-  "event_created_datetime": "2026-01-12T07:35:32.183554+00:00",
+  "event_datetime": "2026-01-12T07:10:32+00:00",
+  "event_created_datetime": "2026-01-12T07:35:32+00:00",
   "location": "FRMRS"
  },
  {
@@ -3108,8 +3108,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T05:53:55.407883+00:00",
-  "event_created_datetime": "2026-01-12T09:00:55.407883+00:00",
+  "event_datetime": "2026-01-12T05:53:55+00:00",
+  "event_created_datetime": "2026-01-12T09:00:55+00:00",
   "location": "EGPSD"
  },
  {
@@ -3119,8 +3119,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T09:25:02.187910+00:00",
-  "event_created_datetime": "2026-01-12T11:25:02.187910+00:00",
+  "event_datetime": "2026-01-12T09:25:02+00:00",
+  "event_created_datetime": "2026-01-12T11:25:02+00:00",
   "location": "AEJEA"
  },
  {
@@ -3130,8 +3130,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T13:36:33.955837+00:00",
-  "event_created_datetime": "2026-01-12T14:43:33.955837+00:00",
+  "event_datetime": "2026-01-12T13:36:34+00:00",
+  "event_created_datetime": "2026-01-12T14:43:34+00:00",
   "location": "NLRTM"
  },
  {
@@ -3141,8 +3141,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T15:49:50.627181+00:00",
-  "event_created_datetime": "2026-01-12T16:13:50.627181+00:00",
+  "event_datetime": "2026-01-12T15:49:51+00:00",
+  "event_created_datetime": "2026-01-12T16:13:51+00:00",
   "location": "AEJEA"
  },
  {
@@ -3152,8 +3152,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-11T22:32:30.179869+00:00",
-  "event_created_datetime": "2026-01-12T19:09:42.330816+00:00",
+  "event_datetime": "2026-01-11T22:32:30+00:00",
+  "event_created_datetime": "2026-01-12T19:09:42+00:00",
   "location": "EGPSD"
  },
  {
@@ -3163,8 +3163,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T19:03:15.346220+00:00",
-  "event_created_datetime": "2026-01-12T19:30:15.346220+00:00",
+  "event_datetime": "2026-01-12T19:03:15+00:00",
+  "event_created_datetime": "2026-01-12T19:30:15+00:00",
   "location": "AEJEA"
  },
  {
@@ -3174,8 +3174,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T19:08:27.703291+00:00",
-  "event_created_datetime": "2026-01-12T19:55:27.703291+00:00",
+  "event_datetime": "2026-01-12T19:08:28+00:00",
+  "event_created_datetime": "2026-01-12T19:55:28+00:00",
   "location": "NLRTM"
  },
  {
@@ -3185,8 +3185,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T20:21:43.795029+00:00",
-  "event_created_datetime": "2026-01-12T20:46:43.795029+00:00",
+  "event_datetime": "2026-01-12T20:21:44+00:00",
+  "event_created_datetime": "2026-01-12T20:46:44+00:00",
   "location": "NLRTM"
  },
  {
@@ -3196,8 +3196,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T20:47:00.667641+00:00",
-  "event_created_datetime": "2026-01-12T20:58:00.667641+00:00",
+  "event_datetime": "2026-01-12T20:47:01+00:00",
+  "event_created_datetime": "2026-01-12T20:58:01+00:00",
   "location": "NLRTM"
  },
  {
@@ -3207,8 +3207,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T14:11:23.716459+00:00",
-  "event_created_datetime": "2026-01-12T22:43:01.754086+00:00",
+  "event_datetime": "2026-01-12T14:11:24+00:00",
+  "event_created_datetime": "2026-01-12T22:43:02+00:00",
   "location": "FRMRS"
  },
  {
@@ -3218,8 +3218,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T22:26:46.418806+00:00",
-  "event_created_datetime": "2026-01-12T23:36:46.418806+00:00",
+  "event_datetime": "2026-01-12T22:26:47+00:00",
+  "event_created_datetime": "2026-01-12T23:36:47+00:00",
   "location": "AEJEA"
  },
  {
@@ -3229,8 +3229,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-13T02:00:44.721078+00:00",
-  "event_created_datetime": "2026-01-13T02:43:44.721078+00:00",
+  "event_datetime": "2026-01-13T02:00:45+00:00",
+  "event_created_datetime": "2026-01-13T02:43:45+00:00",
   "location": "NLRTM"
  },
  {
@@ -3240,8 +3240,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-13T05:57:10.714577+00:00",
-  "event_created_datetime": "2026-01-13T06:06:10.714577+00:00",
+  "event_datetime": "2026-01-13T05:57:11+00:00",
+  "event_created_datetime": "2026-01-13T06:06:11+00:00",
   "location": "AEJEA"
  },
  {
@@ -3251,8 +3251,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-13T10:17:09.755754+00:00",
-  "event_created_datetime": "2026-01-13T11:43:09.755754+00:00",
+  "event_datetime": "2026-01-13T10:17:10+00:00",
+  "event_created_datetime": "2026-01-13T11:43:10+00:00",
   "location": "AEJEA"
  },
  {
@@ -3262,8 +3262,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-13T14:50:22.727430+00:00",
-  "event_created_datetime": "2026-01-13T15:09:22.727430+00:00",
+  "event_datetime": "2026-01-13T14:50:23+00:00",
+  "event_created_datetime": "2026-01-13T15:09:23+00:00",
   "location": "NLRTM"
  },
  {
@@ -3273,8 +3273,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-13T21:17:10.893383+00:00",
-  "event_created_datetime": "2026-01-13T21:21:10.893383+00:00",
+  "event_datetime": "2026-01-13T21:17:10+00:00",
+  "event_created_datetime": "2026-01-13T21:21:10+00:00",
   "location": "EGPSD"
  },
  {
@@ -3284,8 +3284,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T01:27:30.539936+00:00",
-  "event_created_datetime": "2026-01-14T02:10:30.539936+00:00",
+  "event_datetime": "2026-01-14T01:27:31+00:00",
+  "event_created_datetime": "2026-01-14T02:10:31+00:00",
   "location": "AEJEA"
  },
  {
@@ -3295,8 +3295,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T03:52:02.735922+00:00",
-  "event_created_datetime": "2026-01-14T04:10:02.735922+00:00",
+  "event_datetime": "2026-01-14T03:52:02+00:00",
+  "event_created_datetime": "2026-01-14T04:10:02+00:00",
   "location": "AEJEA"
  },
  {
@@ -3307,7 +3307,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-20T19:00:00+00:00",
-  "event_created_datetime": "2026-01-14T05:32:55.476979+00:00",
+  "event_created_datetime": "2026-01-14T05:32:55+00:00",
   "location": "FRMRS"
  },
  {
@@ -3318,7 +3318,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-25T19:00:00+00:00",
-  "event_created_datetime": "2026-01-14T05:32:55.476979+00:00",
+  "event_created_datetime": "2026-01-14T05:32:55+00:00",
   "location": "SAJED"
  },
  {
@@ -3328,8 +3328,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T05:32:55.476979+00:00",
-  "event_created_datetime": "2026-01-14T06:17:55.476979+00:00",
+  "event_datetime": "2026-01-14T05:32:55+00:00",
+  "event_created_datetime": "2026-01-14T06:17:55+00:00",
   "location": "SAJED"
  },
  {
@@ -3339,8 +3339,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T00:39:30.945730+00:00",
-  "event_created_datetime": "2026-01-14T10:52:08.906122+00:00",
+  "event_datetime": "2026-01-14T00:39:32+00:00",
+  "event_created_datetime": "2026-01-14T10:52:10+00:00",
   "location": "AEJEA"
  },
  {
@@ -3350,8 +3350,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-12T22:15:37.144199+00:00",
-  "event_created_datetime": "2026-01-14T13:45:48.999213+00:00",
+  "event_datetime": "2026-01-12T22:15:37+00:00",
+  "event_created_datetime": "2026-01-14T13:45:49+00:00",
   "location": "AEJEA"
  },
  {
@@ -3362,7 +3362,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-24T05:00:00+00:00",
-  "event_created_datetime": "2026-01-14T14:45:00.112298+00:00",
+  "event_created_datetime": "2026-01-14T14:45:00+00:00",
   "location": "SGSIN"
  },
  {
@@ -3372,8 +3372,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T16:09:55.463274+00:00",
-  "event_created_datetime": "2026-01-14T16:35:55.463274+00:00",
+  "event_datetime": "2026-01-14T16:09:56+00:00",
+  "event_created_datetime": "2026-01-14T16:35:56+00:00",
   "location": "CNSHA"
  },
  {
@@ -3384,7 +3384,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-05T21:00:00+00:00",
-  "event_created_datetime": "2026-01-14T18:02:08.716459+00:00",
+  "event_created_datetime": "2026-01-14T18:02:09+00:00",
   "location": "SGSIN"
  },
  {
@@ -3394,8 +3394,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T18:52:33.762139+00:00",
-  "event_created_datetime": "2026-01-14T19:00:33.762139+00:00",
+  "event_datetime": "2026-01-14T18:52:33+00:00",
+  "event_created_datetime": "2026-01-14T19:00:33+00:00",
   "location": "NLRTM"
  },
  {
@@ -3405,8 +3405,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T05:55:02.393638+00:00",
-  "event_created_datetime": "2026-01-15T06:25:02.393638+00:00",
+  "event_datetime": "2026-01-15T05:55:02+00:00",
+  "event_created_datetime": "2026-01-15T06:25:02+00:00",
   "location": "NLRTM"
  },
  {
@@ -3416,8 +3416,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T07:09:40.328023+00:00",
-  "event_created_datetime": "2026-01-15T09:14:40.328023+00:00",
+  "event_datetime": "2026-01-15T07:09:41+00:00",
+  "event_created_datetime": "2026-01-15T09:14:41+00:00",
   "location": "CNSHA"
  },
  {
@@ -3427,8 +3427,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-13T23:53:37.660903+00:00",
-  "event_created_datetime": "2026-01-15T13:40:19.206810+00:00",
+  "event_datetime": "2026-01-13T23:53:38+00:00",
+  "event_created_datetime": "2026-01-15T13:40:20+00:00",
   "location": "FRMRS"
  },
  {
@@ -3438,8 +3438,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T14:36:00.887776+00:00",
-  "event_created_datetime": "2026-01-15T14:43:00.887776+00:00",
+  "event_datetime": "2026-01-15T14:36:00+00:00",
+  "event_created_datetime": "2026-01-15T14:43:00+00:00",
   "location": "AEJEA"
  },
  {
@@ -3450,7 +3450,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-18T21:00:00+00:00",
-  "event_created_datetime": "2026-01-15T17:05:20.783361+00:00",
+  "event_created_datetime": "2026-01-15T17:05:21+00:00",
   "location": "EGPSD"
  },
  {
@@ -3461,7 +3461,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-25T21:00:00+00:00",
-  "event_created_datetime": "2026-01-15T17:05:20.783361+00:00",
+  "event_created_datetime": "2026-01-15T17:05:21+00:00",
   "location": "NLRTM"
  },
  {
@@ -3472,7 +3472,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-07T03:00:00+00:00",
-  "event_created_datetime": "2026-01-15T17:28:34.020146+00:00",
+  "event_created_datetime": "2026-01-15T17:28:34+00:00",
   "location": "LBBEY"
  },
  {
@@ -3482,8 +3482,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T17:05:20.783361+00:00",
-  "event_created_datetime": "2026-01-15T17:43:20.783361+00:00",
+  "event_datetime": "2026-01-15T17:05:21+00:00",
+  "event_created_datetime": "2026-01-15T17:43:21+00:00",
   "location": "NLRTM"
  },
  {
@@ -3493,8 +3493,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T09:40:38.954539+00:00",
-  "event_created_datetime": "2026-01-15T23:59:24.927532+00:00",
+  "event_datetime": "2026-01-15T09:40:39+00:00",
+  "event_created_datetime": "2026-01-15T23:59:25+00:00",
   "location": "CNSHA"
  },
  {
@@ -3505,7 +3505,7 @@
   "event_type_code": "ARRI",
   "classifier": "PLN",
   "event_datetime": "2026-02-12T03:00:00+00:00",
-  "event_created_datetime": "2026-01-16T00:47:52.830250+00:00",
+  "event_created_datetime": "2026-01-16T00:47:53+00:00",
   "location": "SGSIN"
  },
  {
@@ -3516,7 +3516,7 @@
   "event_type_code": "DEPA",
   "classifier": "PLN",
   "event_datetime": "2026-01-23T03:00:00+00:00",
-  "event_created_datetime": "2026-01-16T00:47:52.830250+00:00",
+  "event_created_datetime": "2026-01-16T00:47:53+00:00",
   "location": "LBBEY"
  },
  {
@@ -3526,8 +3526,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "CONF",
   "classifier": "ACT",
-  "event_datetime": "2026-01-16T00:47:52.830250+00:00",
-  "event_created_datetime": "2026-01-16T01:00:52.830250+00:00",
+  "event_datetime": "2026-01-16T00:47:53+00:00",
+  "event_created_datetime": "2026-01-16T01:00:53+00:00",
   "location": "LBBEY"
  },
  {
@@ -3538,7 +3538,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-05T21:00:00+00:00",
-  "event_created_datetime": "2026-01-16T07:43:47.336984+00:00",
+  "event_created_datetime": "2026-01-16T07:43:47+00:00",
   "location": "AEJEA"
  },
  {
@@ -3548,8 +3548,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-14T20:17:37.516205+00:00",
-  "event_created_datetime": "2026-01-16T16:48:48.326134+00:00",
+  "event_datetime": "2026-01-14T20:17:38+00:00",
+  "event_created_datetime": "2026-01-16T16:48:49+00:00",
   "location": "CNSHA"
  },
  {
@@ -3559,8 +3559,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T06:12:36.315407+00:00",
-  "event_created_datetime": "2026-01-16T18:53:47.094089+00:00",
+  "event_datetime": "2026-01-15T06:12:35+00:00",
+  "event_created_datetime": "2026-01-16T18:53:46+00:00",
   "location": "AEJEA"
  },
  {
@@ -3570,8 +3570,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-16T22:58:23.927060+00:00",
-  "event_created_datetime": "2026-01-17T00:16:23.927060+00:00",
+  "event_datetime": "2026-01-16T22:58:24+00:00",
+  "event_created_datetime": "2026-01-17T00:16:24+00:00",
   "location": "NLRTM"
  },
  {
@@ -3581,8 +3581,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-15T10:12:07.327370+00:00",
-  "event_created_datetime": "2026-01-17T01:21:57.294056+00:00",
+  "event_datetime": "2026-01-15T10:12:06+00:00",
+  "event_created_datetime": "2026-01-17T01:21:56+00:00",
   "location": "AEJEA"
  },
  {
@@ -3592,8 +3592,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-17T08:57:33.913237+00:00",
-  "event_created_datetime": "2026-01-17T10:04:33.913237+00:00",
+  "event_datetime": "2026-01-17T08:57:34+00:00",
+  "event_created_datetime": "2026-01-17T10:04:34+00:00",
   "location": "NLRTM"
  },
  {
@@ -3604,7 +3604,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-08T08:00:00+00:00",
-  "event_created_datetime": "2026-01-17T10:31:22.204590+00:00",
+  "event_created_datetime": "2026-01-17T10:31:22+00:00",
   "location": "SGSIN"
  },
  {
@@ -3614,8 +3614,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-17T16:04:37.956760+00:00",
-  "event_created_datetime": "2026-01-17T16:10:37.956760+00:00",
+  "event_datetime": "2026-01-17T16:04:38+00:00",
+  "event_created_datetime": "2026-01-17T16:10:38+00:00",
   "location": "CNSHA"
  },
  {
@@ -3625,8 +3625,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-17T20:07:20.564837+00:00",
-  "event_created_datetime": "2026-01-17T20:53:20.564837+00:00",
+  "event_datetime": "2026-01-17T20:07:21+00:00",
+  "event_created_datetime": "2026-01-17T20:53:21+00:00",
   "location": "NLRTM"
  },
  {
@@ -3636,8 +3636,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-18T01:57:25.159572+00:00",
-  "event_created_datetime": "2026-01-18T02:39:25.159572+00:00",
+  "event_datetime": "2026-01-18T01:57:25+00:00",
+  "event_created_datetime": "2026-01-18T02:39:25+00:00",
   "location": "NLRTM"
  },
  {
@@ -3647,8 +3647,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-18T03:23:21.128117+00:00",
-  "event_created_datetime": "2026-01-18T05:26:21.128117+00:00",
+  "event_datetime": "2026-01-18T03:23:21+00:00",
+  "event_created_datetime": "2026-01-18T05:26:21+00:00",
   "location": "SAJED"
  },
  {
@@ -3658,8 +3658,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-18T06:25:04.383879+00:00",
-  "event_created_datetime": "2026-01-18T06:52:04.383879+00:00",
+  "event_datetime": "2026-01-18T06:25:04+00:00",
+  "event_created_datetime": "2026-01-18T06:52:04+00:00",
   "location": "NLRTM"
  },
  {
@@ -3669,8 +3669,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-18T07:43:43.828985+00:00",
-  "event_created_datetime": "2026-01-18T08:09:43.828985+00:00",
+  "event_datetime": "2026-01-18T07:43:44+00:00",
+  "event_created_datetime": "2026-01-18T08:09:44+00:00",
   "location": "NLRTM"
  },
  {
@@ -3680,8 +3680,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-18T05:20:11.951207+00:00",
-  "event_created_datetime": "2026-01-18T10:48:11.951207+00:00",
+  "event_datetime": "2026-01-18T05:20:12+00:00",
+  "event_created_datetime": "2026-01-18T10:48:12+00:00",
   "location": "NLRTM"
  },
  {
@@ -3692,7 +3692,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-23T11:00:00+00:00",
-  "event_created_datetime": "2026-01-18T11:06:35.078390+00:00",
+  "event_created_datetime": "2026-01-18T11:06:35+00:00",
   "location": "EGPSD"
  },
  {
@@ -3703,7 +3703,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-31T01:00:00+00:00",
-  "event_created_datetime": "2026-01-19T03:43:43.575818+00:00",
+  "event_created_datetime": "2026-01-19T03:43:44+00:00",
   "location": "SGSIN"
  },
  {
@@ -3713,8 +3713,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-18T19:35:45.594709+00:00",
-  "event_created_datetime": "2026-01-19T07:06:57.587889+00:00",
+  "event_datetime": "2026-01-18T19:35:45+00:00",
+  "event_created_datetime": "2026-01-19T07:06:57+00:00",
   "location": "SAJED"
  },
  {
@@ -3724,8 +3724,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-19T11:54:16.884096+00:00",
-  "event_created_datetime": "2026-01-19T12:05:16.884096+00:00",
+  "event_datetime": "2026-01-19T11:54:17+00:00",
+  "event_created_datetime": "2026-01-19T12:05:17+00:00",
   "location": "SAJED"
  },
  {
@@ -3735,8 +3735,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-19T18:20:43.997222+00:00",
-  "event_created_datetime": "2026-01-19T18:40:43.997222+00:00",
+  "event_datetime": "2026-01-19T18:20:44+00:00",
+  "event_created_datetime": "2026-01-19T18:40:44+00:00",
   "location": "NLRTM"
  },
  {
@@ -3746,8 +3746,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-19T18:55:30.210810+00:00",
-  "event_created_datetime": "2026-01-19T19:03:30.210810+00:00",
+  "event_datetime": "2026-01-19T18:55:30+00:00",
+  "event_created_datetime": "2026-01-19T19:03:30+00:00",
   "location": "NLRTM"
  },
  {
@@ -3758,7 +3758,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-31T01:00:00+00:00",
-  "event_created_datetime": "2026-01-19T20:34:22.575818+00:00",
+  "event_created_datetime": "2026-01-19T20:34:22+00:00",
   "location": "SGSIN"
  },
  {
@@ -3768,8 +3768,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T03:22:26.256442+00:00",
-  "event_created_datetime": "2026-01-20T03:47:26.256442+00:00",
+  "event_datetime": "2026-01-20T03:22:26+00:00",
+  "event_created_datetime": "2026-01-20T03:47:26+00:00",
   "location": "LBBEY"
  },
  {
@@ -3779,8 +3779,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T03:35:34.411371+00:00",
-  "event_created_datetime": "2026-01-20T05:16:34.411371+00:00",
+  "event_datetime": "2026-01-20T03:35:34+00:00",
+  "event_created_datetime": "2026-01-20T05:16:34+00:00",
   "location": "LBBEY"
  },
  {
@@ -3790,8 +3790,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T07:04:38.093693+00:00",
-  "event_created_datetime": "2026-01-20T07:11:38.093693+00:00",
+  "event_datetime": "2026-01-20T07:04:38+00:00",
+  "event_created_datetime": "2026-01-20T07:11:38+00:00",
   "location": "CNSHA"
  },
  {
@@ -3801,8 +3801,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T07:29:18.306192+00:00",
-  "event_created_datetime": "2026-01-20T08:14:18.306192+00:00",
+  "event_datetime": "2026-01-20T07:29:19+00:00",
+  "event_created_datetime": "2026-01-20T08:14:19+00:00",
   "location": "NLRTM"
  },
  {
@@ -3812,8 +3812,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T09:27:52.818895+00:00",
-  "event_created_datetime": "2026-01-20T09:31:52.818895+00:00",
+  "event_datetime": "2026-01-20T09:27:53+00:00",
+  "event_created_datetime": "2026-01-20T09:31:53+00:00",
   "location": "CNSHA"
  },
  {
@@ -3823,8 +3823,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T10:04:53.505213+00:00",
-  "event_created_datetime": "2026-01-20T10:19:53.505213+00:00",
+  "event_datetime": "2026-01-20T10:04:54+00:00",
+  "event_created_datetime": "2026-01-20T10:19:54+00:00",
   "location": "NLRTM"
  },
  {
@@ -3835,7 +3835,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-26T00:00:00+00:00",
-  "event_created_datetime": "2026-01-20T22:08:45.642631+00:00",
+  "event_created_datetime": "2026-01-20T22:08:46+00:00",
   "location": "FRMRS"
  },
  {
@@ -3845,8 +3845,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T23:59:02.888179+00:00",
-  "event_created_datetime": "2026-01-21T00:27:02.888179+00:00",
+  "event_datetime": "2026-01-20T23:59:03+00:00",
+  "event_created_datetime": "2026-01-21T00:27:03+00:00",
   "location": "LBBEY"
  },
  {
@@ -3856,8 +3856,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-21T07:01:18.169761+00:00",
-  "event_created_datetime": "2026-01-21T07:32:18.169761+00:00",
+  "event_datetime": "2026-01-21T07:01:18+00:00",
+  "event_created_datetime": "2026-01-21T07:32:18+00:00",
   "location": "NLRTM"
  },
  {
@@ -3867,8 +3867,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-21T01:47:48.891720+00:00",
-  "event_created_datetime": "2026-01-21T09:23:48.891720+00:00",
+  "event_datetime": "2026-01-21T01:47:49+00:00",
+  "event_created_datetime": "2026-01-21T09:23:49+00:00",
   "location": "SAJED"
  },
  {
@@ -3878,8 +3878,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-21T09:51:41.542223+00:00",
-  "event_created_datetime": "2026-01-21T12:48:41.542223+00:00",
+  "event_datetime": "2026-01-21T09:51:41+00:00",
+  "event_created_datetime": "2026-01-21T12:48:41+00:00",
   "location": "LBBEY"
  },
  {
@@ -3889,8 +3889,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-21T16:19:46.730055+00:00",
-  "event_created_datetime": "2026-01-21T16:28:46.730055+00:00",
+  "event_datetime": "2026-01-21T16:19:47+00:00",
+  "event_created_datetime": "2026-01-21T16:28:47+00:00",
   "location": "NLRTM"
  },
  {
@@ -3900,8 +3900,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-20T02:01:34.874160+00:00",
-  "event_created_datetime": "2026-01-21T23:35:56.210192+00:00",
+  "event_datetime": "2026-01-20T02:01:35+00:00",
+  "event_created_datetime": "2026-01-21T23:35:56+00:00",
   "location": "NLRTM"
  },
  {
@@ -3911,8 +3911,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-22T04:06:17.059831+00:00",
-  "event_created_datetime": "2026-01-22T04:10:17.059831+00:00",
+  "event_datetime": "2026-01-22T04:06:17+00:00",
+  "event_created_datetime": "2026-01-22T04:10:17+00:00",
   "location": "CNSHA"
  },
  {
@@ -3922,8 +3922,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-22T14:59:22.765216+00:00",
-  "event_created_datetime": "2026-01-22T15:06:22.765216+00:00",
+  "event_datetime": "2026-01-22T14:59:23+00:00",
+  "event_created_datetime": "2026-01-22T15:06:23+00:00",
   "location": "LBBEY"
  },
  {
@@ -3933,8 +3933,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-22T16:31:09.325799+00:00",
-  "event_created_datetime": "2026-01-22T16:44:09.325799+00:00",
+  "event_datetime": "2026-01-22T16:31:09+00:00",
+  "event_created_datetime": "2026-01-22T16:44:09+00:00",
   "location": "LBBEY"
  },
  {
@@ -3945,7 +3945,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-24T00:00:00+00:00",
-  "event_created_datetime": "2026-01-23T03:54:04.078390+00:00",
+  "event_created_datetime": "2026-01-23T03:54:04+00:00",
   "location": "EGPSD"
  },
  {
@@ -3955,8 +3955,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-23T00:32:17.112078+00:00",
-  "event_created_datetime": "2026-01-23T04:59:17.112078+00:00",
+  "event_datetime": "2026-01-23T00:32:17+00:00",
+  "event_created_datetime": "2026-01-23T04:59:17+00:00",
   "location": "LBBEY"
  },
  {
@@ -3966,8 +3966,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-23T06:03:02.339664+00:00",
-  "event_created_datetime": "2026-01-23T06:18:02.339664+00:00",
+  "event_datetime": "2026-01-23T06:03:03+00:00",
+  "event_created_datetime": "2026-01-23T06:18:03+00:00",
   "location": "NLRTM"
  },
  {
@@ -3977,8 +3977,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-23T06:25:13.717902+00:00",
-  "event_created_datetime": "2026-01-23T08:01:13.717902+00:00",
+  "event_datetime": "2026-01-23T06:25:14+00:00",
+  "event_created_datetime": "2026-01-23T08:01:14+00:00",
   "location": "NLRTM"
  },
  {
@@ -3989,7 +3989,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-01-26T00:00:00+00:00",
-  "event_created_datetime": "2026-01-23T19:13:29.642631+00:00",
+  "event_created_datetime": "2026-01-23T19:13:29+00:00",
   "location": "FRMRS"
  },
  {
@@ -3999,8 +3999,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-23T20:11:44.633439+00:00",
-  "event_created_datetime": "2026-01-23T21:19:44.633439+00:00",
+  "event_datetime": "2026-01-23T20:11:45+00:00",
+  "event_created_datetime": "2026-01-23T21:19:45+00:00",
   "location": "NLRTM"
  },
  {
@@ -4010,8 +4010,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-22T20:22:45.612664+00:00",
-  "event_created_datetime": "2026-01-23T22:37:07.325456+00:00",
+  "event_datetime": "2026-01-22T20:22:46+00:00",
+  "event_created_datetime": "2026-01-23T22:37:08+00:00",
   "location": "LBBEY"
  },
  {
@@ -4021,8 +4021,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T01:15:13.068707+00:00",
-  "event_created_datetime": "2026-01-24T01:24:13.068707+00:00",
+  "event_datetime": "2026-01-24T01:15:13+00:00",
+  "event_created_datetime": "2026-01-24T01:24:13+00:00",
   "location": "EGPSD"
  },
  {
@@ -4033,7 +4033,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-08T22:00:00+00:00",
-  "event_created_datetime": "2026-01-24T08:48:53.159889+00:00",
+  "event_created_datetime": "2026-01-24T08:48:54+00:00",
   "location": "SGSIN"
  },
  {
@@ -4043,8 +4043,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T10:19:46.130070+00:00",
-  "event_created_datetime": "2026-01-24T11:22:46.130070+00:00",
+  "event_datetime": "2026-01-24T10:19:46+00:00",
+  "event_created_datetime": "2026-01-24T11:22:46+00:00",
   "location": "NLRTM"
  },
  {
@@ -4054,8 +4054,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-22T16:27:48.928884+00:00",
-  "event_created_datetime": "2026-01-24T11:23:53.519447+00:00",
+  "event_datetime": "2026-01-22T16:27:49+00:00",
+  "event_created_datetime": "2026-01-24T11:23:54+00:00",
   "location": "LBBEY"
  },
  {
@@ -4065,8 +4065,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-23T17:55:11.461270+00:00",
-  "event_created_datetime": "2026-01-24T11:38:14.534748+00:00",
+  "event_datetime": "2026-01-23T17:55:11+00:00",
+  "event_created_datetime": "2026-01-24T11:38:14+00:00",
   "location": "LBBEY"
  },
  {
@@ -4076,8 +4076,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTIN",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T15:46:50.003007+00:00",
-  "event_created_datetime": "2026-01-24T15:59:50.003007+00:00",
+  "event_datetime": "2026-01-24T15:46:50+00:00",
+  "event_created_datetime": "2026-01-24T15:59:50+00:00",
   "location": "SAJED"
  },
  {
@@ -4087,8 +4087,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T16:12:08.031479+00:00",
-  "event_created_datetime": "2026-01-24T16:25:08.031479+00:00",
+  "event_datetime": "2026-01-24T16:12:08+00:00",
+  "event_created_datetime": "2026-01-24T16:25:08+00:00",
   "location": "SGSIN"
  },
  {
@@ -4098,8 +4098,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T16:25:22.973712+00:00",
-  "event_created_datetime": "2026-01-24T17:10:22.973712+00:00",
+  "event_datetime": "2026-01-24T16:25:23+00:00",
+  "event_created_datetime": "2026-01-24T17:10:23+00:00",
   "location": "SGSIN"
  },
  {
@@ -4110,7 +4110,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-05T21:00:00+00:00",
-  "event_created_datetime": "2026-01-24T20:00:15.336984+00:00",
+  "event_created_datetime": "2026-01-24T20:00:15+00:00",
   "location": "AEJEA"
  },
  {
@@ -4120,8 +4120,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T20:17:43.005921+00:00",
-  "event_created_datetime": "2026-01-24T23:11:43.005921+00:00",
+  "event_datetime": "2026-01-24T20:17:43+00:00",
+  "event_created_datetime": "2026-01-24T23:11:43+00:00",
   "location": "SGSIN"
  },
  {
@@ -4131,8 +4131,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T23:59:36.534146+00:00",
-  "event_created_datetime": "2026-01-25T01:07:36.534146+00:00",
+  "event_datetime": "2026-01-24T23:59:36+00:00",
+  "event_created_datetime": "2026-01-25T01:07:36+00:00",
   "location": "EGPSD"
  },
  {
@@ -4142,8 +4142,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T00:48:24.255396+00:00",
-  "event_created_datetime": "2026-01-25T01:36:24.255396+00:00",
+  "event_datetime": "2026-01-25T00:48:24+00:00",
+  "event_created_datetime": "2026-01-25T01:36:24+00:00",
   "location": "EGPSD"
  },
  {
@@ -4153,8 +4153,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T19:35:30.267974+00:00",
-  "event_created_datetime": "2026-01-25T02:03:22.953965+00:00",
+  "event_datetime": "2026-01-24T19:35:30+00:00",
+  "event_created_datetime": "2026-01-25T02:03:23+00:00",
   "location": "EGPSD"
  },
  {
@@ -4164,8 +4164,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-24T05:22:13.133367+00:00",
-  "event_created_datetime": "2026-01-25T04:31:13.133367+00:00",
+  "event_datetime": "2026-01-24T05:22:13+00:00",
+  "event_created_datetime": "2026-01-25T04:31:13+00:00",
   "location": "SGSIN"
  },
  {
@@ -4175,8 +4175,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T12:08:56.564758+00:00",
-  "event_created_datetime": "2026-01-25T12:25:56.564758+00:00",
+  "event_datetime": "2026-01-25T12:08:56+00:00",
+  "event_created_datetime": "2026-01-25T12:25:56+00:00",
   "location": "EGPSD"
  },
  {
@@ -4186,8 +4186,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T15:48:33.742224+00:00",
-  "event_created_datetime": "2026-01-25T15:57:33.742224+00:00",
+  "event_datetime": "2026-01-25T15:48:34+00:00",
+  "event_created_datetime": "2026-01-25T15:57:34+00:00",
   "location": "SAJED"
  },
  {
@@ -4197,8 +4197,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T16:34:21.006453+00:00",
-  "event_created_datetime": "2026-01-25T17:06:21.006453+00:00",
+  "event_datetime": "2026-01-25T16:34:21+00:00",
+  "event_created_datetime": "2026-01-25T17:06:21+00:00",
   "location": "NLRTM"
  },
  {
@@ -4208,8 +4208,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T19:59:59.817968+00:00",
-  "event_created_datetime": "2026-01-25T21:06:59.817968+00:00",
+  "event_datetime": "2026-01-25T20:00:00+00:00",
+  "event_created_datetime": "2026-01-25T21:07:00+00:00",
   "location": "SAJED"
  },
  {
@@ -4219,8 +4219,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T01:43:53.362190+00:00",
-  "event_created_datetime": "2026-01-26T02:24:53.362190+00:00",
+  "event_datetime": "2026-01-26T01:43:54+00:00",
+  "event_created_datetime": "2026-01-26T02:24:54+00:00",
   "location": "SGSIN"
  },
  {
@@ -4230,8 +4230,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T00:28:37.402108+00:00",
-  "event_created_datetime": "2026-01-26T02:51:37.402108+00:00",
+  "event_datetime": "2026-01-26T00:28:37+00:00",
+  "event_created_datetime": "2026-01-26T02:51:37+00:00",
   "location": "FRMRS"
  },
  {
@@ -4241,8 +4241,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "DEPA",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T02:55:40.731610+00:00",
-  "event_created_datetime": "2026-01-26T03:01:40.731610+00:00",
+  "event_datetime": "2026-01-26T02:55:41+00:00",
+  "event_created_datetime": "2026-01-26T03:01:41+00:00",
   "location": "NLRTM"
  },
  {
@@ -4252,8 +4252,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T14:38:00.064981+00:00",
-  "event_created_datetime": "2026-01-26T04:07:37.395546+00:00",
+  "event_datetime": "2026-01-25T14:38:00+00:00",
+  "event_created_datetime": "2026-01-26T04:07:37+00:00",
   "location": "EGPSD"
  },
  {
@@ -4263,8 +4263,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T03:09:42.838431+00:00",
-  "event_created_datetime": "2026-01-26T04:22:42.838431+00:00",
+  "event_datetime": "2026-01-26T03:09:43+00:00",
+  "event_created_datetime": "2026-01-26T04:22:43+00:00",
   "location": "FRMRS"
  },
  {
@@ -4274,8 +4274,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T20:57:05.728101+00:00",
-  "event_created_datetime": "2026-01-26T04:50:05.728101+00:00",
+  "event_datetime": "2026-01-25T20:57:06+00:00",
+  "event_created_datetime": "2026-01-26T04:50:06+00:00",
   "location": "NLRTM"
  },
  {
@@ -4285,8 +4285,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T07:19:19.444597+00:00",
-  "event_created_datetime": "2026-01-26T07:59:19.444597+00:00",
+  "event_datetime": "2026-01-26T07:19:20+00:00",
+  "event_created_datetime": "2026-01-26T07:59:20+00:00",
   "location": "FRMRS"
  },
  {
@@ -4296,8 +4296,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T08:12:39.185863+00:00",
-  "event_created_datetime": "2026-01-26T08:16:39.185863+00:00",
+  "event_datetime": "2026-01-26T08:12:39+00:00",
+  "event_created_datetime": "2026-01-26T08:16:39+00:00",
   "location": "FRMRS"
  },
  {
@@ -4307,8 +4307,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T18:56:45.554774+00:00",
-  "event_created_datetime": "2026-01-26T19:02:45.554774+00:00",
+  "event_datetime": "2026-01-26T18:56:45+00:00",
+  "event_created_datetime": "2026-01-26T19:02:45+00:00",
   "location": "FRMRS"
  },
  {
@@ -4319,7 +4319,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-21T03:00:00+00:00",
-  "event_created_datetime": "2026-01-26T19:45:04.817968+00:00",
+  "event_created_datetime": "2026-01-26T19:45:05+00:00",
   "location": "FRMRS"
  },
  {
@@ -4329,8 +4329,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-26T20:08:09.184511+00:00",
-  "event_created_datetime": "2026-01-26T20:17:09.184511+00:00",
+  "event_datetime": "2026-01-26T20:08:09+00:00",
+  "event_created_datetime": "2026-01-26T20:17:09+00:00",
   "location": "FRMRS"
  },
  {
@@ -4340,8 +4340,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "LOAD",
   "classifier": "ACT",
-  "event_datetime": "2026-01-25T19:16:44.098655+00:00",
-  "event_created_datetime": "2026-01-26T21:10:09.433406+00:00",
+  "event_datetime": "2026-01-25T19:16:44+00:00",
+  "event_created_datetime": "2026-01-26T21:10:09+00:00",
   "location": "NLRTM"
  },
  {
@@ -4352,7 +4352,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-12T03:00:00+00:00",
-  "event_created_datetime": "2026-01-27T00:26:28.112078+00:00",
+  "event_created_datetime": "2026-01-27T00:26:28+00:00",
   "location": "SGSIN"
  },
  {
@@ -4362,8 +4362,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-27T02:47:41.516249+00:00",
-  "event_created_datetime": "2026-01-27T02:49:41.516249+00:00",
+  "event_datetime": "2026-01-27T02:47:42+00:00",
+  "event_created_datetime": "2026-01-27T02:49:42+00:00",
   "location": "SAJED"
  },
  {
@@ -4373,8 +4373,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-27T01:23:29.998298+00:00",
-  "event_created_datetime": "2026-01-27T03:36:29.998298+00:00",
+  "event_datetime": "2026-01-27T01:23:30+00:00",
+  "event_created_datetime": "2026-01-27T03:36:30+00:00",
   "location": "FRMRS"
  },
  {
@@ -4384,8 +4384,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "ISSU",
   "classifier": "ACT",
-  "event_datetime": "2026-01-27T06:49:09.171392+00:00",
-  "event_created_datetime": "2026-01-27T07:53:09.171392+00:00",
+  "event_datetime": "2026-01-27T06:49:09+00:00",
+  "event_created_datetime": "2026-01-27T07:53:09+00:00",
   "location": "NLRTM"
  },
  {
@@ -4395,8 +4395,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-27T18:09:32.054148+00:00",
-  "event_created_datetime": "2026-01-27T18:21:32.054148+00:00",
+  "event_datetime": "2026-01-27T18:09:32+00:00",
+  "event_created_datetime": "2026-01-27T18:21:32+00:00",
   "location": "FRMRS"
  },
  {
@@ -4406,8 +4406,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-01-28T07:33:34.371355+00:00",
-  "event_created_datetime": "2026-01-28T07:36:34.371355+00:00",
+  "event_datetime": "2026-01-28T07:33:35+00:00",
+  "event_created_datetime": "2026-01-28T07:36:35+00:00",
   "location": "FRMRS"
  },
  {
@@ -4417,8 +4417,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-28T17:32:47.842695+00:00",
-  "event_created_datetime": "2026-01-28T18:34:47.842695+00:00",
+  "event_datetime": "2026-01-28T17:32:49+00:00",
+  "event_created_datetime": "2026-01-28T18:34:49+00:00",
   "location": "SGSIN"
  },
  {
@@ -4428,8 +4428,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-29T04:16:51.872266+00:00",
-  "event_created_datetime": "2026-01-29T04:51:51.872266+00:00",
+  "event_datetime": "2026-01-29T04:16:53+00:00",
+  "event_created_datetime": "2026-01-29T04:51:53+00:00",
   "location": "SGSIN"
  },
  {
@@ -4439,8 +4439,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-29T04:16:32.492960+00:00",
-  "event_created_datetime": "2026-01-29T07:42:32.492960+00:00",
+  "event_datetime": "2026-01-29T04:16:33+00:00",
+  "event_created_datetime": "2026-01-29T07:42:33+00:00",
   "location": "SGSIN"
  },
  {
@@ -4451,7 +4451,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-05T03:00:00+00:00",
-  "event_created_datetime": "2026-01-29T10:19:34.222567+00:00",
+  "event_created_datetime": "2026-01-29T10:19:34+00:00",
   "location": "SAJED"
  },
  {
@@ -4461,8 +4461,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-30T05:45:15.170120+00:00",
-  "event_created_datetime": "2026-01-30T08:58:15.170120+00:00",
+  "event_datetime": "2026-01-30T05:45:15+00:00",
+  "event_created_datetime": "2026-01-30T08:58:15+00:00",
   "location": "FRMRS"
  },
  {
@@ -4472,8 +4472,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-30T12:42:26.693332+00:00",
-  "event_created_datetime": "2026-01-30T13:14:26.693332+00:00",
+  "event_datetime": "2026-01-30T12:42:27+00:00",
+  "event_created_datetime": "2026-01-30T13:14:27+00:00",
   "location": "FRMRS"
  },
  {
@@ -4483,8 +4483,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-30T16:31:05.812769+00:00",
-  "event_created_datetime": "2026-01-30T16:39:05.812769+00:00",
+  "event_datetime": "2026-01-30T16:31:06+00:00",
+  "event_created_datetime": "2026-01-30T16:39:06+00:00",
   "location": "FRMRS"
  },
  {
@@ -4494,8 +4494,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-30T02:39:12.668557+00:00",
-  "event_created_datetime": "2026-01-30T21:57:41.129920+00:00",
+  "event_datetime": "2026-01-30T02:39:12+00:00",
+  "event_created_datetime": "2026-01-30T21:57:40+00:00",
   "location": "FRMRS"
  },
  {
@@ -4505,8 +4505,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-01-31T00:28:08.472533+00:00",
-  "event_created_datetime": "2026-01-31T00:57:08.472533+00:00",
+  "event_datetime": "2026-01-31T00:28:08+00:00",
+  "event_created_datetime": "2026-01-31T00:57:08+00:00",
   "location": "SGSIN"
  },
  {
@@ -4516,8 +4516,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-01-31T00:08:55.249970+00:00",
-  "event_created_datetime": "2026-01-31T01:00:55.249970+00:00",
+  "event_datetime": "2026-01-31T00:08:56+00:00",
+  "event_created_datetime": "2026-01-31T01:00:56+00:00",
   "location": "FRMRS"
  },
  {
@@ -4527,8 +4527,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-31T16:51:10.903583+00:00",
-  "event_created_datetime": "2026-01-31T17:35:10.903583+00:00",
+  "event_datetime": "2026-01-31T16:51:10+00:00",
+  "event_created_datetime": "2026-01-31T17:35:10+00:00",
   "location": "SGSIN"
  },
  {
@@ -4538,8 +4538,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-31T17:35:56.865662+00:00",
-  "event_created_datetime": "2026-01-31T17:46:56.865662+00:00",
+  "event_datetime": "2026-01-31T17:35:56+00:00",
+  "event_created_datetime": "2026-01-31T17:46:56+00:00",
   "location": "SGSIN"
  },
  {
@@ -4549,8 +4549,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-31T15:26:18.895168+00:00",
-  "event_created_datetime": "2026-01-31T18:12:18.895168+00:00",
+  "event_datetime": "2026-01-31T15:26:18+00:00",
+  "event_created_datetime": "2026-01-31T18:12:18+00:00",
   "location": "SGSIN"
  },
  {
@@ -4560,8 +4560,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-01-31T23:57:02.222118+00:00",
-  "event_created_datetime": "2026-02-01T00:20:02.222118+00:00",
+  "event_datetime": "2026-01-31T23:57:02+00:00",
+  "event_created_datetime": "2026-02-01T00:20:02+00:00",
   "location": "SGSIN"
  },
  {
@@ -4572,7 +4572,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-03T09:00:00+00:00",
-  "event_created_datetime": "2026-02-01T04:26:25.818895+00:00",
+  "event_created_datetime": "2026-02-01T04:26:25+00:00",
   "location": "FRMRS"
  },
  {
@@ -4582,8 +4582,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-01T21:40:37.533254+00:00",
-  "event_created_datetime": "2026-02-01T22:41:37.533254+00:00",
+  "event_datetime": "2026-02-01T21:40:37+00:00",
+  "event_created_datetime": "2026-02-01T22:41:37+00:00",
   "location": "SGSIN"
  },
  {
@@ -4593,8 +4593,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-02T01:26:24.912715+00:00",
-  "event_created_datetime": "2026-02-02T01:39:24.912715+00:00",
+  "event_datetime": "2026-02-02T01:26:25+00:00",
+  "event_created_datetime": "2026-02-02T01:39:25+00:00",
   "location": "CNSHA"
  },
  {
@@ -4605,7 +4605,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-07T02:00:00+00:00",
-  "event_created_datetime": "2026-02-02T21:03:20.716459+00:00",
+  "event_created_datetime": "2026-02-02T21:03:21+00:00",
   "location": "SGSIN"
  },
  {
@@ -4615,8 +4615,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-02T23:19:35.130732+00:00",
-  "event_created_datetime": "2026-02-02T23:33:35.130732+00:00",
+  "event_datetime": "2026-02-02T23:19:35+00:00",
+  "event_created_datetime": "2026-02-02T23:33:35+00:00",
   "location": "CNSHA"
  },
  {
@@ -4626,8 +4626,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-03T09:12:28.430901+00:00",
-  "event_created_datetime": "2026-02-03T17:52:28.430901+00:00",
+  "event_datetime": "2026-02-03T09:12:28+00:00",
+  "event_created_datetime": "2026-02-03T17:52:28+00:00",
   "location": "FRMRS"
  },
  {
@@ -4637,8 +4637,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-03T14:42:57.440227+00:00",
-  "event_created_datetime": "2026-02-03T19:38:57.440227+00:00",
+  "event_datetime": "2026-02-03T14:42:57+00:00",
+  "event_created_datetime": "2026-02-03T19:38:57+00:00",
   "location": "FRMRS"
  },
  {
@@ -4648,8 +4648,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-03T20:09:03.347869+00:00",
-  "event_created_datetime": "2026-02-03T20:30:03.347869+00:00",
+  "event_datetime": "2026-02-03T20:09:03+00:00",
+  "event_created_datetime": "2026-02-03T20:30:03+00:00",
   "location": "SGSIN"
  },
  {
@@ -4659,8 +4659,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-04T01:35:55.941190+00:00",
-  "event_created_datetime": "2026-02-04T02:01:55.941190+00:00",
+  "event_datetime": "2026-02-04T01:35:56+00:00",
+  "event_created_datetime": "2026-02-04T02:01:56+00:00",
   "location": "SGSIN"
  },
  {
@@ -4671,7 +4671,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-08T08:00:00+00:00",
-  "event_created_datetime": "2026-02-04T05:58:43.204590+00:00",
+  "event_created_datetime": "2026-02-04T05:58:44+00:00",
   "location": "SGSIN"
  },
  {
@@ -4681,8 +4681,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-04T05:39:16.004853+00:00",
-  "event_created_datetime": "2026-02-04T06:00:16.004853+00:00",
+  "event_datetime": "2026-02-04T05:39:16+00:00",
+  "event_created_datetime": "2026-02-04T06:00:16+00:00",
   "location": "CNSHA"
  },
  {
@@ -4692,8 +4692,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-04T07:14:31.974542+00:00",
-  "event_created_datetime": "2026-02-04T07:21:31.974542+00:00",
+  "event_datetime": "2026-02-04T07:14:32+00:00",
+  "event_created_datetime": "2026-02-04T07:21:32+00:00",
   "location": "SGSIN"
  },
  {
@@ -4704,7 +4704,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-12T07:00:00+00:00",
-  "event_created_datetime": "2026-02-04T21:50:06.112078+00:00",
+  "event_created_datetime": "2026-02-04T21:50:06+00:00",
   "location": "SGSIN"
  },
  {
@@ -4714,8 +4714,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-05T03:10:26.082688+00:00",
-  "event_created_datetime": "2026-02-05T03:15:26.082688+00:00",
+  "event_datetime": "2026-02-05T03:10:26+00:00",
+  "event_created_datetime": "2026-02-05T03:15:26+00:00",
   "location": "SAJED"
  },
  {
@@ -4725,8 +4725,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-05T08:20:22.355480+00:00",
-  "event_created_datetime": "2026-02-05T08:28:22.355480+00:00",
+  "event_datetime": "2026-02-05T08:20:22+00:00",
+  "event_created_datetime": "2026-02-05T08:28:22+00:00",
   "location": "SAJED"
  },
  {
@@ -4736,8 +4736,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-05T18:20:20.580725+00:00",
-  "event_created_datetime": "2026-02-05T19:06:20.580725+00:00",
+  "event_datetime": "2026-02-05T18:20:20+00:00",
+  "event_created_datetime": "2026-02-05T19:06:20+00:00",
   "location": "FRMRS"
  },
  {
@@ -4747,8 +4747,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-05T21:14:44.004532+00:00",
-  "event_created_datetime": "2026-02-05T21:32:44.004532+00:00",
+  "event_datetime": "2026-02-05T21:14:44+00:00",
+  "event_created_datetime": "2026-02-05T21:32:44+00:00",
   "location": "AEJEA"
  },
  {
@@ -4758,8 +4758,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-05T23:20:19.061127+00:00",
-  "event_created_datetime": "2026-02-05T23:48:19.061127+00:00",
+  "event_datetime": "2026-02-05T23:20:19+00:00",
+  "event_created_datetime": "2026-02-05T23:48:19+00:00",
   "location": "SAJED"
  },
  {
@@ -4770,7 +4770,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-15T20:00:00+00:00",
-  "event_created_datetime": "2026-02-06T07:57:39.354243+00:00",
+  "event_created_datetime": "2026-02-06T07:57:39+00:00",
   "location": "EGPSD"
  },
  {
@@ -4780,8 +4780,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-04T16:14:04.692990+00:00",
-  "event_created_datetime": "2026-02-06T11:34:46.748414+00:00",
+  "event_datetime": "2026-02-04T16:14:04+00:00",
+  "event_created_datetime": "2026-02-06T11:34:46+00:00",
   "location": "SGSIN"
  },
  {
@@ -4791,8 +4791,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-06T13:38:11.733805+00:00",
-  "event_created_datetime": "2026-02-06T15:50:11.733805+00:00",
+  "event_datetime": "2026-02-06T13:38:12+00:00",
+  "event_created_datetime": "2026-02-06T15:50:12+00:00",
   "location": "SAJED"
  },
  {
@@ -4802,8 +4802,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-06T21:54:26.736383+00:00",
-  "event_created_datetime": "2026-02-06T21:56:26.736383+00:00",
+  "event_datetime": "2026-02-06T21:54:26+00:00",
+  "event_created_datetime": "2026-02-06T21:56:26+00:00",
   "location": "CNSHA"
  },
  {
@@ -4813,8 +4813,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-07T02:14:30.140426+00:00",
-  "event_created_datetime": "2026-02-07T02:36:30.140426+00:00",
+  "event_datetime": "2026-02-07T02:14:30+00:00",
+  "event_created_datetime": "2026-02-07T02:36:30+00:00",
   "location": "LBBEY"
  },
  {
@@ -4824,8 +4824,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-07T12:39:30.615568+00:00",
-  "event_created_datetime": "2026-02-07T13:23:30.615568+00:00",
+  "event_datetime": "2026-02-07T12:39:31+00:00",
+  "event_created_datetime": "2026-02-07T13:23:31+00:00",
   "location": "SGSIN"
  },
  {
@@ -4835,8 +4835,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-06T06:33:53.471605+00:00",
-  "event_created_datetime": "2026-02-07T16:09:34.641469+00:00",
+  "event_datetime": "2026-02-06T06:33:53+00:00",
+  "event_created_datetime": "2026-02-07T16:09:34+00:00",
   "location": "AEJEA"
  },
  {
@@ -4846,8 +4846,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-07T19:14:50.731972+00:00",
-  "event_created_datetime": "2026-02-07T19:22:50.731972+00:00",
+  "event_datetime": "2026-02-07T19:14:50+00:00",
+  "event_created_datetime": "2026-02-07T19:22:50+00:00",
   "location": "LBBEY"
  },
  {
@@ -4857,8 +4857,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-07T23:51:10.826132+00:00",
-  "event_created_datetime": "2026-02-08T00:11:10.826132+00:00",
+  "event_datetime": "2026-02-07T23:51:11+00:00",
+  "event_created_datetime": "2026-02-08T00:11:11+00:00",
   "location": "LBBEY"
  },
  {
@@ -4868,8 +4868,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-08T01:24:24.401396+00:00",
-  "event_created_datetime": "2026-02-08T01:33:24.401396+00:00",
+  "event_datetime": "2026-02-08T01:24:24+00:00",
+  "event_created_datetime": "2026-02-08T01:33:24+00:00",
   "location": "AEJEA"
  },
  {
@@ -4879,8 +4879,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-08T04:01:28.900869+00:00",
-  "event_created_datetime": "2026-02-08T04:23:28.900869+00:00",
+  "event_datetime": "2026-02-08T04:01:30+00:00",
+  "event_created_datetime": "2026-02-08T04:23:30+00:00",
   "location": "SAJED"
  },
  {
@@ -4890,8 +4890,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-08T07:42:27.904326+00:00",
-  "event_created_datetime": "2026-02-08T08:03:27.904326+00:00",
+  "event_datetime": "2026-02-08T07:42:28+00:00",
+  "event_created_datetime": "2026-02-08T08:03:28+00:00",
   "location": "SGSIN"
  },
  {
@@ -4901,8 +4901,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-08T12:09:15.652530+00:00",
-  "event_created_datetime": "2026-02-08T12:16:15.652530+00:00",
+  "event_datetime": "2026-02-08T12:09:16+00:00",
+  "event_created_datetime": "2026-02-08T12:16:16+00:00",
   "location": "FRMRS"
  },
  {
@@ -4912,8 +4912,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-07T01:51:50.624121+00:00",
-  "event_created_datetime": "2026-02-08T20:27:50.556648+00:00",
+  "event_datetime": "2026-02-07T01:51:51+00:00",
+  "event_created_datetime": "2026-02-08T20:27:51+00:00",
   "location": "SGSIN"
  },
  {
@@ -4923,8 +4923,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-08T20:50:12.767194+00:00",
-  "event_created_datetime": "2026-02-08T21:00:12.767194+00:00",
+  "event_datetime": "2026-02-08T20:50:13+00:00",
+  "event_created_datetime": "2026-02-08T21:00:13+00:00",
   "location": "SGSIN"
  },
  {
@@ -4934,8 +4934,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-09T01:54:10.155153+00:00",
-  "event_created_datetime": "2026-02-09T01:58:10.155153+00:00",
+  "event_datetime": "2026-02-09T01:54:10+00:00",
+  "event_created_datetime": "2026-02-09T01:58:10+00:00",
   "location": "SGSIN"
  },
  {
@@ -4945,8 +4945,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-09T05:31:12.468171+00:00",
-  "event_created_datetime": "2026-02-09T06:30:12.468171+00:00",
+  "event_datetime": "2026-02-09T05:31:13+00:00",
+  "event_created_datetime": "2026-02-09T06:30:13+00:00",
   "location": "SGSIN"
  },
  {
@@ -4956,8 +4956,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-09T06:57:00.029658+00:00",
-  "event_created_datetime": "2026-02-09T07:32:00.029658+00:00",
+  "event_datetime": "2026-02-09T06:57:00+00:00",
+  "event_created_datetime": "2026-02-09T07:32:00+00:00",
   "location": "LBBEY"
  },
  {
@@ -4967,8 +4967,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-09T07:57:12.877740+00:00",
-  "event_created_datetime": "2026-02-09T08:23:12.877740+00:00",
+  "event_datetime": "2026-02-09T07:57:13+00:00",
+  "event_created_datetime": "2026-02-09T08:23:13+00:00",
   "location": "SGSIN"
  },
  {
@@ -4979,7 +4979,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-18T21:00:00+00:00",
-  "event_created_datetime": "2026-02-09T12:48:19.731610+00:00",
+  "event_created_datetime": "2026-02-09T12:48:19+00:00",
   "location": "EGPSD"
  },
  {
@@ -4989,8 +4989,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-09T18:48:41.734246+00:00",
-  "event_created_datetime": "2026-02-09T19:29:41.734246+00:00",
+  "event_datetime": "2026-02-09T18:48:42+00:00",
+  "event_created_datetime": "2026-02-09T19:29:42+00:00",
   "location": "SGSIN"
  },
  {
@@ -5000,8 +5000,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-09T20:59:28.740390+00:00",
-  "event_created_datetime": "2026-02-09T21:05:28.740390+00:00",
+  "event_datetime": "2026-02-09T20:59:29+00:00",
+  "event_created_datetime": "2026-02-09T21:05:29+00:00",
   "location": "SGSIN"
  },
  {
@@ -5012,7 +5012,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-12T08:00:00+00:00",
-  "event_created_datetime": "2026-02-10T09:16:17.112078+00:00",
+  "event_created_datetime": "2026-02-10T09:16:17+00:00",
   "location": "SGSIN"
  },
  {
@@ -5022,8 +5022,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-10T15:11:58.149075+00:00",
-  "event_created_datetime": "2026-02-10T15:34:58.149075+00:00",
+  "event_datetime": "2026-02-10T15:11:58+00:00",
+  "event_created_datetime": "2026-02-10T15:34:58+00:00",
   "location": "AEJEA"
  },
  {
@@ -5033,8 +5033,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-08T21:10:54.981429+00:00",
-  "event_created_datetime": "2026-02-10T16:49:43.961685+00:00",
+  "event_datetime": "2026-02-08T21:10:56+00:00",
+  "event_created_datetime": "2026-02-10T16:49:45+00:00",
   "location": "SAJED"
  },
  {
@@ -5044,8 +5044,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-10T20:51:45.440111+00:00",
-  "event_created_datetime": "2026-02-10T21:12:45.440111+00:00",
+  "event_datetime": "2026-02-10T20:51:46+00:00",
+  "event_created_datetime": "2026-02-10T21:12:46+00:00",
   "location": "SGSIN"
  },
  {
@@ -5055,8 +5055,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-11T09:29:41.272731+00:00",
-  "event_created_datetime": "2026-02-11T09:29:41.272731+00:00",
+  "event_datetime": "2026-02-11T09:29:42+00:00",
+  "event_created_datetime": "2026-02-11T09:29:42+00:00",
   "location": "SGSIN"
  },
  {
@@ -5066,8 +5066,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-12T07:32:38.213514+00:00",
-  "event_created_datetime": "2026-02-12T07:56:38.213514+00:00",
+  "event_datetime": "2026-02-12T07:32:38+00:00",
+  "event_created_datetime": "2026-02-12T07:56:38+00:00",
   "location": "SGSIN"
  },
  {
@@ -5077,8 +5077,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-12T14:42:47.016667+00:00",
-  "event_created_datetime": "2026-02-12T14:48:47.016667+00:00",
+  "event_datetime": "2026-02-12T14:42:47+00:00",
+  "event_created_datetime": "2026-02-12T14:48:47+00:00",
   "location": "SGSIN"
  },
  {
@@ -5089,7 +5089,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-18T22:00:00+00:00",
-  "event_created_datetime": "2026-02-12T22:02:23.731610+00:00",
+  "event_created_datetime": "2026-02-12T22:02:24+00:00",
   "location": "EGPSD"
  },
  {
@@ -5099,8 +5099,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-12T22:57:27.628899+00:00",
-  "event_created_datetime": "2026-02-12T23:03:27.628899+00:00",
+  "event_datetime": "2026-02-12T22:57:27+00:00",
+  "event_created_datetime": "2026-02-12T23:03:27+00:00",
   "location": "SGSIN"
  },
  {
@@ -5110,8 +5110,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-12T08:48:44.962417+00:00",
-  "event_created_datetime": "2026-02-13T01:33:16.336314+00:00",
+  "event_datetime": "2026-02-12T08:48:46+00:00",
+  "event_created_datetime": "2026-02-13T01:33:17+00:00",
   "location": "SGSIN"
  },
  {
@@ -5121,8 +5121,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-13T01:01:08.781271+00:00",
-  "event_created_datetime": "2026-02-13T01:56:08.781271+00:00",
+  "event_datetime": "2026-02-13T01:01:09+00:00",
+  "event_created_datetime": "2026-02-13T01:56:09+00:00",
   "location": "SGSIN"
  },
  {
@@ -5132,8 +5132,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-13T08:08:31.275019+00:00",
-  "event_created_datetime": "2026-02-13T08:43:31.275019+00:00",
+  "event_datetime": "2026-02-13T08:08:32+00:00",
+  "event_created_datetime": "2026-02-13T08:43:32+00:00",
   "location": "SGSIN"
  },
  {
@@ -5144,7 +5144,7 @@
   "event_type_code": "ARRI",
   "classifier": "EST",
   "event_datetime": "2026-02-14T06:00:00+00:00",
-  "event_created_datetime": "2026-02-13T11:27:32.721078+00:00",
+  "event_created_datetime": "2026-02-13T11:27:33+00:00",
   "location": "CNSHA"
  },
  {
@@ -5154,8 +5154,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-12T22:27:06.340632+00:00",
-  "event_created_datetime": "2026-02-13T12:32:01.668794+00:00",
+  "event_datetime": "2026-02-12T22:27:06+00:00",
+  "event_created_datetime": "2026-02-13T12:32:01+00:00",
   "location": "SGSIN"
  },
  {
@@ -5165,8 +5165,8 @@
   "event_type": "SHIPMENT",
   "event_type_code": "RELS",
   "classifier": "ACT",
-  "event_datetime": "2026-02-13T23:19:26.654286+00:00",
-  "event_created_datetime": "2026-02-14T00:40:26.654286+00:00",
+  "event_datetime": "2026-02-13T23:19:27+00:00",
+  "event_created_datetime": "2026-02-14T00:40:27+00:00",
   "location": "SGSIN"
  },
  {
@@ -5176,8 +5176,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "GTOT",
   "classifier": "ACT",
-  "event_datetime": "2026-02-12T11:38:34.634776+00:00",
-  "event_created_datetime": "2026-02-14T03:28:32.934525+00:00",
+  "event_datetime": "2026-02-12T11:38:35+00:00",
+  "event_created_datetime": "2026-02-14T03:28:33+00:00",
   "location": "SGSIN"
  },
  {
@@ -5187,8 +5187,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T04:53:30.340017+00:00",
-  "event_created_datetime": "2026-02-14T05:04:30.340017+00:00",
+  "event_datetime": "2026-02-14T04:53:30+00:00",
+  "event_created_datetime": "2026-02-14T05:04:30+00:00",
   "location": "CNSHA"
  },
  {
@@ -5198,8 +5198,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T05:57:23.896770+00:00",
-  "event_created_datetime": "2026-02-14T06:55:23.896770+00:00",
+  "event_datetime": "2026-02-14T05:57:24+00:00",
+  "event_created_datetime": "2026-02-14T06:55:24+00:00",
   "location": "CNSHA"
  },
  {
@@ -5209,8 +5209,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T13:11:06.106964+00:00",
-  "event_created_datetime": "2026-02-14T14:22:06.106964+00:00",
+  "event_datetime": "2026-02-14T13:11:06+00:00",
+  "event_created_datetime": "2026-02-14T14:22:06+00:00",
   "location": "CNSHA"
  },
  {
@@ -5220,8 +5220,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T18:00:32.706750+00:00",
-  "event_created_datetime": "2026-02-14T18:21:32.706750+00:00",
+  "event_datetime": "2026-02-14T18:00:33+00:00",
+  "event_created_datetime": "2026-02-14T18:21:33+00:00",
   "location": "CNSHA"
  },
  {
@@ -5231,8 +5231,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T15:46:42.012950+00:00",
-  "event_created_datetime": "2026-02-14T18:23:42.012950+00:00",
+  "event_datetime": "2026-02-14T15:46:42+00:00",
+  "event_created_datetime": "2026-02-14T18:23:42+00:00",
   "location": "CNSHA"
  },
  {
@@ -5242,8 +5242,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T19:51:11.845634+00:00",
-  "event_created_datetime": "2026-02-14T20:17:11.845634+00:00",
+  "event_datetime": "2026-02-14T19:51:12+00:00",
+  "event_created_datetime": "2026-02-14T20:17:12+00:00",
   "location": "CNSHA"
  },
  {
@@ -5253,8 +5253,8 @@
   "event_type": "EQUIPMENT",
   "event_type_code": "DISC",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T20:10:16.630760+00:00",
-  "event_created_datetime": "2026-02-14T21:37:16.630760+00:00",
+  "event_datetime": "2026-02-14T20:10:16+00:00",
+  "event_created_datetime": "2026-02-14T21:37:16+00:00",
   "location": "CNSHA"
  },
  {
@@ -5264,8 +5264,8 @@
   "event_type": "TRANSPORT",
   "event_type_code": "ARRI",
   "classifier": "ACT",
-  "event_datetime": "2026-02-14T23:34:31.147602+00:00",
-  "event_created_datetime": "2026-02-14T23:37:31.147602+00:00",
+  "event_datetime": "2026-02-14T23:34:31+00:00",
+  "event_created_datetime": "2026-02-14T23:37:31+00:00",
   "location": "LBBEY"
  }
 ]

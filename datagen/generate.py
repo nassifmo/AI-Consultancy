@@ -3,13 +3,16 @@
     python -m datagen.generate --config datagen/config/tiny.yaml
     python -m datagen.generate --config datagen/config/default.yaml --out /tmp/dev
 
-Implemented: layers 1-7 (world, tracking, enquiries, handling, follow-up, costs, ground truth).
-Every written file is validated against the data dictionary; generation fails on any issue.
+Implemented: all layers (world, tracking, enquiries, handling, follow-up, costs, ground truth,
+rendering, defect injection).
+Clean exports are validated against the data dictionary before defects are injected;
+generation fails on any issue.
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import shutil
@@ -20,9 +23,10 @@ from pathlib import Path
 
 from datagen.config_schema import GeneratorConfig, ServiceRules, load_config, load_rules
 from datagen.dictionary_tools import load_dictionary, validate_records, validate_references
+from datagen.generator.defects import inject
 from datagen.generator.costs import ai_invoice_rows, cost_parameters, rollout_rows, staffing_rows
 from datagen.generator.enquiries import build_enquiries
-from datagen.generator.export import build_tables, handling_tables, write_exports
+from datagen.generator.export import build_tables, datetime_fields, handling_tables, localize, write_exports
 from datagen.generator.handling import Handled, handle_all
 from datagen.generator.model import World
 from datagen.generator.review import render_review
@@ -31,7 +35,8 @@ from datagen.generator.world import build_world
 
 CONFIG_DIR = Path(__file__).resolve().parent / "config"
 DATASETS_DIR = Path(__file__).resolve().parent / "datasets"
-LAYERS_IMPLEMENTED = ["world", "tracking", "enquiries", "handling", "follow_up", "costs", "ground_truth"]
+LAYERS_IMPLEMENTED = ["world", "tracking", "enquiries", "handling", "follow_up", "costs", "ground_truth",
+                      "rendering", "defects"]
 REVIEW_SHEET_MAX_SHIPMENTS = 60
 
 
@@ -41,7 +46,9 @@ class Generated:
     rules: ServiceRules
     world: World
     handled: Handled
-    tables: dict
+    tables: dict  # final exports + ground truth, with defects injected (what gets written)
+    clean_tables: dict  # the same before defect injection (validated against the dictionary)
+    clean_issues: list[str]
 
 
 def rules_for(cfg: GeneratorConfig, config_dir: Path = CONFIG_DIR) -> ServiceRules:
@@ -68,12 +75,33 @@ def generate_all(cfg: GeneratorConfig, rules: ServiceRules | None = None) -> Gen
         "true_outcome": true_outcome_rows(world, handled),
         "planted_effects": [planted_effects(cfg, rules, world, handled)],
     }
-    return Generated(cfg, rules, world, handled, tables)
+    d = load_dictionary()
+    localize(tables, cfg.rendering.local_time_files, cfg.rendering.local_timezone, d)
+    clean_issues = validate_tables(tables)
+    clean = copy.deepcopy(tables)
+    dt_fields = {k: datetime_fields(k, d) for k in cfg.rendering.local_time_files}
+    tables["injected_defects"] = inject(cfg, tables, handled, dt_fields)
+    return Generated(cfg, rules, world, handled, tables, clean, clean_issues)
+
+
+def export_metadata(g: Generated) -> dict:
+    """What a partner would tell us about the export (time zones, window, rule version)."""
+    r = g.cfg.rendering
+    return {
+        "study_period": [g.world.period_start.isoformat(), g.world.period_end.isoformat()],
+        "data_cutoff": g.world.data_cutoff.isoformat(),
+        "rule_version": g.rules.rule_version,
+        "timezones": {f: (r.local_timezone if f in r.local_time_files else "UTC") for f in
+                      ["customers", "shipments", "tracking_events", "enquiries", "agent_runs", "cases",
+                       "case_history", "agent_work", "responses", "ai_invoice", "rollout_log", "staffing"]},
+        "notes": "Timestamps carry a UTC offset. If an offset is missing, interpret it in the file's time zone above.",
+    }
 
 
 def summarize(g: Generated) -> dict:
     w, truths = g.world, g.handled.truths
     pop = [t for t in truths if t.in_population and t.in_scope]
+    defects = g.tables.get("injected_defects", [])
     return {
         "customers": len(w.customers),
         "shipments": len(w.shipments),
@@ -89,12 +117,14 @@ def summarize(g: Generated) -> dict:
         "cases": len(g.tables["cases"]),
         "human_work_items": len(g.tables["agent_work"]),
         "responses": len(g.tables["responses"]),
+        "defects_injected": dict(sorted(Counter(x["defect_type"] for x in defects).items())),
+        "expected_unknown": sum(r["expected_evaluator_state"] == "unknown" for r in g.tables["true_outcome"]),
     }
 
 
 def validate_tables(tables: dict[str, list[dict]]) -> list[str]:
     d = load_dictionary()
-    issues = [str(i) for key, rows in tables.items() if key != "planted_effects"
+    issues = [str(i) for key, rows in tables.items() if key not in ("planted_effects", "injected_defects")
               for i in validate_records(key, rows, d)]
     issues += [str(i) for i in validate_references(tables, d)]
     return issues
@@ -104,7 +134,7 @@ def run(config_path: Path, out_dir: Path | None = None) -> Path:
     cfg = load_config(config_path)
     rules = rules_for(cfg, Path(config_path).parent)
     g = generate_all(cfg, rules)
-    issues = validate_tables(g.tables)
+    issues = g.clean_issues + [str(i) for i in validate_records("injected_defects", g.tables["injected_defects"])]
     if issues:
         raise RuntimeError("generated data failed validation:\n" + "\n".join(issues[:50]))
 
@@ -114,6 +144,8 @@ def run(config_path: Path, out_dir: Path | None = None) -> Path:
     write_exports(g.tables, out_dir)
     rules_src = Path(config_path).parent / cfg.service_rules_file
     shutil.copyfile(rules_src, out_dir / "exports" / "service_rules.yaml")
+    (out_dir / "exports" / "export_metadata.json").write_text(json.dumps(export_metadata(g), indent=2) + "\n",
+                                                              encoding="utf-8")
 
     manifest = {
         "dataset_name": cfg.dataset_name,

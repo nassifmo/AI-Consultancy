@@ -34,6 +34,17 @@ Plan: `docs/SYNTHETIC_DATA_PLAN.md`. Human-readable field list: `docs/DATA_DICTI
 - Independent contacts about one shipment are spaced `min_days_between_contacts` apart, so recontacts
   inside the repeat window come from handling quality (plus a small noise rate).
 
+## Step 4 (done): rendering and defects
+- Case, case-history and human-work files are exported in local time (`Asia/Beirut`, offset kept);
+  `exports/export_metadata.json` declares each file's time zone, the study period and the data cutoff.
+- All timestamps have whole-second precision.
+- `generator/defects.py` injects defects after the clean exports are validated and logs each one in
+  `ground_truth/injected_defects.csv`. Recoverable defects (duplicates, retries, out-of-order rows,
+  dropped offsets, orphans, ID typos recoverable via another link) leave the expected result unchanged.
+  Evidence-removing defects (missing tracking history, blank claim on the final answer, conflicting
+  case closure) set `expected_evaluator_state` to `unknown`. The true outcome itself never changes.
+- `tiny` has defects disabled (clean, for review). `default` uses light rates; heavy sets come in step 6.
+
 ## Commands
 ```bash
 pip install -r requirements.txt

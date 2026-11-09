@@ -112,15 +112,19 @@ costs:
     generate: true
     baseline_headcount: 25
 
+rendering:
+  local_timezone: Asia/Beirut    # case and workforce systems export local time (offset included)
+  local_time_files: [cases, case_history, agent_work]
+
 defects:
-  enabled: true
+  enabled: false          # tiny stays clean for row-by-row review; damaged sets come in step 6
   rates:                         # share of rows affected in the target file
-    duplicate_row: 0.01
-    missing_field: 0.02
-    missing_snapshot: 0.02
-    timezone_shift: 0.005
-    id_typo: 0.005
-    orphan_record: 0.003
-    retry_row: 0.01
-    late_record: 0.01
-    conflicting_closure: 0.005
+    duplicate_row: 0.01          # exact duplicate rows (export glitch)
+    missing_field: 0.02          # blank optional field (claimed ETA/status, active time, case closed_at)
+    missing_snapshot: 0.02       # share of shipments whose tracking history is missing from the export
+    timezone_shift: 0.005        # local-time row exported without its UTC offset
+    id_typo: 0.005               # enquiry reference mistyped in a work or case row
+    orphan_record: 0.003         # work row for an enquiry not in the export
+    retry_row: 0.01              # agent platform logs a failed technical retry before the real run
+    late_record: 0.01            # row out of chronological order (arrived in a later batch)
+    conflicting_closure: 0.005   # case table says closed, case history shows it reopened

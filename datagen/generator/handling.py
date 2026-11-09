@@ -18,7 +18,7 @@ from datagen.config_schema import AgentBehaviour, GeneratorConfig, ServiceRules
 
 from . import ids
 from .model import Enquiry, Shipment, World
-from .sampling import choice_weighted, hours, layer_rng, lognormal, uniform_time
+from .sampling import choice_weighted, days, hours, layer_rng, lognormal, minutes, uniform_time
 from .state import STATUS_ORDER, known_state_at
 
 HUMAN_BASELINE = "human_baseline"
@@ -60,6 +60,7 @@ class Truth:
     answers: list[Answer] = field(default_factory=list)
     escalation_required: bool | None = None
     required_actions_done: bool | None = None
+    qualifying_cases: list[EscalationCase] = field(default_factory=list)  # escalations that met the rules
     escalations: list[EscalationCase] = field(default_factory=list)
     handed_off: bool = False
     rescued: bool = False
@@ -213,7 +214,7 @@ class Handler:
         if self.rng.random() >= hc.case_followup_compliance:
             return esc  # never actioned: no investigation, no update, no closure
 
-        start = at + timedelta(minutes=self.skew(hc.queue_minutes))
+        start = at + minutes(self.skew(hc.queue_minutes))
         self.work(t, "handle_case", start, self.skew(hc.case_minutes), case)
         deadline = self.rules.follow_up.followup_deadline_hours
         upd = uniform_time(self.rng, at + hours(min(2.0, deadline / 2)), at + hours(deadline))
@@ -223,7 +224,7 @@ class Handler:
         esc.first_update_at = upd
         self.history(case, upd, "status", "escalated", "open", owner)
 
-        closed = upd + timedelta(days=self.skew(hc.case_resolution_days))
+        closed = upd + days(self.skew(hc.case_resolution_days))
         code = "resolved_after_investigation" if self.rng.random() < 0.9 else "customer_unreachable"
         case.update(closed_at=closed, closure_code=code)
         self.history(case, closed, "status", "open", "closed", owner)
@@ -262,11 +263,11 @@ class Handler:
         q, b = t.enquiry, self.cfg.agents[version]
         true = self.w.shipment(q.true_booking_ref)
         if q.channel == "email":
-            start = q.received_at + timedelta(minutes=self.rng.uniform(5, 60))
+            start = q.received_at + minutes(self.rng.uniform(5, 60))
         else:
-            start = q.received_at + timedelta(seconds=self.rng.uniform(0, 60))
+            start = q.received_at + timedelta(seconds=round(self.rng.uniform(0, 60)))
         voice = round(self.skew(b.voice_seconds)) if q.channel == "voice" else 0
-        end = start + timedelta(seconds=voice or self.rng.uniform(20, 90))
+        end = start + timedelta(seconds=voice or round(self.rng.uniform(20, 90)))
         steps: list[dict] = []
         step = lambda **kw: steps.append({"step_no": len(steps) + 1, "tool_input": None, "tool_output": None,
                                           "snapshot_time": None, **kw})
@@ -317,7 +318,7 @@ class Handler:
         if handoff:
             t.handed_off = True
             run["self_reported_outcome"] = "handed_off"
-            self.human_answer(t, end + timedelta(minutes=self.skew(self.cfg.human.queue_minutes)), True)
+            self.human_answer(t, end + minutes(self.skew(self.cfg.human.queue_minutes)), True)
             return
 
         self.respond(t, answer)
@@ -368,11 +369,12 @@ class Handler:
               and e.opened_at - q.received_at <= hours(r.escalation.max_hours_to_escalate)
               and e.first_update_at is not None
               and e.first_update_at - e.opened_at <= hours(r.follow_up.followup_deadline_hours)]
+        t.qualifying_cases = ok if t.escalation_required else []
         t.required_actions_done = bool(ok) if t.escalation_required else True
         if final is None or not final.correct or not t.required_actions_done:
             return "failed"
         if t.escalation_required:
-            window_end = q.received_at + timedelta(days=r.follow_up.observation_window_days)
+            window_end = q.received_at + days(r.follow_up.observation_window_days)
             if all(e.closed_at is None or e.closed_at > window_end for e in ok):
                 return "escalated_open"
         return "resolved"
@@ -386,7 +388,7 @@ class Handler:
             k = self.known(true, q.received_at)
             t.escalation_required = self.needs_escalation(true, k.status, k.eta)
         if q.arm == HUMAN_BASELINE:
-            self.human_answer(t, q.received_at + timedelta(minutes=self.skew(self.cfg.human.queue_minutes)), False)
+            self.human_answer(t, q.received_at + minutes(self.skew(self.cfg.human.queue_minutes)), False)
         else:
             self.ai_answer(t, q.arm)
         t.service_outcome = self.service_outcome(t)
@@ -401,7 +403,7 @@ class Handler:
             return None
         q = t.enquiry
         after = max([q.received_at] + [a.sent_at for a in t.answers]) + hours(2)
-        window = q.received_at + timedelta(days=self.rules.follow_up.repeat_contact_window_days)
+        window = q.received_at + days(self.rules.follow_up.repeat_contact_window_days)
         at = uniform_time(self.rng, after, window)
         if at >= self.w.data_cutoff or at <= after:
             return None
@@ -431,7 +433,7 @@ def _mark_repeats(truths: list[Truth], window_days: float) -> None:
     by_key: dict[tuple[str, str], list[Truth]] = {}
     for t in truths:
         by_key.setdefault((t.enquiry.customer_id, t.enquiry.true_booking_ref), []).append(t)
-    window = timedelta(days=window_days)
+    window = days(window_days)
     for group in by_key.values():
         group.sort(key=lambda t: t.enquiry.received_at)
         for i, t in enumerate(group):

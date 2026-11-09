@@ -50,4 +50,13 @@ def uniform_time(rng: random.Random, start: datetime, end: datetime) -> datetime
 
 
 def hours(h: float) -> timedelta:
-    return timedelta(hours=h)
+    """Whole-second duration (exports carry second precision, like real systems)."""
+    return timedelta(seconds=round(h * 3600))
+
+
+def minutes(m: float) -> timedelta:
+    return timedelta(seconds=round(m * 60))
+
+
+def days(d: float) -> timedelta:
+    return timedelta(seconds=round(d * 86400))

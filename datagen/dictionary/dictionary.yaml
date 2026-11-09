@@ -307,9 +307,14 @@ ground_truth:
     filename: injected_defects.csv
     format: csv
     primary_key: defect_id
+    notes: >
+      missing_snapshot removes a shipment's whole tracking history (record_id = booking_ref).
+      affected_enquiries lists in-scope enquiries whose expected evaluator state became "unknown".
     fields:
       - {name: defect_id, type: string, required: true, description: "Unique defect"}
       - {name: file, type: string, required: true, description: "Export file affected"}
       - {name: record_id, type: string, required: true, description: "Affected record"}
       - {name: defect_type, type: enum, required: true, values: [duplicate_row, missing_field, missing_snapshot, timezone_shift, id_typo, orphan_record, retry_row, late_record, conflicting_closure, false_self_report], description: "Defect injected"}
+      - {name: field, type: string, required: false, description: "Field changed, if one field"}
       - {name: detail, type: string, required: false, description: "What was changed"}
+      - {name: affected_enquiries, type: list, required: false, description: "Enquiries whose expected evaluator state became unknown (semicolon-separated)"}

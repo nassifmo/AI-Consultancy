@@ -8,7 +8,7 @@ from datagen.config_schema import GeneratorConfig
 
 from . import ids
 from .model import Customer, Shipment, TrackingEvent, World
-from .sampling import choice_weighted, hours, layer_rng, lognormal, uniform_time
+from .sampling import choice_weighted, days, hours, layer_rng, lognormal, minutes, uniform_time
 
 # Countries matching the default port list (ISO 3166-1 alpha-2).
 COUNTRIES = ["LB", "AE", "SA", "EG", "FR", "CN", "SG", "NL"]
@@ -58,7 +58,7 @@ def build_shipments(cfg: GeneratorConfig, customers: list[Customer]) -> list[Shi
         origin, destination = rng.sample(cfg.world.ports, 2)
         planned_departure = _round_hour(uniform_time(rng, dep_from, dep_to))
         transit = rng.randint(cfg.world.transit_days.min, cfg.world.transit_days.max)
-        planned_arrival = planned_departure + timedelta(days=transit)
+        planned_arrival = planned_departure + days(transit)
         n_cont = rng.randint(cfg.world.containers_per_shipment.min, cfg.world.containers_per_shipment.max)
         containers = []
         for _ in range(n_cont):
@@ -81,7 +81,7 @@ def build_shipments(cfg: GeneratorConfig, customers: list[Customer]) -> list[Shi
                 destination=destination,
                 planned_departure=planned_departure,
                 planned_arrival=planned_arrival,
-                booked_at=planned_departure - timedelta(days=rng.uniform(7, 21)),
+                booked_at=planned_departure - days(rng.uniform(7, 21)),
                 actual_departure=actual_departure,
                 actual_arrival=actual_arrival,
                 bl_issued_at=actual_departure + hours(rng.uniform(6, 48)),
@@ -125,7 +125,7 @@ def build_events(cfg: GeneratorConfig, shipments: list[Shipment]) -> list[Tracki
         if rng.random() < tr.stale_lag_share:
             return t + hours(rng.uniform(tr.stale_lag_hours.min, tr.stale_lag_hours.max)), True
         lag = lognormal(rng, tr.recording_lag_minutes.median, tr.recording_lag_minutes.p95)
-        return t + timedelta(minutes=round(lag)), False
+        return t + minutes(round(lag)), False
 
     def add(s, etype, code, cls, when, created, loc, container=None, stale=False):
         events.append(
@@ -181,4 +181,4 @@ def build_world(cfg: GeneratorConfig, observation_window_days: float = 0.0) -> W
     shipments = build_shipments(cfg, customers)
     events = build_events(cfg, shipments)
     return World(customers=customers, shipments=shipments, events=events, period_start=start, period_end=end,
-                 data_cutoff=end + timedelta(days=observation_window_days))
+                 data_cutoff=end + days(observation_window_days))

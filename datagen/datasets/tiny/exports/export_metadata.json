@@ -1,0 +1,23 @@
+{
+  "study_period": [
+    "2026-01-01T00:00:00+00:00",
+    "2026-02-01T00:00:00+00:00"
+  ],
+  "data_cutoff": "2026-02-15T00:00:00+00:00",
+  "rule_version": "0.1.0-proposed",
+  "timezones": {
+    "customers": "UTC",
+    "shipments": "UTC",
+    "tracking_events": "UTC",
+    "enquiries": "UTC",
+    "agent_runs": "UTC",
+    "cases": "Asia/Beirut",
+    "case_history": "Asia/Beirut",
+    "agent_work": "Asia/Beirut",
+    "responses": "UTC",
+    "ai_invoice": "UTC",
+    "rollout_log": "UTC",
+    "staffing": "UTC"
+  },
+  "notes": "Timestamps carry a UTC offset. If an offset is missing, interpret it in the file's time zone above."
+}

@@ -251,11 +251,15 @@ Only needed to support realized cash-savings claims.
 
 ### injected_defects (`injected_defects.csv`)
 
+missing_snapshot removes a shipment's whole tracking history (record_id = booking_ref). affected_enquiries lists in-scope enquiries whose expected evaluator state became "unknown".
+
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `defect_id` | string | yes | Unique defect |
 | `file` | string | yes | Export file affected |
 | `record_id` | string | yes | Affected record |
 | `defect_type` | enum: `duplicate_row`, `missing_field`, `missing_snapshot`, `timezone_shift`, `id_typo`, `orphan_record`, `retry_row`, `late_record`, `conflicting_closure`, `false_self_report` | yes | Defect injected |
+| `field` | string | no | Field changed, if one field |
 | `detail` | string | no | What was changed |
+| `affected_enquiries` | list | no | Enquiries whose expected evaluator state became unknown (semicolon-separated) |
 

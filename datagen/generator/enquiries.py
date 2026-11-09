@@ -16,7 +16,7 @@ from datagen.config_schema import GeneratorConfig
 
 from . import ids
 from .model import Enquiry, Shipment, World
-from .sampling import choice_weighted, hours, layer_rng, poisson, uniform_time
+from .sampling import choice_weighted, days, hours, layer_rng, poisson, uniform_time
 
 REFERENCE_KIND_SHARES = {"booking": 0.60, "container": 0.25, "bl": 0.15}
 DELAY_NOTICE_HOURS = 2.0  # an estimate this much later than the plan counts as an announced delay
@@ -84,7 +84,7 @@ def build_enquiries(cfg: GeneratorConfig, world: World) -> list[Enquiry]:
             for _ in range(poisson(rng, extra)):
                 drafts.append((uniform_time(rng, notice, post_end), s, "delay", True))
 
-    drafts = _space_out(drafts, timedelta(days=eq.min_days_between_contacts))
+    drafts = _space_out(drafts, days(eq.min_days_between_contacts))
     drafts = [d for d in drafts if world.period_start <= d[0] < world.data_cutoff]
     drafts.sort(key=lambda d: (d[0], d[1].booking_ref))
 

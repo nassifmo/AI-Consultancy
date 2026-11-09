@@ -11,7 +11,7 @@ ENQ-000009,True,,BKG000100024,agent_v1,S1,resolved,departed,2026-01-12T10:00:00+
 ENQ-000010,True,,BKG000100022,human_baseline,S8,failed,departed,2026-02-04T23:00:00+00:00,True,True,True,False,True,False,False,False,False,True,619,0.0,failed
 ENQ-000011,True,ENQ-000010,BKG000100022,human_baseline,S1,resolved,departed,2026-02-04T23:00:00+00:00,True,True,True,False,True,False,False,False,False,False,277,0.0,resolved
 ENQ-000012,True,,BKG000100014,human_baseline,S1,resolved,departed,2026-01-26T03:00:00+00:00,True,True,True,False,True,False,False,False,False,False,445,0.0,resolved
-ENQ-000013,True,,BKG000100018,human_baseline,S1,resolved,released,2026-01-10T20:33:03.917813+00:00,True,True,True,False,True,False,False,False,False,False,492,0.0,resolved
+ENQ-000013,True,,BKG000100018,human_baseline,S1,resolved,released,2026-01-10T20:33:04+00:00,True,True,True,False,True,False,False,False,False,False,492,0.0,resolved
 ENQ-000014,True,,BKG000100001,human_baseline,S1,resolved,gated_in,2026-02-02T01:00:00+00:00,True,True,True,False,True,False,False,False,False,False,373,0.0,resolved
 ENQ-000015,True,,BKG000100002,agent_v1,S1,resolved,departed,2026-01-31T02:00:00+00:00,True,True,True,False,True,True,False,False,False,False,0,0.227239,resolved
 ENQ-000016,True,,BKG000100023,human_baseline,S1,resolved,departed,2026-01-25T22:00:00+00:00,True,True,True,False,True,False,False,False,False,False,422,0.0,resolved
@@ -31,11 +31,11 @@ ENQ-000029,True,ENQ-000020,BKG000100013,agent_v1,S1,resolved,departed,2026-02-08
 ENQ-000030,True,,BKG000100000,agent_v1,S8,failed,departed,2026-02-05T21:00:00+00:00,True,True,True,True,True,False,False,True,False,True,1360,0.176221,failed
 ENQ-000031,True,,BKG000100001,agent_v1,S1,resolved,departed,2026-02-02T01:00:00+00:00,True,True,True,False,True,True,False,False,False,False,0,0.255719,resolved
 ENQ-000032,True,ENQ-000030,BKG000100000,agent_v1,S11,failed,departed,2026-02-05T21:00:00+00:00,True,True,True,True,False,False,False,False,False,False,0,0.359895,failed
-ENQ-000033,True,,BKG000100023,agent_v1,S1,resolved,discharged,2026-01-26T00:28:37.402108+00:00,True,True,True,False,True,True,False,False,False,False,0,0.602344,resolved
+ENQ-000033,True,,BKG000100023,agent_v1,S1,resolved,discharged,2026-01-26T00:28:37+00:00,True,True,True,False,True,True,False,False,False,False,0,0.602344,resolved
 ENQ-000034,True,,BKG000100017,human_baseline,S1,resolved,departed,2026-02-15T00:00:00+00:00,True,True,True,False,True,False,False,False,False,False,212,0.0,resolved
 ENQ-000035,True,,BKG000100015,human_baseline,S1,resolved,departed,2026-02-07T03:00:00+00:00,True,True,True,False,True,False,False,False,False,False,816,0.0,resolved
 ENQ-000036,True,,BKG000100005,human_baseline,S1,resolved,departed,2026-03-01T14:00:00+00:00,True,True,True,False,True,False,False,False,False,False,598,0.0,resolved
-ENQ-000037,True,,BKG000100006,agent_v1,S1,resolved,released,2026-01-24T05:22:13.133367+00:00,True,True,True,False,True,True,False,False,False,False,0,0.008322,resolved
+ENQ-000037,True,,BKG000100006,agent_v1,S1,resolved,released,2026-01-24T05:22:13+00:00,True,True,True,False,True,True,False,False,False,False,0,0.008322,resolved
 ENQ-000038,True,,BKG000100007,human_baseline,S1,resolved,departed,2026-02-08T22:00:00+00:00,True,True,True,False,True,False,False,False,False,False,849,0.0,resolved
 ENQ-000039,True,,BKG000100019,human_baseline,S1,resolved,departed,2026-02-03T09:00:00+00:00,True,True,True,False,True,False,False,False,False,False,846,0.0,resolved
 ENQ-000040,False,,BKG000100002,agent_v1,S12,out_of_scope,,,,,,,,False,False,True,False,False,890,0.008781,out_of_scope
@@ -44,10 +44,10 @@ ENQ-000042,False,,BKG000100022,agent_v1,S1,resolved,departed,2026-02-05T03:00:00
 ENQ-000043,False,,BKG000100000,human_baseline,S2,failed,departed,2026-02-07T02:00:00+00:00,True,True,True,True,False,False,False,False,False,False,4085,0.0,failed
 ENQ-000044,False,,BKG000100009,agent_v1,S1,resolved,departed,2026-02-21T03:00:00+00:00,True,True,True,False,True,True,False,False,False,False,0,0.807215,resolved
 ENQ-000045,False,,BKG000100021,agent_v1,S1,resolved,departed,2026-02-13T22:00:00+00:00,True,True,True,False,True,True,False,False,False,False,0,0.086519,resolved
-ENQ-000046,False,,BKG000100013,human_baseline,S1,resolved,discharged,2026-02-08T07:42:27.904326+00:00,True,True,True,False,True,False,False,False,False,False,543,0.0,resolved
-ENQ-000047,False,,BKG000100019,human_baseline,S1,resolved,gated_out,2026-02-03T09:12:28.430901+00:00,True,True,True,False,True,False,False,False,False,False,398,0.0,resolved
+ENQ-000046,False,,BKG000100013,human_baseline,S1,resolved,discharged,2026-02-08T07:42:28+00:00,True,True,True,False,True,False,False,False,False,False,543,0.0,resolved
+ENQ-000047,False,,BKG000100019,human_baseline,S1,resolved,gated_out,2026-02-03T09:12:28+00:00,True,True,True,False,True,False,False,False,False,False,398,0.0,resolved
 ENQ-000048,False,,BKG000100017,human_baseline,S1,resolved,departed,2026-02-15T00:00:00+00:00,True,True,True,False,True,False,False,False,False,False,586,0.0,resolved
-ENQ-000049,False,,BKG000100007,agent_v1,S1,resolved,discharged,2026-02-08T20:50:12.767194+00:00,True,True,True,False,True,True,False,False,False,False,0,0.007275,resolved
-ENQ-000050,False,,BKG000100000,human_baseline,S1,resolved,gated_out,2026-02-07T01:51:50.624121+00:00,True,True,True,False,True,False,False,False,False,False,565,0.0,resolved
+ENQ-000049,False,,BKG000100007,agent_v1,S1,resolved,discharged,2026-02-08T20:50:13+00:00,True,True,True,False,True,True,False,False,False,False,0,0.007275,resolved
+ENQ-000050,False,,BKG000100000,human_baseline,S1,resolved,gated_out,2026-02-07T01:51:51+00:00,True,True,True,False,True,False,False,False,False,False,565,0.0,resolved
 ENQ-000051,False,,BKG000100009,human_baseline,S4,failed,departed,2026-02-21T03:00:00+00:00,True,False,False,False,True,False,False,False,False,False,609,0.0,failed
 ENQ-000052,False,,BKG000100029,agent_v1,S1,resolved,departed,2026-02-14T04:00:00+00:00,True,True,True,False,True,True,False,False,False,False,0,0.392041,resolved

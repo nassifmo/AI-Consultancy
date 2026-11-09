@@ -237,6 +237,21 @@ class Defects(Strict):
         return v
 
 
+class Rendering(Strict):
+    """How exports are rendered. Some company systems export local time (with its offset)."""
+
+    local_timezone: str = "UTC"
+    local_time_files: list[str] = Field(default_factory=list)
+
+    @field_validator("local_timezone")
+    @classmethod
+    def _tz(cls, v):
+        from zoneinfo import ZoneInfo
+
+        ZoneInfo(v)  # raises if unknown
+        return v
+
+
 class GeneratorConfig(Strict):
     dataset_name: str
     seed: int
@@ -252,6 +267,7 @@ class GeneratorConfig(Strict):
     rescue: Rescue
     follow_up: FollowUp
     costs: Costs
+    rendering: Rendering = Field(default_factory=Rendering)
     defects: Defects
 
     @model_validator(mode="after")
