@@ -109,3 +109,22 @@ def test_counterfactual_runs_share_the_same_world(confounded):
     first, *rest = originals.values()
     assert all(o == first for o in rest)
     assert {t.arm for t in runs["agent_v1"]} == {"agent_v1"}
+
+
+# ---------------------------------------------------------------- hand-off packaging
+
+
+def test_package_includes_truth_for_dev_sets_but_never_for_heldout(tmp_path):
+    import shutil
+    import zipfile
+
+    from datagen.package import DATASETS_DIR, package
+
+    datasets = tmp_path / "datasets"
+    shutil.copytree(DATASETS_DIR / "tiny", datasets / "tiny")
+    shutil.copytree(DATASETS_DIR / "tiny", datasets / "heldout")
+    tiny = zipfile.ZipFile(package("tiny", tmp_path / "out", datasets)).namelist()
+    held = zipfile.ZipFile(package("heldout", tmp_path / "out", datasets)).namelist()
+    assert "tiny/ground_truth/true_outcome.csv" in tiny and "tiny/review.md" in tiny
+    assert "heldout/exports/enquiries.csv" in held
+    assert not any("ground_truth" in n or n.endswith(("manifest.json", "review.md")) for n in held)

@@ -1,12 +1,13 @@
-# Scenario Library Review (for Mohamad)
+# Scenario Library Review (for Bahaa)
 
 The scenario library (`datagen/scenarios/library.yaml`) holds hand-written golden cases. Each one is a small
 dataset in partner export format with the result a correct evaluator must give. They were written from the
 service rules (`datagen/config/service_rules.yaml`, version 0.1.0-proposed), not from the generator code.
 They will be the acceptance tests for the evaluator we build next.
 
-**Please review independently.** For each row, read the scenario in `library.yaml`, apply the rules
-yourself, and tick the last column if you get the same expected result. Mark anything you disagree with.
+**Reviewer: Bahaa (evaluator builder).** Mohamad generated the data, so the independent check on these
+expected results comes from the evaluator side, and your rule interpretation must match them. For each row, read the scenario in `library.yaml`, apply the rules
+yourself, and tick the last column if you get the same expected result. Mark anything you disagree with and send it back to Mohamad, who updates the library and regenerates the data.
 Run `python -m datagen.scenario_library` to check the file is valid after any edit.
 
 Shared fixtures (shipments and their tracking timelines) are in `datagen/scenarios/base.yaml`, with

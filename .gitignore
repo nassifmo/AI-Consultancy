@@ -4,3 +4,4 @@ __pycache__/
 datagen/datasets/*
 !datagen/datasets/tiny/
 datagen/config/heldout.yaml
+datagen/handoff/

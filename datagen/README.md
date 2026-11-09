@@ -1,5 +1,7 @@
 # datagen
 
+Owner: Mohamad Nassif (data generation). Hand-off guide for the evaluator builder: `docs/DATA_HANDOFF.md`.
+
 Synthetic data generator for the AI customer-service agent value evaluator.
 Plan: `docs/SYNTHETIC_DATA_PLAN.md`. Human-readable field list: `docs/DATA_DICTIONARY.md`.
 
@@ -82,4 +84,5 @@ python -m datagen.generate --config datagen/config/tiny.yaml     # -> datagen/da
 python -m datagen.generate --config datagen/config/default.yaml  # -> datagen/datasets/dev (not committed)
 python -m datagen.scenario_library --write                       # -> datagen/datasets/scenarios/<id> (not committed)
 python -m datagen.build_datasets                                 # all named datasets (~40 s)
+python -m datagen.package                                        # zip each dataset for hand-off -> datagen/handoff/
 ```
