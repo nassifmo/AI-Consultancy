@@ -65,3 +65,4 @@ not in this repo yet.
 ## Decisions log
 - 2026-11: Scope set to AI customer-service agent; workflow = shipment-status/delay enquiries; CMA CGM first pilot target.
 - 2026-11-03: Workflow and architecture plan concluded (see `docs/ARCHITECTURE_PLAN.md`); stack Python/SQLite/FastAPI/Streamlit.
+- 2026-11: Build and prove the evaluator on synthetic/simulated data first, then apply to real company data (CMA CGM or others).
