@@ -1,0 +1,9 @@
+# Direct dependencies used for the tested Python 3.11 meeting release.
+numpy==2.2.6
+scipy==1.16.2
+streamlit==1.52.1
+pydantic==2.13.0
+PyYAML==6.0.3
+tzdata==2026.1
+pytest==9.0.3
+requests==2.34.2

@@ -1,0 +1,86 @@
+# Preparing a shipment customer-support pilot
+
+We can now prepare source extracts, map their fields, check evidence gaps, and run the same evaluator used for the synthetic demonstration. The actual systems, access permissions, workflow rules, and logging completeness still need an authorized sample from the company.
+
+```mermaid
+flowchart LR
+    A[CRM, tracking, agent and finance sources] --> B[Read-only extraction or company-provided files]
+    B --> C[Preserved local source snapshot]
+    C --> D[Versioned field mapping]
+    D --> E[Evidence and linkage checks]
+    E --> F[Normalized exports]
+    F --> G[Enquiry verification at the observation time]
+    G --> H[Service, human work and scoped costs]
+    H --> I[Deployment or upgrade comparison]
+    I --> J[Traceable reports and explicit gaps]
+```
+
+## What is implemented
+
+| Capability | How it is used |
+| --- | --- |
+| CSV, JSON and JSONL preparation | A mapping profile states which source field supplies each evaluator field. Nested JSON records and tool-call lists are supported. |
+| Read-only JSON API collection | The configurable collector fetches pages, retries transient failures, respects rate-limit delays, and publishes a local snapshot after the configured extraction completes. Its tests use mocked endpoints. |
+| File import on the website | Open **Prepare company files**, select the profile and source ZIP, inspect the mapping preview, then save and use the prepared files. |
+| Reusable mapping example | **Preview synthetic company extract** demonstrates the complete import on renamed copies of S32's records. |
+| Evidence readiness | **Data readiness** reports what the records can support, missing fields, timestamp interpretation, broken links, allocation coverage and incomplete histories. |
+| Completeness declarations | Company imports start with source coverage unknown. A source owner can declare complete or partial coverage for a specified extraction. Unverified history cannot establish the first answer, zero human work or an omitted action. |
+| Traceability | Published imports preserve the original files, profile, file hashes and row references. The evaluator only reads the normalized `exports` directory. |
+| Asynchronous delivery links | A response can name its agent run explicitly, or a run can name its delivered response. Matching also checks the actor, text and successful send action. |
+| Workflow settings | A company grading policy can be selected before evaluation. Service thresholds and request profiles are versioned with each analysis. |
+| Repeatable local results | An identical input and configuration produces the same calculated result. Imports and run bundles are published atomically. |
+
+## Which data to request
+
+Start with a small authorized, consistently pseudonymized sample that includes successful cases, handoffs, corrections and unresolved work. Include related tables over the same period and confirm the last time covered by the extracts. Count the selected requests in the source system so we can reconcile the extracted population.
+
+| Owner | Records and definitions to confirm | What they allow us to check |
+| --- | --- | --- |
+| Customer support or CRM | Intake message, customer/account key, conversation and case IDs, sent replies, updates, reopenings, closure reason and follow-up links | What the customer asked, what was delivered, and whether the case was resolved |
+| Tracking or operations | Booking and container IDs, destination and milestone, planned/estimated/actual classification, event time and publication time, revisions and holds | What information was available when a reply was sent |
+| AI or integration team | Version/model, run and response IDs, tool input/output and success, actual send acknowledgement, handoff, usage, retries and failures | Which agent acted and which backend operation completed |
+| Workforce management | Active work durations, timing method, pauses, concurrent work and after-contact work | Remaining human effort and capacity released |
+| Finance | Billing units and rates by effective period/model, invoices and credits, maintenance/setup scope, labour cost and currency | Reconciled costs and a defensible economic boundary |
+| Experiment or rollout owner | Allocation recorded before handling, introduction dates, eligibility and regional rules | Whether a comparison can estimate incremental contribution |
+
+## Real-world problems and how we handle them
+
+| Problem | Treatment in the prepared system or pilot task |
+| --- | --- |
+| Different names, formats or enum values | Change the mapping profile. Preserve the source record and conversion history. |
+| Missing optional table | Inspect supported service results and report the affected capability as partial or unavailable. |
+| Duplicates or conflicting IDs | Preserve the evidence and flag conflicts. Exact duplicates count once in the evaluator. |
+| Missing offset or ambiguous local time | Require the original offset or an explicit source zone. Leave ambiguous measurements unverified. |
+| Only the current tracking snapshot is retained | Historical answer accuracy remains unknown until publication history or an equivalent trusted snapshot is available. |
+| Different IDs across systems | Agree a customer/case/booking/container mapping from source evidence and check join coverage. Avoid guessing the correct booking from the desired answer. |
+| Sampled traces or omitted failures | Mark source coverage partial. An empty log is insufficient to infer zero work or success. |
+| Ticket elapsed time supplied without active work | Show elapsed service time and request a validated timer or representative time study for effort. |
+| No recorded treatment assignment | Verify individual cases. Describe group differences with a study-design limitation. |
+| Asynchronous run and response times | Use a source-provided response/run relationship. The adapter must preserve generation, send and record times separately. |
+| Free text or language beyond the reviewed wording | Retain the text and an interpretation gap. Validate extraction with independent reviewers before expanding automatic judgments. |
+| Late invoices, credits or several model prices | Reconcile the applicable period and model-specific quantities. The current scoped ledger needs a further model/rate mapping for several prices under the same monthly category. |
+| Truck, warehouse or demurrage losses | Collect shipment-linked actions and final charge/credit records. These downstream effects are outside the current resource-cost ledger. |
+
+## Source extraction contract
+
+For an API, document the read-only endpoint, account scope, selected fields, response envelope, pagination stop condition, time filters, deletion/history behavior and rate limits. Credentials belong in the company's approved secret storage or local environment. Keep them out of mapping profiles and saved manifests.
+
+An extraction is a snapshot with an explicit period and completion record. Publish it after all selected pages are fetched successfully. On a failed page, retry the extraction without marking that period complete. Retaining stable IDs allows duplicate delivery or overlapping extraction windows to be checked during preparation. Provider-specific deletion and revision rules require source validation.
+
+The [collector configuration](acquisition/README.md) supports explicit next-page URLs or offset rules, query filters, bounded retries, and credentials from an environment variable. Its sample uses `example.invalid` and is validated without making requests. A completed fetch still needs source-owner confirmation that permissions, period, retained fields and historical data are adequate.
+
+For exported logs, document whether they include all attempts, retries, failed actions and customer-visible sends. A tool-call trace can show a request to create a case. The case system must establish whether the case exists and when its state changed. The supporting [source research](docs/PILOT_DATA_SOURCES.md) records the public API and logging constraints.
+
+## What we adjust with the pilot company
+
+1. Confirm the specific service workflow, intended business outcome, data owner and access scope.
+2. Reconcile source counts and field meanings on a small sample. Configure source mapping, time zones and extraction completion declarations.
+3. Have workflow reviewers judge selected cases independently. Compare identity, timing, actions, outcome and unknown judgments against the evaluator.
+4. Resolve material mapping or interpretation errors and freeze the resulting policy and evaluator version.
+5. Validate a comparison design with adequate follow-up. Run the pilot and record scope and uncertainty.
+
+Independent held-out scoring remains a separate evaluation step. Real agents can generate new trials in a controlled environment once the replay runner and model access are implemented. The prepared import path can receive those resulting operational records.
+
+## Current limits
+
+This is a local application. Remote multi-user hosting, authentication and company retention controls require a deployment decision. No company endpoint, sample, field mapping or policy has been confirmed. Carrier-specific API behavior, deletion history, transcript extraction and financial effects will be validated against the records the company supplies. The preparation checks describe available evidence and do not certify real-world evaluator accuracy.

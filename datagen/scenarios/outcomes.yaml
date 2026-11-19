@@ -1,0 +1,169 @@
+# Review fixtures for scoring case outcomes from evidence available at each cutoff.
+rule_version: '0.3.0-proposed'
+
+scenarios:
+  - id: S23
+    title: The escalation is still open at the first export cutoff
+    tests: Follow-up is timely, and the later closure is absent from the first snapshot
+    data_cutoff: '2026-03-19T09:00:00+00:00'
+    enquiries: &long_enquiry
+      - enquiry_id: ENQ-S23
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-DELAY
+        enquiry_type: delay
+        customer_message: 'Please investigate the delayed shipment and confirm the revised pickup arrangements.'
+    runs: &long_runs
+      - enquiry: ENQ-S23
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed and the revised ETA is 17 March at 12:00 UTC. I will escalate your pickup enquiry to operations.'
+        self: escalated
+        escalated: true
+    cases:
+      - &long_case
+        case_id: CAS-S23
+        enquiry: ENQ-S23
+        opened: '2026-03-09T09:01:30+00:00'
+        reason: delay_investigation
+        owner: HUM-T1
+    history:
+      - &long_created [CAS-S23, '2026-03-09T09:01:30+00:00', status, null, new, ai_agent]
+      - &long_escalated [CAS-S23, '2026-03-09T09:02:00+00:00', status, new, escalated, ai_agent]
+      - &long_investigating [CAS-S23, '2026-03-09T14:55:00+00:00', status, escalated, open, HUM-T1]
+    responses:
+      - &long_update
+        enquiry: ENQ-S23
+        at: '2026-03-09T15:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S23
+        message_text: 'We have started the investigation. The recorded ETA is 17 March at 12:00 UTC. We will confirm the revised pickup arrangements when operations responds.'
+    work:
+      - &long_followup {enquiry: ENQ-S23, case: CAS-S23, agent: HUM-T1, at: '2026-03-09T14:55:00+00:00', active: 240, activity: follow_up}
+    expected:
+      ENQ-S23: {state: escalated_open, first_answer_correct: true, info_correct: true, escalation_required: true, required_actions_done: true, ai_only: false, repeat_contact: false, human_seconds: 240}
+
+  - id: S24
+    title: The same escalation resolves after day 14
+    tests: A recorded close and a documented pickup confirmation establish the outcome once they become observable
+    data_cutoff: &long_closed_cutoff '2026-03-26T12:00:00+02:00'
+    enquiries: *long_enquiry
+    runs: *long_runs
+    cases: &long_closed_cases
+      - <<: *long_case
+        closed: '2026-03-25T10:00:00+00:00'
+        code: resolved_after_investigation
+    history: &long_closed_history
+      - *long_created
+      - *long_escalated
+      - *long_investigating
+      - [CAS-S23, '2026-03-25T10:00:00+00:00', status, open, closed, HUM-T1]
+    responses: &long_closed_responses
+      - *long_update
+      - enquiry: ENQ-S23
+        at: '2026-03-25T10:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: arrived
+        case: CAS-S23
+        message_text: 'Operations has confirmed the revised pickup appointment for 26 March at 14:00 local time. The vessel arrived at Rotterdam on 17 March at 11:30 UTC. I have closed the enquiry.'
+    work:
+      - *long_followup
+      - {enquiry: ENQ-S23, case: CAS-S23, agent: HUM-T1, at: '2026-03-25T09:47:00+00:00', active: 600, activity: handle_case}
+    expected:
+      ENQ-S23: {state: resolved, first_answer_correct: true, info_correct: true, escalation_required: true, required_actions_done: true, ai_only: false, repeat_contact: false, human_seconds: 840}
+
+  - id: S25
+    title: A case closes with the customer unreachable
+    tests: Closure and timely actions can be verified even when the request remains unresolved
+    data_cutoff: '2026-03-19T09:00:00+00:00'
+    enquiries: &unreachable_enquiry
+      - enquiry_id: ENQ-S25
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-DELAY
+        enquiry_type: delay
+        customer_message: 'The delay affects pickup. Please confirm the new arrangements after checking with operations.'
+    runs: &unreachable_runs
+      - enquiry: ENQ-S25
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed and the revised ETA is 17 March at 12:00 UTC. I will ask our team to review the pickup options.'
+        self: escalated
+        escalated: true
+    cases:
+      - &unreachable_case
+        case_id: CAS-S25
+        enquiry: ENQ-S25
+        opened: '2026-03-09T09:01:30+00:00'
+        reason: delay_investigation
+        owner: HUM-T1
+        closed: '2026-03-12T10:00:00+00:00'
+        code: customer_unreachable
+    history: &unreachable_history
+      - [CAS-S25, '2026-03-09T09:01:30+00:00', status, null, new, ai_agent]
+      - [CAS-S25, '2026-03-09T09:02:00+00:00', status, new, escalated, ai_agent]
+      - [CAS-S25, '2026-03-09T15:00:00+00:00', status, escalated, pending_customer, HUM-T1]
+      - [CAS-S25, '2026-03-12T10:00:00+00:00', status, pending_customer, closed, HUM-T1]
+    responses: &unreachable_responses
+      - enquiry: ENQ-S25
+        at: '2026-03-09T15:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S25
+        message_text: 'The current recorded ETA is 17 March at 12:00 UTC. We need your preferred pickup time to confirm an appointment.'
+    work: &unreachable_work
+      - {enquiry: ENQ-S25, case: CAS-S25, agent: HUM-T1, at: '2026-03-09T14:55:00+00:00', active: 240, activity: follow_up}
+      - {enquiry: ENQ-S25, case: CAS-S25, agent: HUM-T1, at: '2026-03-12T09:55:00+00:00', active: 240, activity: follow_up}
+    expected:
+      ENQ-S25: {state: closed_unresolved, first_answer_correct: true, escalation_required: true, required_actions_done: true, ai_only: false, repeat_contact: false, human_seconds: 480}
+
+  - id: S26
+    title: A closure is recorded with no resolution evidence
+    tests: The lifecycle shows closure, but missing resolution evidence leaves the outcome unknown
+    data_cutoff: '2026-03-19T09:00:00+00:00'
+    enquiries: *unreachable_enquiry
+    runs: *unreachable_runs
+    cases:
+      - <<: *unreachable_case
+        code: null
+    history: *unreachable_history
+    responses: *unreachable_responses
+    work: *unreachable_work
+    expected:
+      ENQ-S25: {state: unknown, first_answer_correct: true, escalation_required: true, required_actions_done: true, ai_only: false, repeat_contact: false, human_seconds: 480}
+
+  - id: S27
+    title: The support team resolves the case and the export has no active-work records
+    tests: Verify the shared resolution and human involvement. Leave active human effort unknown despite known ticket elapsed time.
+    data_cutoff: *long_closed_cutoff
+    enquiries: *long_enquiry
+    runs: *long_runs
+    cases: *long_closed_cases
+    history: *long_closed_history
+    responses: *long_closed_responses
+    work: []
+    expected:
+      ENQ-S23:
+        state: resolved
+        first_answer_correct: true
+        info_correct: true
+        escalation_required: true
+        required_actions_done: true
+        ai_only: false
+        repeat_contact: false
+        human_seconds: null

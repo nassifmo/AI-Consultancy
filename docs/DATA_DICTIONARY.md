@@ -1,6 +1,6 @@
 # Data Dictionary
 
-Generated from `datagen/dictionary/dictionary.yaml` (version 0.1.0). Do not edit by hand.
+Generated from `datagen/dictionary/dictionary.yaml` (version 1.0). Do not edit by hand.
 
 Each file is both a synthetic export we generate and a file we will request from partner companies.
 
@@ -61,8 +61,18 @@ event_created_datetime is essential: it tells us when the carrier system knew ab
 | `channel` | enum: `voice`, `email`, `chat` | yes | Contact channel |
 | `received_at` | datetime | yes | When the enquiry arrived |
 | `stated_reference` | string | no | Reference as given by the customer (may be wrong or partial) |
+| `customer_message` | string | no | Customer's recorded request at intake |
+| `related_enquiry_id` | string | no | Prior enquiry identified by customer or CRM linkage (-> `enquiries.enquiry_id`) |
+| `confirmed_reference` | string | no | Reference the customer subsequently confirmed for this enquiry |
+| `reference_confirmed_at` | datetime | no | Time of the customer's reference confirmation |
 | `enquiry_type` | enum: `status`, `delay`, `documents`, `other` | yes | Classified enquiry type |
 | `language` | string | no | ISO 639-1 language code |
+| `assigned_arm` | enum: `human_baseline`, `agent_v1`, `agent_v2` | no | Handling policy from the allocation record. Required for analysis by assignment |
+| `assignment_at` | datetime | no | Time the handling policy was assigned. Continuations carry the original assignment time |
+| `root_enquiry_id` | string | no | Initial enquiry for the request. Initial requests reference themselves (-> `enquiries.enquiry_id`) |
+| `contact_relation` | enum: `initial`, `continuation`, `new_request`, `unknown` | no | Recorded relationship between this contact and the service request |
+| `assignment_unit_id` | string | no | Allocated unit: original enquiry ID, operating country, or dated before/after period |
+| `assignment_method` | enum: `randomized`, `before_after`, `regional_rollout` | no | Mechanism by which the handling policy was assigned |
 
 ### E5 agent_runs (`agent_runs.json`)
 
@@ -85,7 +95,7 @@ event_created_datetime is essential: it tells us when the carrier system knew ab
 | `claimed_status` | string | no | Shipment status stated to the customer (structured) |
 | `claimed_eta` | datetime | no | ETA stated to the customer |
 | `response_text` | string | no | Message sent to the customer |
-| `self_reported_outcome` | enum: `resolved`, `escalated`, `handed_off`, `failed` | yes | Outcome as reported by the agent itself (not trusted) |
+| `self_reported_outcome` | enum: `resolved`, `escalated`, `handed_off`, `awaiting_customer`, `failed` | yes | Outcome as reported by the agent itself (not trusted) |
 | `handoff_flag` | boolean | yes | Run ended by handing to a human |
 | `tokens_in` | integer | no | LLM input tokens |
 | `tokens_out` | integer | no | LLM output tokens |
@@ -108,7 +118,7 @@ event_created_datetime is essential: it tells us when the carrier system knew ab
 
 ### E7 case_history (`case_history.csv`)
 
-**Real source:** Case field history (e.g. Salesforce CaseHistory2) | **Owner:** CRM admin
+**Real source:** Case field history (for example Salesforce CaseHistory, depending on the source system and enabled tracking) | **Owner:** CRM admin
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -162,8 +172,9 @@ At least one of enquiry_id or case_id must be present. Elapsed ticket time is NO
 | `date` | date | yes | Effective date |
 | `agent_version` | string | yes | Version deployed (or "human_baseline") |
 | `arm_assignment_rule` | enum: `random_by_enquiry`, `by_region`, `all_traffic`, `none` | yes | How traffic was assigned |
-| `traffic_share` | number | yes | Share of in-scope traffic (0-1) |
+| `traffic_share` | number | yes | Share of in-scope traffic (0-1), measured within the region if specified |
 | `change_description` | string | no | What changed |
+| `region` | string | no | Operating country for regional assignment. Blank for a dataset-wide rule |
 
 ### E11 cost_parameters (`cost_parameters.json`)
 
@@ -199,8 +210,9 @@ Every message that gave the customer shipment information, from the AI agent or 
 | `sent_at` | datetime | yes | When the message was sent |
 | `actor_type` | enum: `ai_agent`, `human` | yes | Who sent it |
 | `actor_id` | string | yes | Agent version or pseudonymized human ID |
-| `purpose` | enum: `answer`, `correction`, `case_update` | yes | Why it was sent |
+| `purpose` | enum: `answer`, `correction`, `case_update`, `clarification` | yes | Why it was sent |
 | `shipment_reference` | string | no | Booking reference the message is about, as linked by the sender |
+| `container_reference` | string | no | Specific container described in the response |
 | `claimed_status` | string | no | Shipment status stated |
 | `claimed_eta` | datetime | no | ETA stated |
 | `message_text` | string | no | Message body |

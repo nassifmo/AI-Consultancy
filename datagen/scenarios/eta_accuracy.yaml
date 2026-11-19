@@ -1,0 +1,182 @@
+# Initial severity examples for the contextual grading rubric.
+rule_version: '0.5.0-proposed'
+
+scenarios:
+  - id: S28
+    title: The reply gives the recorded ETA in the destination's time zone
+    tests: Equivalent instants pass regardless of UTC offset
+    data_cutoff: &eta_cutoff '2026-03-19T09:00:00+00:00'
+    enquiries: &eta_enquiry
+      - &eta_enquiry_row
+        enquiry_id: ENQ-S28
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-D24
+        enquiry_type: status
+        customer_message: 'What time is the vessel expected to arrive at Rotterdam, in local time?'
+    runs:
+      - &eta_run
+        enquiry: ENQ-S28
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-D24
+        status: departed
+        tracking_eta: '2026-03-16T10:00:00+00:00'
+        eta: '2026-03-16T11:00:00+01:00'
+        response_override:
+          message_text: 'The vessel has departed. The current Rotterdam ETA is 16 March at 11:00 local time.'
+        self: resolved
+    expected:
+      ENQ-S28: {state: resolved, severity: none, eta_error_seconds: 0, first_answer_correct: true, info_correct: true, escalation_required: false, ai_only: true, human_seconds: 0}
+
+  - id: S29
+    title: A routine tracking reply gives the ETA one minute late
+    tests: Measure the discrepancy and grade it as minor. The customer's routine request is still answered.
+    data_cutoff: *eta_cutoff
+    enquiries: *eta_enquiry
+    runs:
+      - &one_minute_reply
+        <<: *eta_run
+        eta: '2026-03-16T11:01:00+01:00'
+        response_override:
+          message_text: 'The vessel has departed. The current Rotterdam ETA is 16 March at 11:01 local time.'
+    expected:
+      ENQ-S28: {state: resolved, severity: minor, eta_error_seconds: 60, first_answer_correct: false, info_correct: false, escalation_required: false, ai_only: true, human_seconds: 0}
+
+  - id: S30
+    title: A one-minute ETA discrepancy changes the answer to a staffing decision
+    tests: The same measured discrepancy is material when it changes the instruction at a documented cutoff.
+    data_cutoff: *eta_cutoff
+    enquiries:
+      - <<: *eta_enquiry_row
+        customer_message: 'For the 16 March Rotterdam arrival, the morning monitoring team handles a published vessel ETA of 11:00 local time or earlier. For a later ETA we notify the afternoon team. Based on the current ETA, which team should I notify?'
+    runs:
+      - <<: *one_minute_reply
+        response_override:
+          message_text: 'The current Rotterdam ETA is 16 March at 11:01 local time. Notify the afternoon monitoring team.'
+    expected:
+      ENQ-S28: {state: failed, severity: material, eta_error_seconds: 60, first_answer_correct: false, info_correct: false, escalation_required: false, human_seconds: 0}
+
+  - id: S31
+    title: A required escalation is one second late and the team later resolves the enquiry
+    tests: Record the small policy overrun and the verified resolution independently.
+    data_cutoff: *eta_cutoff
+    enquiries:
+      - enquiry_id: ENQ-S31
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-DELAY
+        enquiry_type: delay
+        customer_message: 'The shipment is delayed. Please check with operations and confirm the current vessel ETA.'
+    cases:
+      - {case_id: CAS-S31, enquiry: ENQ-S31, opened: '2026-03-09T11:00:01+00:00', reason: delay_investigation, owner: HUM-T1, closed: '2026-03-12T10:00:00+00:00', code: resolved_after_investigation}
+    history:
+      - [CAS-S31, '2026-03-09T11:00:01+00:00', status, null, new, HUM-T1]
+      - [CAS-S31, '2026-03-09T11:00:01+00:00', status, new, escalated, HUM-T1]
+      - [CAS-S31, '2026-03-12T10:00:00+00:00', status, escalated, closed, HUM-T1]
+    responses:
+      - enquiry: ENQ-S31
+        at: '2026-03-09T10:59:00+00:00'
+        actor: HUM-T1
+        purpose: answer
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        message_text: 'The vessel has departed and the current ETA is 17 March at 12:00 UTC. We will ask operations to confirm.'
+      - enquiry: ENQ-S31
+        at: '2026-03-09T15:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        case: CAS-S31
+        message_text: 'The operations team is checking the revised schedule. We will follow up with their confirmation.'
+      - enquiry: ENQ-S31
+        at: '2026-03-12T10:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S31
+        message_text: 'Operations confirmed the 17 March arrival estimate at 12:00 UTC. The enquiry has been completed.'
+    expected:
+      ENQ-S31: {state: resolved, severity: minor, escalation_required: true, escalation_on_time: false, escalation_delay_seconds: 1, first_answer_correct: true, info_correct: true, ai_only: false, human_seconds: null}
+
+  - id: S32
+    title: A human corrects a claim from the wrong container
+    tests: A verified correction can resolve the enquiry while the initial critical failure stays visible.
+    data_cutoff: '2026-03-23T09:00:00+00:00'
+    enquiries:
+      - enquiry_id: ENQ-S32
+        received_at: '2026-03-15T13:00:00+00:00'
+        stated_reference: SYNU9000020
+        enquiry_type: status
+        customer_message: 'Has container SYNU9000020 been unloaded at Rotterdam yet?'
+    runs:
+      - enquiry: ENQ-S32
+        start: '2026-03-15T13:00:20+00:00'
+        end: '2026-03-15T13:01:00+00:00'
+        linked: BKG-T-MULTI
+        tracking_reference: SYNU9000015
+        status: discharged
+        response_override:
+          container_reference: SYNU9000020
+          message_text: 'Container SYNU9000020 was unloaded in Rotterdam at 11:30 UTC.'
+        self: resolved
+    responses:
+      - enquiry: ENQ-S32
+        at: '2026-03-15T13:08:00+00:00'
+        actor: HUM-T1
+        purpose: correction
+        ref: BKG-T-MULTI
+        container_reference: SYNU9000020
+        status: arrived
+        message_text: 'The 11:30 unloading was for a different container. The vessel has arrived in Rotterdam. As of this message no unloading is recorded for your container SYNU9000020.'
+    work:
+      - {enquiry: ENQ-S32, agent: HUM-T1, at: '2026-03-15T13:02:00+00:00', active: 300, activity: correct_ai_answer}
+    expected:
+      ENQ-S32: {state: resolved, severity: critical, initial_failure: true, first_answer_correct: false, info_correct: true, rescued: true, ai_only: false, human_seconds: 300}
+
+  - id: S33
+    title: The agent omits a required escalation and a human later completes it
+    tests: A correct ETA and eventual resolution both receive credit. The missed mandatory action remains critical.
+    data_cutoff: *eta_cutoff
+    enquiries:
+      - enquiry_id: ENQ-S33
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-DELAY
+        enquiry_type: delay
+        customer_message: 'The delay affects our arrangements. Please check the new ETA and have operations review the case.'
+    runs:
+      - enquiry: ENQ-S33
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed. The revised arrival estimate is 17 March at 12:00 UTC.'
+        self: resolved
+    cases:
+      - {case_id: CAS-S33, enquiry: ENQ-S33, opened: '2026-03-09T12:00:00+00:00', reason: delay_investigation, owner: HUM-T1, closed: '2026-03-12T10:00:00+00:00', code: resolved_after_investigation}
+    history:
+      - [CAS-S33, '2026-03-09T12:00:00+00:00', status, null, new, HUM-T1]
+      - [CAS-S33, '2026-03-09T12:00:00+00:00', status, new, escalated, HUM-T1]
+      - [CAS-S33, '2026-03-12T10:00:00+00:00', status, escalated, closed, HUM-T1]
+    responses:
+      - enquiry: ENQ-S33
+        at: '2026-03-09T15:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        case: CAS-S33
+        message_text: 'I opened a case with operations. We will send you their confirmation as soon as it is available.'
+      - enquiry: ENQ-S33
+        at: '2026-03-12T10:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S33
+        message_text: 'Operations reviewed the delay and confirmed the 17 March arrival estimate at 12:00 UTC. I have closed the case.'
+    expected:
+      ENQ-S33: {state: resolved, severity: critical, initial_failure: true, first_answer_correct: true, info_correct: true, escalation_required: true, escalation_on_time: false, escalation_delay_seconds: 3600, rescued: true, ai_only: false, human_seconds: null}

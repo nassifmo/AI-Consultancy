@@ -1,0 +1,264 @@
+{
+  "schema_version": "1.0",
+  "profile_id": "synthetic-renamed-shipment",
+  "profile_version": "1.0",
+  "metadata": {
+    "rule_version": "0.5.0-proposed",
+    "study_period": [
+      "2026-03-15T13:00:00+00:00",
+      "2026-03-15T13:00:01+00:00"
+    ],
+    "data_cutoff": "2026-03-23T09:00:00+00:00",
+    "timezones": {
+      "customers": "UTC",
+      "shipments": "UTC",
+      "tracking_events": "UTC",
+      "enquiries": "UTC",
+      "agent_runs": "UTC",
+      "responses": "UTC",
+      "cases": "UTC",
+      "case_history": "UTC",
+      "agent_work": "UTC"
+    },
+    "dataset_origin": "synthetic",
+    "source_completeness": {
+      "customers": "complete",
+      "shipments": "complete",
+      "tracking_events": "complete",
+      "enquiries": "complete",
+      "agent_runs": "complete",
+      "responses": "complete",
+      "cases": "complete",
+      "case_history": "complete",
+      "agent_work": "complete"
+    },
+    "source_description": "Synthetic S32 records with renamed fields. The profile is an example, not a production vendor connector."
+  },
+  "tables": {
+    "customers": {
+      "file": "accounts.csv",
+      "format": "csv",
+      "columns": {
+        "customer_id": "external_customer_id",
+        "segment": "external_segment",
+        "country": "external_country",
+        "preferred_channel": "external_preferred_channel"
+      }
+    },
+    "shipments": {
+      "file": "bookings.csv",
+      "format": "csv",
+      "columns": {
+        "booking_ref": "external_booking_ref",
+        "bl_ref": "external_bl_ref",
+        "container_refs": "external_container_refs",
+        "customer_id": "external_customer_id",
+        "origin": "external_origin",
+        "destination": "external_destination",
+        "planned_departure": {
+          "path": "external_planned_departure",
+          "type": "datetime"
+        },
+        "planned_arrival": {
+          "path": "external_planned_arrival",
+          "type": "datetime"
+        }
+      }
+    },
+    "tracking_events": {
+      "file": "tracking.jsonl",
+      "format": "jsonl",
+      "columns": {
+        "event_id": "external_event_id",
+        "booking_ref": "external_booking_ref",
+        "container_ref": "external_container_ref",
+        "event_type": "external_event_type",
+        "event_type_code": "external_event_type_code",
+        "classifier": "external_classifier",
+        "event_datetime": {
+          "path": "external_event_datetime",
+          "type": "datetime"
+        },
+        "event_created_datetime": {
+          "path": "external_event_created_datetime",
+          "type": "datetime"
+        },
+        "location": "external_location"
+      }
+    },
+    "enquiries": {
+      "file": "tickets.csv",
+      "format": "csv",
+      "columns": {
+        "customer_id": "external_customer_id",
+        "channel": "external_channel",
+        "language": "external_language",
+        "enquiry_id": "external_enquiry_id",
+        "received_at": {
+          "path": "external_received_at",
+          "type": "datetime"
+        },
+        "stated_reference": "external_stated_reference",
+        "enquiry_type": {
+          "path": "external_enquiry_type",
+          "values": {
+            "TRACKING": "status",
+            "EXCEPTION": "delay"
+          }
+        },
+        "customer_message": "external_customer_message"
+      }
+    },
+    "agent_runs": {
+      "file": "agent_traces.json",
+      "format": "json",
+      "columns": {
+        "run_id": "external_run_id",
+        "enquiry_id": "external_enquiry_id",
+        "agent_version": "external_agent_version",
+        "started_at": {
+          "path": "external_started_at",
+          "type": "datetime"
+        },
+        "ended_at": {
+          "path": "external_ended_at",
+          "type": "datetime"
+        },
+        "steps": {
+          "path": "external_steps",
+          "type": "object_list",
+          "items": {
+            "step_no": {
+              "path": "index",
+              "type": "integer"
+            },
+            "tool_name": "operation",
+            "tool_input": "arguments",
+            "tool_output": "returned",
+            "snapshot_time": {
+              "path": "observed_at",
+              "type": "datetime"
+            },
+            "success": {
+              "path": "ok",
+              "type": "boolean"
+            }
+          }
+        },
+        "claimed_status": "external_claimed_status",
+        "claimed_eta": {
+          "path": "external_claimed_eta",
+          "type": "datetime"
+        },
+        "response_text": "external_response_text",
+        "self_reported_outcome": "external_self_reported_outcome",
+        "handoff_flag": {
+          "path": "external_handoff_flag",
+          "type": "boolean"
+        },
+        "tokens_in": {
+          "path": "external_tokens_in",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "path": "external_tokens_out",
+          "type": "integer"
+        },
+        "voice_seconds": {
+          "path": "external_voice_seconds",
+          "type": "integer"
+        }
+      },
+      "records_path": "records"
+    },
+    "responses": {
+      "file": "messages.csv",
+      "format": "csv",
+      "columns": {
+        "response_id": "external_response_id",
+        "enquiry_id": "external_enquiry_id",
+        "case_id": "external_case_id",
+        "sent_at": {
+          "path": "external_sent_at",
+          "type": "datetime"
+        },
+        "actor_type": {
+          "path": "external_actor_type",
+          "values": {
+            "BOT": "ai_agent",
+            "STAFF": "human"
+          }
+        },
+        "actor_id": "external_actor_id",
+        "purpose": "external_purpose",
+        "shipment_reference": "external_shipment_reference",
+        "claimed_status": "external_claimed_status",
+        "claimed_eta": {
+          "path": "external_claimed_eta",
+          "type": "datetime"
+        },
+        "message_text": "external_message_text",
+        "container_reference": "external_container_reference"
+      }
+    },
+    "cases": {
+      "file": "service_cases.csv",
+      "format": "csv",
+      "columns": {
+        "case_id": "external_case_id",
+        "enquiry_id": "external_enquiry_id",
+        "opened_at": {
+          "path": "external_opened_at",
+          "type": "datetime"
+        },
+        "reason": "external_reason",
+        "owner_id": "external_owner_id",
+        "priority": "external_priority",
+        "closed_at": {
+          "path": "external_closed_at",
+          "type": "datetime"
+        },
+        "closure_code": "external_closure_code"
+      }
+    },
+    "case_history": {
+      "file": "case_events.csv",
+      "format": "csv",
+      "columns": {
+        "history_id": "external_history_id",
+        "case_id": "external_case_id",
+        "changed_at": {
+          "path": "external_changed_at",
+          "type": "datetime"
+        },
+        "field": "external_field",
+        "old_value": "external_old_value",
+        "new_value": "external_new_value",
+        "changed_by": "external_changed_by"
+      }
+    },
+    "agent_work": {
+      "file": "work_sessions.csv",
+      "format": "csv",
+      "columns": {
+        "work_id": "external_work_id",
+        "enquiry_id": "external_enquiry_id",
+        "case_id": "external_case_id",
+        "agent_id": "external_agent_id",
+        "accepted_at": {
+          "path": "external_accepted_at",
+          "type": "datetime"
+        },
+        "closed_at": {
+          "path": "external_closed_at",
+          "type": "datetime"
+        },
+        "active_seconds": "external_active_seconds",
+        "handle_seconds": "external_handle_seconds",
+        "acw_seconds": "external_acw_seconds",
+        "activity": "external_activity",
+        "measurement_method": "external_measurement_method"
+      }
+    }
+  }
+}

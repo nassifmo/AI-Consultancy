@@ -1,0 +1,13 @@
+# Clean three-arm dataset for the meeting. Same behaviour assumptions as dev.
+extends: default.yaml
+dataset_name: demo
+
+period:
+  months: 1
+
+world:
+  n_customers: 420
+  n_shipments: 2200
+
+defects:
+  enabled: false

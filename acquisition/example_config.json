@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "source_id": "replace-with-approved-source-name",
+  "url": "https://example.invalid/api/cases",
+  "records_path": "records",
+  "query": {"updated_since": "2026-11-01T00:00:00Z"},
+  "credential_env": "SHIPMENT_SOURCE_TOKEN",
+  "pagination": {"mode": "next_url", "next_path": "next"},
+  "limits": {"max_pages": 100, "max_records": 250000, "max_bytes": 104857600, "retries": 3,
+             "timeout_seconds": 30, "max_retry_after_seconds": 15}
+}

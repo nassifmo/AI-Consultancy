@@ -72,6 +72,14 @@ def enquiries_rows(w: World) -> list[dict]:
             "stated_reference": q.stated_reference,
             "enquiry_type": q.enquiry_type,
             "language": q.language,
+            "customer_message": q.customer_message,
+            "assigned_arm": q.arm,
+            "assignment_at": fmt_dt(q.assignment_at),
+            "root_enquiry_id": q.repeat_of.enquiry_id if q.repeat_of else q.enquiry_id,
+            "related_enquiry_id": q.repeat_of.enquiry_id if q.repeat_of else None,
+            "contact_relation": "continuation" if q.repeat_of else "initial",
+            "assignment_unit_id": q.assignment_group or (q.repeat_of or q).enquiry_id,
+            "assignment_method": q.assignment_method,
         }
         for q in w.enquiries
     ]
@@ -229,7 +237,7 @@ def localize(tables: dict, files: list[str], tz_name: str, d: dict) -> None:
 def write_csv(path: Path, rows: list[dict], fieldnames: list[str] | None = None) -> None:
     """Write rows; an empty table still gets its header (from `fieldnames`)."""
     with open(path, "w", newline="", encoding="utf-8") as f:
-        names = list(rows[0]) if rows else fieldnames
+        names = list(dict.fromkeys(key for row in rows for key in row)) if rows else fieldnames
         if not names:
             return
         writer = csv.DictWriter(f, fieldnames=names)

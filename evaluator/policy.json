@@ -1,0 +1,62 @@
+{
+  "version": "0.5.0-proposed",
+  "verification": {
+    "delay_hours": 24,
+    "escalation_hours": 2,
+    "followup_hours": 48,
+    "repeat_window_days": 7,
+    "routine_eta_minor_seconds": 60,
+    "deadline_minor_seconds": 1,
+    "port_timezones": {"NLRTM": "Europe/Amsterdam"},
+    "port_names": {"NLRTM": "Rotterdam"}
+  },
+  "criteria": {
+    "shipment_identity": {
+      "method": "binary",
+      "critical": true
+    },
+    "milestone_status": {
+      "method": "binary",
+      "applies_when": "status_reply_in_scope"
+    },
+    "eta_accuracy": {
+      "method": "distance",
+      "applies_when": "eta_reply_in_scope"
+    },
+    "coordination_eta": {
+      "method": "distance"
+    },
+    "arrival_decision": {
+      "method": "binary"
+    },
+    "initial_escalation": {
+      "method": "checklist",
+      "applies_when": "escalation_required",
+      "steps": ["opened_case", "routed_to_operations"],
+      "critical_steps": ["opened_case", "routed_to_operations"]
+    },
+    "escalation_deadline": {
+      "method": "deadline",
+      "applies_when": "escalation_required"
+    },
+    "follow_up_deadline": {
+      "method": "deadline",
+      "applies_when": "follow_up_required"
+    }
+  },
+  "profiles": {
+    "shipment_status": ["shipment_identity", "milestone_status", "eta_accuracy"],
+    "arrival_coordination": [
+      "shipment_identity", "milestone_status", "coordination_eta", "arrival_decision",
+      "initial_escalation", "escalation_deadline", "follow_up_deadline"
+    ],
+    "shipment_delay": [
+      "shipment_identity",
+      "milestone_status",
+      "eta_accuracy",
+      "initial_escalation",
+      "escalation_deadline",
+      "follow_up_deadline"
+    ]
+  }
+}

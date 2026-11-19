@@ -1,0 +1,2 @@
+external_work_id,external_enquiry_id,external_case_id,external_agent_id,external_accepted_at,external_closed_at,external_active_seconds,external_handle_seconds,external_acw_seconds,external_activity,external_measurement_method
+WRK-S32-1,ENQ-S32,,HUM-T1,2026-03-15T13:02:00+00:00,2026-03-15T13:08:00+00:00,300,360,0,correct_ai_answer,logged

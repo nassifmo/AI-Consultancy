@@ -12,7 +12,8 @@ physically happened.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
+from heapq import heapify, heappop, heappush
 
 from datagen.config_schema import AgentBehaviour, GeneratorConfig, ServiceRules
 
@@ -25,6 +26,17 @@ HUMAN_BASELINE = "human_baseline"
 ARRIVED_OR_LATER = set(STATUS_ORDER[STATUS_ORDER.index("arrived") :])
 TYPO_LOOKUP_EXTRA_MINUTES = 3.0  # human searches the customer's account when the reference is wrong
 HUMAN_SPOTS_OTHER_SHIPMENT = 0.5  # human notices the customer quoted another of their shipments
+ASSIGNMENT_METHODS = {
+    "randomized_split": "randomized",
+    "before_after_confounded": "before_after",
+    "staged_rollout": "regional_rollout",
+}
+
+
+def region_assignments(world: World) -> dict[str, bool]:
+    """Return each operating country's actual assignment at the regional switch."""
+    countries = sorted({customer.country for customer in world.customers})
+    return {country: index < (len(countries) + 1) // 2 for index, country in enumerate(countries)}
 
 
 # ---------------------------------------------------------------- records
@@ -99,8 +111,12 @@ class Handler:
     def __init__(self, cfg: GeneratorConfig, rules: ServiceRules, world: World):
         self.cfg, self.rules, self.w = cfg, rules, world
         self.rng = layer_rng(cfg.seed, "handling")
+        self.assignment_rng = layer_rng(cfg.seed, "assignment")
         self.out = Handled()
         self.humans = [f"HUM-{i:03d}" for i in range(1, int(cfg.costs.staffing.baseline_headcount) + 1)]
+        self.human_actions = 0
+        self.country_by_customer = {customer.customer_id: customer.country for customer in world.customers}
+        self.regional_switch = region_assignments(world)
         self.ref_index: dict[str, Shipment] = {}
         self.by_customer: dict[str, list[Shipment]] = {}
         for s in world.shipments:
@@ -116,7 +132,41 @@ class Handler:
         return lognormal(self.rng, spec.median, spec.p95)
 
     def human(self) -> str:
-        return self.rng.choice(self.humans)
+        # Place each evidence-linked task on one staff member after times are known.
+        self.human_actions += 1
+        return f"worker-for-task-{self.human_actions}"
+
+    def schedule_human_work(self) -> None:
+        """Assign synthetic task intervals to staff without double-booking anyone."""
+        available = [(datetime.min.replace(tzinfo=UTC), employee) for employee in self.humans]
+        if not available:
+            raise ValueError("The synthetic workload requires at least one whole support employee.")
+        heapify(available)
+        assignments = {}
+        for row in sorted(self.out.agent_work, key=lambda work: work["accepted_at"]):
+            free_at, employee = heappop(available)
+            if free_at > row["accepted_at"]:
+                raise ValueError("The generated workload exceeds the synthetic staffing capacity.")
+            assignments[row["agent_id"]] = employee
+            heappush(available, (row["closed_at"], employee))
+
+        def resolve_worker(actor):
+            if isinstance(actor, str) and actor.startswith("worker-for-task-"):
+                return assignments.get(actor, self.humans[0])
+            return actor
+
+        for rows, fields in (
+            (self.out.agent_work, ("agent_id",)),
+            (self.out.responses, ("actor_id",)),
+            (self.out.cases, ("owner_id",)),
+            (self.out.case_history, ("changed_by", "old_value", "new_value")),
+        ):
+            for row in rows:
+                for field_name in fields:
+                    row[field_name] = resolve_worker(row[field_name])
+        for result in self.out.truths:
+            for answer in result.answers:
+                answer.actor_id = resolve_worker(answer.actor_id)
 
     def known(self, s: Shipment, t: datetime):
         return known_state_at(self.w.events_for(s.booking_ref), t)
@@ -136,23 +186,32 @@ class Handler:
             return False
         return (eta - s.planned_arrival) > hours(self.rules.escalation.escalate_if_delay_hours)
 
-    def assign_arm(self, q: Enquiry) -> str:
+    def assign(self, q: Enquiry) -> None:
         d = self.cfg.design
         if q.repeat_of is not None:
-            return q.repeat_of.arm
+            q.arm = q.repeat_of.arm
+            q.assignment_at = q.repeat_of.assignment_at
+            q.assignment_method = q.repeat_of.assignment_method
+            q.assignment_group = q.repeat_of.assignment_group
+            return
+        q.assignment_at = q.received_at
+        q.assignment_method = ASSIGNMENT_METHODS[d.type]
         if d.type == "randomized_split":
-            return choice_weighted(self.rng, {a.name: a.share for a in d.arms})
+            q.arm = choice_weighted(self.assignment_rng, {a.name: a.share for a in d.arms})
+            return
         rollout = datetime.combine(d.rollout_date, datetime.min.time(), tzinfo=q.received_at.tzinfo)
         before, after = d.arms[0].name, d.arms[1].name
-        if q.received_at < rollout:
-            return before
+        post_rollout = q.received_at >= rollout
         if d.type == "staged_rollout":
-            countries = sorted({c.country for c in self.w.customers})
-            country = next(c.country for c in self.w.customers if c.customer_id == q.customer_id)
-            return after if countries.index(country) < len(countries) / 2 else before
-        return after  # before_after_confounded
+            q.assignment_group = self.country_by_customer[q.customer_id]
+            q.arm = after if post_rollout and self.regional_switch[q.assignment_group] else before
+        else:
+            period_start = rollout if post_rollout else self.w.period_start
+            q.assignment_group = f"period:{period_start.date().isoformat()}"
+            q.arm = after if post_rollout else before
 
-    def work(self, t: Truth, activity: str, start: datetime, active_min: float, case: dict | None = None) -> datetime:
+    def work(self, t: Truth, activity: str, start: datetime, active_min: float, case: dict | None = None,
+             *, actor: str | None = None) -> datetime:
         active = max(30, round(active_min * 60))
         handle = round(active * self.rng.uniform(1.1, 1.5))
         acw = round(self.skew(self.cfg.human.acw_minutes) * 60) if activity == "handle_enquiry" else 0
@@ -161,7 +220,7 @@ class Handler:
             {
                 "_enq": t.enquiry,
                 "_case": case,
-                "agent_id": self.human(),
+                "agent_id": actor or self.human(),
                 "accepted_at": start,
                 "closed_at": closed,
                 "active_seconds": active + acw,
@@ -219,7 +278,7 @@ class Handler:
         deadline = self.rules.follow_up.followup_deadline_hours
         upd = uniform_time(self.rng, at + hours(min(2.0, deadline / 2)), at + hours(deadline))
         k = self.known(s, upd)
-        self.work(t, "follow_up", upd - timedelta(minutes=5), self.skew(hc.followup_minutes), case)
+        self.work(t, "follow_up", upd - timedelta(minutes=5), self.skew(hc.followup_minutes), case, actor=owner)
         self.respond(t, Answer(upd, "human", owner, s, k.status, k.eta, True, "case_update"), case)
         esc.first_update_at = upd
         self.history(case, upd, "status", "escalated", "open", owner)
@@ -312,7 +371,7 @@ class Handler:
                "claimed_eta": answer.claimed_eta if answer else None,
                "response_text": _message(answer) if answer else "Let me transfer you to a colleague.",
                "self_reported_outcome": None, "handoff_flag": handoff,
-               "tokens_in": tokens_in, "tokens_out": tokens_out, "voice_seconds": voice or None}
+               "tokens_in": tokens_in, "tokens_out": tokens_out, "voice_seconds": voice}
         self.out.agent_runs.append(run)
 
         if handoff:
@@ -340,7 +399,7 @@ class Handler:
                 "priority": "normal", "closed_at": None, "closure_code": None}
         self.out.cases.append(case)
         self.history(case, start, "status", None, "new", owner)
-        sent = self.work(t, "correct_ai_answer", start, self.skew(r.rescue_minutes), case)
+        sent = self.work(t, "correct_ai_answer", start, self.skew(r.rescue_minutes), case, actor=owner)
         k = self.known(true, sent)
         self.respond(t, Answer(sent, "human", owner, true, k.status, k.eta, True, "correction"), case)
         case.update(closed_at=sent, closure_code="resolved_info_provided")
@@ -380,7 +439,7 @@ class Handler:
         return "resolved"
 
     def handle(self, q: Enquiry, in_population: bool) -> Truth:
-        q.arm = self.assign_arm(q)
+        self.assign(q)
         t = Truth(q, q.arm, q.enquiry_type in self.rules.in_scope_enquiry_types, in_population)
         true = self.w.shipment(q.true_booking_ref)
         if t.in_scope:
@@ -408,11 +467,14 @@ class Handler:
         if at >= self.w.data_cutoff or at <= after:
             return None
         s = self.w.shipment(q.true_booking_ref)
+        message = ("I am still waiting for an update on my earlier shipment enquiry."
+                   if t.service_outcome in {"failed", "escalated_open"}
+                   else "Please give me the latest tracking status for this shipment.")
         return Enquiry(enquiry_id="", customer_id=q.customer_id,
                        channel=choice_weighted(self.rng, self.cfg.enquiries.channel_mix),
                        received_at=at, stated_reference=s.booking_ref, enquiry_type=q.enquiry_type,
                        language=q.language, true_booking_ref=s.booking_ref, reference_kind="booking",
-                       delay_driven=False, repeat_of=q)
+                       delay_driven=False, repeat_of=q, customer_message=message)
 
 
 def _iso(dt: datetime | None) -> str:
@@ -479,6 +541,7 @@ def handle_all(cfg: GeneratorConfig, rules: ServiceRules, world: World) -> Handl
             repeats.append(r)
     for q in repeats:  # repeat contacts are handled but do not spawn further repeats
         h.handle(q, world.period_start <= q.received_at < world.period_end)
+    h.schedule_human_work()
 
     # Renumber every enquiry in time order, as a real system would.
     world.enquiries = sorted(originals + repeats, key=lambda q: (q.received_at, q.true_booking_ref))

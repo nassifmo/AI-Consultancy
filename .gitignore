@@ -5,3 +5,14 @@ datagen/datasets/*
 !datagen/datasets/tiny/
 datagen/config/heldout.yaml
 datagen/handoff/
+
+# Local evaluator state, generated artifacts and credentials
+.venv/
+/runs/
+/pilot_imports/
+/meeting_release/
+/qa/chrome-qa-profile/
+*.log
+.env
+.env.*
+**/.streamlit/secrets.toml

@@ -16,7 +16,7 @@
 # `partner_source` / `owner` describe where the real data would come from.
 # Enum value lists marked "subset" must be checked against the cited standard before real-data mapping.
 
-version: 0.1.0
+version: "1.0"
 
 files:
 
@@ -85,8 +85,18 @@ files:
       - {name: channel, type: enum, required: true, values: [voice, email, chat], description: "Contact channel"}
       - {name: received_at, type: datetime, required: true, description: "When the enquiry arrived"}
       - {name: stated_reference, type: string, required: false, description: "Reference as given by the customer (may be wrong or partial)"}
+      - {name: customer_message, type: string, required: false, description: "Customer's recorded request at intake"}
+      - {name: related_enquiry_id, type: string, required: false, references: enquiries.enquiry_id, description: "Prior enquiry identified by customer or CRM linkage"}
+      - {name: confirmed_reference, type: string, required: false, description: "Reference the customer subsequently confirmed for this enquiry"}
+      - {name: reference_confirmed_at, type: datetime, required: false, description: "Time of the customer's reference confirmation"}
       - {name: enquiry_type, type: enum, required: true, values: [status, delay, documents, other], description: "Classified enquiry type"}
       - {name: language, type: string, required: false, description: "ISO 639-1 language code"}
+      - {name: assigned_arm, type: enum, required: false, values: [human_baseline, agent_v1, agent_v2], description: "Handling policy from the allocation record. Required for analysis by assignment"}
+      - {name: assignment_at, type: datetime, required: false, description: "Time the handling policy was assigned. Continuations carry the original assignment time"}
+      - {name: root_enquiry_id, type: string, required: false, references: enquiries.enquiry_id, description: "Initial enquiry for the request. Initial requests reference themselves"}
+      - {name: contact_relation, type: enum, required: false, values: [initial, continuation, new_request, unknown], description: "Recorded relationship between this contact and the service request"}
+      - {name: assignment_unit_id, type: string, required: false, description: "Allocated unit: original enquiry ID, operating country, or dated before/after period"}
+      - {name: assignment_method, type: enum, required: false, values: [randomized, before_after, regional_rollout], description: "Mechanism by which the handling policy was assigned"}
 
   agent_runs:
     id: E5
@@ -115,7 +125,7 @@ files:
       - {name: claimed_status, type: string, required: false, description: "Shipment status stated to the customer (structured)"}
       - {name: claimed_eta, type: datetime, required: false, description: "ETA stated to the customer"}
       - {name: response_text, type: string, required: false, description: "Message sent to the customer"}
-      - {name: self_reported_outcome, type: enum, required: true, values: [resolved, escalated, handed_off, failed], description: "Outcome as reported by the agent itself (not trusted)"}
+      - {name: self_reported_outcome, type: enum, required: true, values: [resolved, escalated, handed_off, awaiting_customer, failed], description: "Outcome as reported by the agent itself (not trusted)"}
       - {name: handoff_flag, type: boolean, required: true, description: "Run ended by handing to a human"}
       - {name: tokens_in, type: integer, required: false, description: "LLM input tokens"}
       - {name: tokens_out, type: integer, required: false, description: "LLM output tokens"}
@@ -194,15 +204,16 @@ files:
     id: E10
     filename: rollout_log.csv
     format: csv
-    primary_key: [date, agent_version]
+    primary_key: [date, agent_version, region]
     partner_source: Integrator deployment log / release notes
     owner: Integrator
     fields:
       - {name: date, type: date, required: true, description: "Effective date"}
       - {name: agent_version, type: string, required: true, description: "Version deployed (or \"human_baseline\")"}
       - {name: arm_assignment_rule, type: enum, required: true, values: [random_by_enquiry, by_region, all_traffic, none], description: "How traffic was assigned"}
-      - {name: traffic_share, type: number, required: true, description: "Share of in-scope traffic (0-1)"}
+      - {name: traffic_share, type: number, required: true, description: "Share of in-scope traffic (0-1), measured within the region if specified"}
       - {name: change_description, type: string, required: false, description: "What changed"}
+      - {name: region, type: string, required: false, description: "Operating country for regional assignment. Blank for a dataset-wide rule"}
 
   cost_parameters:
     id: E11
@@ -246,8 +257,9 @@ files:
       - {name: sent_at, type: datetime, required: true, description: "When the message was sent"}
       - {name: actor_type, type: enum, required: true, values: [ai_agent, human], description: "Who sent it"}
       - {name: actor_id, type: string, required: true, description: "Agent version or pseudonymized human ID"}
-      - {name: purpose, type: enum, required: true, values: [answer, correction, case_update], description: "Why it was sent"}
+      - {name: purpose, type: enum, required: true, values: [answer, correction, case_update, clarification], description: "Why it was sent"}
       - {name: shipment_reference, type: string, required: false, description: "Booking reference the message is about, as linked by the sender"}
+      - {name: container_reference, type: string, required: false, description: "Specific container described in the response"}
       - {name: claimed_status, type: string, required: false, description: "Shipment status stated"}
       - {name: claimed_eta, type: datetime, required: false, description: "ETA stated"}
       - {name: message_text, type: string, required: false, description: "Message body"}

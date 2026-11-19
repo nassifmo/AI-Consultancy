@@ -1,0 +1,341 @@
+# Additional hand-written fixtures for the proposed scoring contract.
+# Dates and shipment references are synthetic. All times are UTC.
+rule_version: '0.2.0-proposed'
+
+shipments:
+  - {booking_ref: BKG-T-MULTI, bl_ref: SBL-T-MULTI, container_refs: 'SYNU9000015;SYNU9000020', customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: '2026-03-01T10:00:00+00:00', planned_arrival: '2026-03-15T09:20:00+00:00'}
+  - {booking_ref: BKG-T-TRANSFER, bl_ref: SBL-T-TRANSFER, container_refs: SYNU9000036, customer_id: CUS-T1, origin: LBBEY, destination: NLRTM, planned_departure: '2026-03-01T10:00:00+00:00', planned_arrival: '2026-03-15T10:00:00+00:00'}
+
+tracking_events:
+  - {event_id: E-M1, booking_ref: BKG-T-MULTI, container_ref: null, event_type: TRANSPORT, event_type_code: ARRI, classifier: ACT, event_datetime: '2026-03-15T09:20:00+00:00', event_created_datetime: '2026-03-15T09:30:00+00:00', location: NLRTM}
+  - {event_id: E-M2, booking_ref: BKG-T-MULTI, container_ref: SYNU9000015, event_type: EQUIPMENT, event_type_code: DISC, classifier: ACT, event_datetime: '2026-03-15T11:30:00+00:00', event_created_datetime: '2026-03-15T11:45:00+00:00', location: NLRTM}
+  - {event_id: E-M3, booking_ref: BKG-T-MULTI, container_ref: SYNU9000020, event_type: EQUIPMENT, event_type_code: DISC, classifier: ACT, event_datetime: '2026-03-15T16:30:00+00:00', event_created_datetime: '2026-03-15T17:00:00+00:00', location: NLRTM}
+  - {event_id: E-T1, booking_ref: BKG-T-TRANSFER, container_ref: null, event_type: TRANSPORT, event_type_code: ARRI, classifier: PLN, event_datetime: '2026-03-15T10:00:00+00:00', event_created_datetime: '2026-02-15T09:00:00+00:00', location: NLRTM}
+  - {event_id: E-T2, booking_ref: BKG-T-TRANSFER, container_ref: null, event_type: TRANSPORT, event_type_code: DEPA, classifier: ACT, event_datetime: '2026-03-01T10:30:00+00:00', event_created_datetime: '2026-03-01T10:45:00+00:00', location: LBBEY}
+  - {event_id: E-T3, booking_ref: BKG-T-TRANSFER, container_ref: null, event_type: TRANSPORT, event_type_code: ARRI, classifier: ACT, event_datetime: '2026-03-08T10:00:00+00:00', event_created_datetime: '2026-03-08T10:15:00+00:00', location: FRMRS}
+  - {event_id: E-T4, booking_ref: BKG-T-TRANSFER, container_ref: SYNU9000036, event_type: EQUIPMENT, event_type_code: DISC, classifier: ACT, event_datetime: '2026-03-08T12:00:00+00:00', event_created_datetime: '2026-03-08T12:15:00+00:00', location: FRMRS}
+  - {event_id: E-T5, booking_ref: BKG-T-TRANSFER, container_ref: null, event_type: TRANSPORT, event_type_code: ARRI, classifier: EST, event_datetime: '2026-03-15T22:00:00+00:00', event_created_datetime: '2026-03-08T13:00:00+00:00', location: NLRTM}
+
+scenarios:
+  - id: S13
+    title: Customer provides a bill of lading reference after the agent asks for a shipment identifier
+    tests: Clarification and confirmation within one enquiry before any shipment claim
+    enquiries:
+      - enquiry_id: ENQ-S13
+        received_at: '2026-03-05T09:00:00+00:00'
+        stated_reference: null
+        enquiry_type: status
+        customer_message: 'Can you tell me the status of my container?'
+        confirmed_reference: SBL-T-ONTIME
+        reference_confirmed_at: '2026-03-05T09:03:00+00:00'
+    runs:
+      - enquiry: ENQ-S13
+        start: '2026-03-05T09:00:20+00:00'
+        end: '2026-03-05T09:01:00+00:00'
+        clarification: 'Could you provide your booking, bill of lading, or container number so I can find your shipment?'
+        self: awaiting_customer
+      - enquiry: ENQ-S13
+        start: '2026-03-05T09:03:10+00:00'
+        end: '2026-03-05T09:04:00+00:00'
+        lookup_reference: SBL-T-ONTIME
+        linked: BKG-T-ONTIME
+        status: departed
+        eta: '2026-03-15T10:00:00+00:00'
+        response_override:
+          message_text: 'The latest tracking update shows your shipment has departed. The recorded arrival estimate is 15 March at 10:00 UTC.'
+        self: resolved
+    expected:
+      ENQ-S13: {state: resolved, clarification_requested: true, first_answer_correct: true, info_correct: true, ai_only: true, human_seconds: 0}
+
+  - id: S14
+    title: Customer quotes conflicting references and does not clarify
+    tests: Conflicting aliases point to two valid bookings and the reply requests clarification
+    enquiries:
+      - enquiry_id: ENQ-S14
+        received_at: '2026-03-05T09:00:00+00:00'
+        stated_reference: 'BKG-T-ONTIME / SBL-T-DELAY'
+        enquiry_type: status
+        customer_message: 'I have booking BKG-T-ONTIME in one email and bill of lading SBL-T-DELAY in another. I am unsure which matches the Rotterdam shipment I am asking about. Can you check its status?'
+    runs:
+      - enquiry: ENQ-S14
+        start: '2026-03-05T09:00:20+00:00'
+        end: '2026-03-05T09:01:00+00:00'
+        lookup_output: 'Conflicting references: BKG-T-ONTIME and BKG-T-DELAY'
+        clarification: 'These references identify two different shipments. Which reference would you like me to check?'
+        self: awaiting_customer
+    expected:
+      ENQ-S14: {state: awaiting_customer, clarification_requested: true, ai_only: false, human_seconds: 0}
+
+  - id: S15
+    title: Correct booking and correct container with no discharge yet recorded
+    tests: A vessel arrival and a sibling container discharge do not prove discharge of the requested container
+    enquiries:
+      - enquiry_id: ENQ-S15
+        received_at: '2026-03-15T13:00:00+00:00'
+        stated_reference: SYNU9000020
+        enquiry_type: status
+        customer_message: 'Has container SYNU9000020 been unloaded at Rotterdam yet?'
+    runs:
+      - enquiry: ENQ-S15
+        start: '2026-03-15T13:00:20+00:00'
+        end: '2026-03-15T13:01:00+00:00'
+        linked: BKG-T-MULTI
+        tracking_reference: SYNU9000020
+        status: arrived
+        eta: '2026-03-15T09:20:00+00:00'
+        response_override:
+          container_reference: SYNU9000020
+          message_text: 'The vessel arrived in Rotterdam at 09:20 UTC. There is no discharge recorded yet for container SYNU9000020.'
+        self: resolved
+    expected:
+      ENQ-S15: {state: resolved, first_answer_correct: true, info_correct: true, ai_only: true, human_seconds: 0}
+
+  - id: S16
+    title: Correct booking but agent uses another container's discharge event
+    tests: A sibling container event cannot support a claim about the requested container
+    enquiries:
+      - enquiry_id: ENQ-S16
+        received_at: '2026-03-15T13:00:00+00:00'
+        stated_reference: SYNU9000020
+        enquiry_type: status
+        customer_message: 'Has container SYNU9000020 been unloaded at Rotterdam yet?'
+    runs:
+      - enquiry: ENQ-S16
+        start: '2026-03-15T13:00:20+00:00'
+        end: '2026-03-15T13:01:00+00:00'
+        linked: BKG-T-MULTI
+        tracking_reference: SYNU9000015
+        status: discharged
+        eta: '2026-03-15T09:20:00+00:00'
+        response_override:
+          container_reference: SYNU9000020
+          message_text: 'Container SYNU9000020 was unloaded in Rotterdam at 11:30 UTC.'
+        self: resolved
+    expected:
+      ENQ-S16: {state: failed, first_answer_correct: false, info_correct: false, self_report_false: true, human_seconds: 0}
+
+  - id: S17
+    title: Customer contacts again because the original requested confirmation never arrived
+    tests: Explicit tie to an unfulfilled commitment supports a qualifying recontact
+    enquiries:
+      - enquiry_id: ENQ-S17A
+        received_at: '2026-03-05T09:00:00+00:00'
+        stated_reference: BKG-T-ONTIME
+        enquiry_type: status
+        customer_message: 'Please confirm the current vessel ETA in writing so I can share it with the consignee.'
+      - enquiry_id: ENQ-S17B
+        received_at: '2026-03-07T09:00:00+00:00'
+        stated_reference: SBL-T-ONTIME
+        enquiry_type: status
+        related_enquiry_id: ENQ-S17A
+        channel: email
+        customer_message: 'Following up on ENQ-S17A. My written confirmation never arrived. Please send the same confirmation that was promised.'
+    runs:
+      - enquiry: ENQ-S17A
+        start: '2026-03-05T09:00:20+00:00'
+        end: '2026-03-05T09:01:00+00:00'
+        linked: BKG-T-ONTIME
+        status: departed
+        eta: '2026-03-15T10:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed and its recorded ETA is 15 March at 10:00 UTC. I will send you a written confirmation by tomorrow.'
+        self: resolved
+    responses:
+      - enquiry: ENQ-S17B
+        at: '2026-03-07T09:05:00+00:00'
+        actor: HUM-T1
+        purpose: answer
+        ref: BKG-T-ONTIME
+        status: departed
+        eta: '2026-03-15T10:00:00+00:00'
+        message_text: 'Here is the written confirmation for BKG-T-ONTIME. As of this reply, the vessel has departed and the recorded ETA is 15 March at 10:00 UTC.'
+    work:
+      - {enquiry: ENQ-S17B, agent: HUM-T1, at: '2026-03-07T09:01:00+00:00', active: 180, activity: follow_up}
+    expected:
+      ENQ-S17A: {state: failed, info_correct: true, repeat_contact: true, self_report_false: true, human_seconds: 0}
+      ENQ-S17B: {state: resolved, info_correct: true, repeat_contact: false, ai_only: false, human_seconds: 180}
+
+  - id: S18
+    title: Customer contacts again to confirm a newly published ETA for the same shipment
+    tests: A distinct request prompted by a newly recorded update does not invalidate the earlier correct answer
+    enquiries:
+      - enquiry_id: ENQ-S18A
+        received_at: '2026-03-07T09:00:00+00:00'
+        stated_reference: BKG-T-D24
+        enquiry_type: status
+        customer_message: 'What is the Rotterdam vessel ETA currently on my shipment?'
+      - enquiry_id: ENQ-S18B
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-D24
+        enquiry_type: status
+        related_enquiry_id: ENQ-S18A
+        customer_message: 'Your March 7 answer helped. I have since received a March 8 schedule update. Could you confirm the newly published ETA?'
+    runs:
+      - enquiry: ENQ-S18A
+        start: '2026-03-07T09:00:20+00:00'
+        end: '2026-03-07T09:01:00+00:00'
+        linked: BKG-T-D24
+        status: departed
+        eta: '2026-03-15T10:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed. The current Rotterdam arrival estimate is 15 March at 10:00 UTC.'
+        self: resolved
+      - enquiry: ENQ-S18B
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-D24
+        status: departed
+        eta: '2026-03-16T10:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed. The revised Rotterdam arrival estimate is 16 March at 10:00 UTC.'
+        self: resolved
+    expected:
+      ENQ-S18A: {state: resolved, info_correct: true, repeat_contact: false, ai_only: true, human_seconds: 0}
+      ENQ-S18B: {state: resolved, info_correct: true, escalation_required: false, repeat_contact: false, ai_only: true, human_seconds: 0}
+
+  - id: S19
+    title: Delay becomes visible after receipt but before the initial answer
+    tests: Under the proposed trigger rule the escalation deadline starts when the qualifying revision becomes visible
+    enquiries:
+      - enquiry_id: ENQ-S19
+        received_at: '2026-03-08T07:00:00+00:00'
+        stated_reference: BKG-T-DELAY
+        channel: email
+        enquiry_type: delay
+        customer_message: 'Could you check whether the ship is delayed and tell me the confirmed update?'
+    runs:
+      - enquiry: ENQ-S19
+        start: '2026-03-08T09:43:30+00:00'
+        end: '2026-03-08T09:44:30+00:00'
+        linked: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed and the recorded ETA moved to 17 March at 12:00 UTC. I will refer the delay to our team for review.'
+        self: escalated
+        escalated: true
+    cases:
+      - {case_id: CAS-S19, enquiry: ENQ-S19, opened: '2026-03-08T09:45:00+00:00', reason: delay_investigation, owner: HUM-T1, closed: '2026-03-10T12:10:00+00:00', code: resolved_after_investigation}
+    history:
+      - [CAS-S19, '2026-03-08T09:45:00+00:00', status, null, new, ai_agent]
+      - [CAS-S19, '2026-03-08T09:45:30+00:00', status, new, escalated, ai_agent]
+      - [CAS-S19, '2026-03-08T14:55:00+00:00', status, escalated, open, HUM-T1]
+      - [CAS-S19, '2026-03-10T12:10:00+00:00', status, open, closed, HUM-T1]
+    responses:
+      - enquiry: ENQ-S19
+        at: '2026-03-08T15:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S19
+        message_text: 'We are reviewing the revised schedule. The current arrival estimate is 17 March at 12:00 UTC.'
+      - enquiry: ENQ-S19
+        at: '2026-03-10T12:10:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S19
+        message_text: 'We completed the schedule check with operations and confirm the published ETA of 17 March at 12:00 UTC. We have closed this enquiry.'
+    work:
+      - {enquiry: ENQ-S19, case: CAS-S19, agent: HUM-T1, at: '2026-03-08T14:55:00+00:00', active: 240, activity: follow_up}
+      - {enquiry: ENQ-S19, case: CAS-S19, agent: HUM-T1, at: '2026-03-10T12:00:00+00:00', active: 480, activity: follow_up}
+    expected:
+      ENQ-S19:
+        state: resolved
+        first_answer_correct: true
+        info_correct: true
+        escalation_required: true
+        escalation_triggered_at: '2026-03-08T08:00:00+00:00'
+        required_actions_done: true
+        ai_only: false
+        human_seconds: 720
+
+  - id: S20
+    title: Customer unreachable is a terminal closure without resolution
+    tests: A timely escalation and update cannot make an unreachable closure count as resolved
+    enquiries:
+      - enquiry_id: ENQ-S20
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-DELAY
+        enquiry_type: delay
+        customer_message: 'The delay is causing a pickup issue. Please investigate and let me know what to do.'
+    runs:
+      - enquiry: ENQ-S20
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-DELAY
+        status: departed
+        eta: '2026-03-17T12:00:00+00:00'
+        response_override:
+          message_text: 'The vessel has departed and the revised ETA is 17 March at 12:00 UTC. I will ask our team to review your pickup issue.'
+        self: escalated
+        escalated: true
+    cases:
+      - {case_id: CAS-S20, enquiry: ENQ-S20, opened: '2026-03-09T09:01:30+00:00', reason: delay_investigation, owner: HUM-T1, closed: '2026-03-12T10:00:00+00:00', code: customer_unreachable}
+    history:
+      - [CAS-S20, '2026-03-09T09:01:30+00:00', status, null, new, ai_agent]
+      - [CAS-S20, '2026-03-09T09:02:00+00:00', status, new, escalated, ai_agent]
+      - [CAS-S20, '2026-03-09T15:00:00+00:00', status, escalated, pending_customer, HUM-T1]
+      - [CAS-S20, '2026-03-12T10:00:00+00:00', status, pending_customer, closed, HUM-T1]
+    responses:
+      - enquiry: ENQ-S20
+        at: '2026-03-09T15:00:00+00:00'
+        actor: HUM-T1
+        purpose: case_update
+        ref: BKG-T-DELAY
+        eta: '2026-03-17T12:00:00+00:00'
+        case: CAS-S20
+        message_text: 'The revised vessel ETA is 17 March at 12:00 UTC. We still need your pickup details to advise on arrangements.'
+    work:
+      - {enquiry: ENQ-S20, case: CAS-S20, agent: HUM-T1, at: '2026-03-09T14:55:00+00:00', active: 240, activity: follow_up}
+      - {enquiry: ENQ-S20, case: CAS-S20, agent: HUM-T1, at: '2026-03-12T09:55:00+00:00', active: 240, activity: follow_up}
+    expected:
+      ENQ-S20: {state: failed, first_answer_correct: true, escalation_required: true, required_actions_done: true, ai_only: false, human_seconds: 480}
+
+  - id: S21
+    title: Agent mistakes a transshipment port arrival for arrival at the final destination
+    tests: An actual arrival at an intermediate port does not replace the final destination estimate
+    enquiries:
+      - enquiry_id: ENQ-S21
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-TRANSFER
+        enquiry_type: status
+        customer_message: 'Has booking BKG-T-TRANSFER arrived in Rotterdam? What is the latest arrival time for Rotterdam?'
+    runs:
+      - enquiry: ENQ-S21
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-TRANSFER
+        status: arrived
+        eta: '2026-03-08T10:00:00+00:00'
+        response_override:
+          message_text: 'The vessel arrived in Rotterdam on 8 March at 10:00 UTC.'
+        self: resolved
+    expected:
+      ENQ-S21: {state: failed, first_answer_correct: false, info_correct: false, self_report_false: true, human_seconds: 0}
+
+  - id: S22
+    title: Agent correctly distinguishes the transshipment arrival from the final ETA
+    tests: With the same records the reply reports the recorded arrival at the correct intermediate port and the latest estimate for the destination
+    enquiries:
+      - enquiry_id: ENQ-S22
+        received_at: '2026-03-09T09:00:00+00:00'
+        stated_reference: BKG-T-TRANSFER
+        enquiry_type: status
+        customer_message: 'Has booking BKG-T-TRANSFER arrived in Rotterdam? What is the latest arrival time for Rotterdam?'
+    runs:
+      - enquiry: ENQ-S22
+        start: '2026-03-09T09:00:20+00:00'
+        end: '2026-03-09T09:01:00+00:00'
+        linked: BKG-T-TRANSFER
+        status: null
+        eta: '2026-03-15T22:00:00+00:00'
+        response_override:
+          message_text: 'The vessel arrival recorded on 8 March at 10:00 UTC was at Marseille. Tracking has no recorded Rotterdam arrival yet. The current Rotterdam ETA is 15 March at 22:00 UTC.'
+        self: resolved
+    expected:
+      ENQ-S22: {state: resolved, first_answer_correct: true, info_correct: true, escalation_required: false, ai_only: true, human_seconds: 0}

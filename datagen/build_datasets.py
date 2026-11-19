@@ -2,6 +2,7 @@
 
     python -m datagen.build_datasets                  # all datasets
     python -m datagen.build_datasets dev confounded   # selected ones
+    python -m datagen.build_datasets --out-root datagen/datasets/release_1 demo tiny dev damaged null_effect confounded staged
 
 Datasets (config in datagen/config/, output in datagen/datasets/<name>/):
     tiny         ~50 enquiries, clean, for row-by-row review (committed)
@@ -15,6 +16,7 @@ Datasets (config in datagen/config/, output in datagen/datasets/<name>/):
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -29,6 +31,7 @@ DATASETS = {
     "confounded": "confounded.yaml",
     "staged": "staged.yaml",
     "heldout": "heldout.yaml",
+    "demo": "demo.yaml",
 }
 KEY_METRICS = ["verified_resolution_rate", "first_answer_correct_rate", "human_minutes_per_enquiry",
                "variable_cost_per_enquiry"]
@@ -56,13 +59,23 @@ def describe(out: Path) -> list[str]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    names = (argv if argv is not None else sys.argv[1:]) or list(DATASETS)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("names", nargs="*", metavar="DATASET")
+    parser.add_argument("--out-root", type=Path, help="Write named datasets inside this output directory.")
+    args = parser.parse_args(argv)
+    names = args.names or [name for name in DATASETS if name != "demo"]
+    output_root = args.out_root.resolve() if args.out_root else None
     for name in names:
+        if name not in DATASETS:
+            parser.error(f"Unknown dataset {name!r}. Choose from {', '.join(DATASETS)}.")
         config = CONFIG_DIR / DATASETS[name]
         if not config.exists():
             print(f"== {name}: skipped ({config.name} not found)")
             continue
-        out = run(config)
+        destination = output_root / name if output_root else None
+        if destination is not None and (destination.exists() or destination.is_symlink()):
+            parser.error(f"Choose a new destination. Already exists: {destination}")
+        out = run(config, destination)
         print("\n".join(describe(out)))
     return 0
 

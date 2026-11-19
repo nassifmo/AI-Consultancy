@@ -38,7 +38,10 @@ def test_library_covers_all_planned_scenarios(lib):
 
 def test_every_outcome_state_is_exercised(lib):
     states = {e["state"] for s in lib for e in s.expected.values()}
-    assert states == {"resolved", "escalated_open", "failed", "unknown", "out_of_scope"}
+    assert states == {
+        "resolved", "escalated_open", "failed", "unknown", "out_of_scope",
+        "awaiting_customer", "closed_unresolved",
+    }
 
 
 def test_boundary_pairs_disagree(lib):
@@ -93,4 +96,7 @@ def test_ai_answer_missing_claim_is_not_unknown():
 def test_write_scenarios(tmp_path, lib):
     write(lib[:3], tmp_path)
     sc = tmp_path / lib[0].id
-    assert (sc / "exports" / "enquiries.csv").exists() and (sc / "expected.json").exists()
+    assert (sc / "exports" / "enquiries.csv").is_file()
+    assert (sc / "ground_truth" / "expected.json").is_file()
+    assert not (sc / "expected.json").exists()
+    assert not list((sc / "exports").rglob("expected.json"))

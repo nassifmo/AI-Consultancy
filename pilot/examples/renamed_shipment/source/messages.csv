@@ -1,0 +1,3 @@
+external_response_id,external_enquiry_id,external_case_id,external_sent_at,external_actor_type,external_actor_id,external_purpose,external_shipment_reference,external_claimed_status,external_claimed_eta,external_message_text,external_container_reference
+RSP-S32-AI1,ENQ-S32,,2026-03-15T13:01:00+00:00,BOT,agent_v1,answer,BKG-T-MULTI,discharged,,Container SYNU9000020 was unloaded in Rotterdam at 11:30 UTC.,SYNU9000020
+RSP-S32-H1,ENQ-S32,,2026-03-15T13:08:00+00:00,STAFF,HUM-T1,correction,BKG-T-MULTI,arrived,,The 11:30 unloading was for a different container. The vessel has arrived in Rotterdam. As of this message no unloading is recorded for your container SYNU9000020.,SYNU9000020

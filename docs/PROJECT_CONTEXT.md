@@ -69,3 +69,12 @@ not in this repo yet.
 - 2026-11: Rule boundaries proposed (delay strictly > 24h; ETA tolerance, escalation, follow-up and repeat windows inclusive); pending team confirmation. See `docs/SCENARIO_REVIEW.md`.
 - 2026-11: Test datasets defined (dev 3-arm, damaged, null_effect, confounded, staged, heldout template). dev sized so the planted integrator effect is detectable (~2,500 enquiries/arm). Rollout datasets carry true causal effects from counterfactual runs.
 - 2026-11: Roles for this stage: Mohamad Nassif generates the data (datagen/) and hands it off; Bahaa Hamdan builds the evaluator. Bahaa reviews the scenario library; Mohamad creates the private heldout set and delivers exports only. Hand-off guide: `docs/DATA_HANDOFF.md`.
+
+
+## Evaluator and pilot demonstration (19 November 2026)
+
+The local application can import and check shipment records, trace findings to individual enquiries,
+compare handling policies, and propose a next step based on service evidence and costs. See the
+[quick start](../README.md), [test report](../TEST_REPORT.md) and the [pilot scope](../pilot_prospect/PILOT_ONE_PAGER.html).
+The demonstration uses synthetic records. Company access, held-out verification and company impact
+remain unconfirmed. The first proposed pilot is a read-only feasibility check with a support owner and data contact.

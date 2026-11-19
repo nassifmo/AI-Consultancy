@@ -7,7 +7,7 @@ from datetime import datetime
 
 from datagen.config_schema import GeneratorConfig
 
-from .handling import HUMAN_BASELINE, Handled
+from .handling import HUMAN_BASELINE, Handled, region_assignments
 from .model import World
 
 
@@ -67,13 +67,24 @@ def rollout_rows(cfg: GeneratorConfig, world: World) -> list[dict]:
         return [{"date": start, "agent_version": a.name, "arm_assignment_rule": "random_by_enquiry",
                  "traffic_share": a.share, "change_description": _describe(a.name)} for a in d.arms]
     before, after = d.arms[0].name, d.arms[1].name
-    rule = "by_region" if d.type == "staged_rollout" else "all_traffic"
-    share = 0.5 if d.type == "staged_rollout" else 1.0
+    if d.type == "staged_rollout":
+        mapping = region_assignments(world)
+        initial = [
+            {"date": start, "region": region, "agent_version": before, "arm_assignment_rule": "by_region",
+             "traffic_share": 1.0, "change_description": _describe(before)}
+            for region in mapping
+        ]
+        switches = [
+            {"date": d.rollout_date.isoformat(), "region": region, "agent_version": after,
+             "arm_assignment_rule": "by_region", "traffic_share": 1.0, "change_description": _describe(after)}
+            for region, switches_to_ai in mapping.items() if switches_to_ai
+        ]
+        return initial + switches
     return [
         {"date": start, "agent_version": before, "arm_assignment_rule": "all_traffic", "traffic_share": 1.0,
          "change_description": _describe(before)},
-        {"date": d.rollout_date.isoformat(), "agent_version": after, "arm_assignment_rule": rule,
-         "traffic_share": share, "change_description": _describe(after)},
+        {"date": d.rollout_date.isoformat(), "agent_version": after, "arm_assignment_rule": "all_traffic",
+         "traffic_share": 1.0, "change_description": _describe(after)},
     ]
 
 

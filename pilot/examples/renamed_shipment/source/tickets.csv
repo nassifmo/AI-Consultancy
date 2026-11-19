@@ -1,0 +1,2 @@
+external_customer_id,external_channel,external_language,external_enquiry_id,external_received_at,external_stated_reference,external_enquiry_type,external_customer_message
+CUS-T1,voice,en,ENQ-S32,2026-03-15T13:00:00+00:00,SYNU9000020,TRACKING,Has container SYNU9000020 been unloaded at Rotterdam yet?

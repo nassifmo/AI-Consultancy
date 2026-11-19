@@ -1,0 +1,45 @@
+{
+  "records": [
+    {
+      "external_run_id": "RUN-S32-1",
+      "external_enquiry_id": "ENQ-S32",
+      "external_agent_version": "agent_v1",
+      "external_started_at": "2026-03-15T13:00:20+00:00",
+      "external_ended_at": "2026-03-15T13:01:00+00:00",
+      "external_steps": [
+        {
+          "index": 1,
+          "operation": "lookup_shipment",
+          "arguments": "SYNU9000020",
+          "returned": "BKG-T-MULTI",
+          "observed_at": null,
+          "ok": true
+        },
+        {
+          "index": 2,
+          "operation": "get_tracking_status",
+          "arguments": "SYNU9000015",
+          "returned": "status=discharged; eta=None",
+          "observed_at": "2026-03-15T13:01:00+00:00",
+          "ok": true
+        },
+        {
+          "index": 3,
+          "operation": "send_message",
+          "arguments": null,
+          "returned": "sent",
+          "observed_at": null,
+          "ok": true
+        }
+      ],
+      "external_claimed_status": "discharged",
+      "external_claimed_eta": null,
+      "external_response_text": "Container SYNU9000020 was unloaded in Rotterdam at 11:30 UTC.",
+      "external_self_reported_outcome": "resolved",
+      "external_handoff_flag": false,
+      "external_tokens_in": 2500,
+      "external_tokens_out": 300,
+      "external_voice_seconds": null
+    }
+  ]
+}

@@ -106,9 +106,16 @@ def export_metadata(g: Generated) -> dict:
     """What a partner would tell us about the export (time zones, window, rule version)."""
     r = g.cfg.rendering
     return {
+        "schema_version": "1.0",
+        "dataset_origin": "synthetic",
+        "dataset_name": g.cfg.dataset_name,
         "study_period": [g.world.period_start.isoformat(), g.world.period_end.isoformat()],
         "data_cutoff": g.world.data_cutoff.isoformat(),
         "rule_version": g.rules.rule_version,
+        "billing_timezone": g.cfg.period.timezone,
+        "agent_run_usage_complete": not any(
+            row["defect_type"] == "retry_row" for row in g.tables["injected_defects"]
+        ),
         "timezones": {f: (r.local_timezone if f in r.local_time_files else "UTC") for f in
                       ["customers", "shipments", "tracking_events", "enquiries", "agent_runs", "cases",
                        "case_history", "agent_work", "responses", "ai_invoice", "rollout_log", "staffing"]},
@@ -171,6 +178,9 @@ def run(config_path: Path, out_dir: Path | None = None) -> Path:
         "config_file": str(config_path),
         "config_sha256": hashlib.sha256(Path(config_path).read_bytes()).hexdigest(),
         "rule_version": rules.rule_version,
+        "dataset_origin": "synthetic",
+        "schema_version": "1.0",
+        "reference_status": "historical_policy_unaligned",
         "study_period": [g.world.period_start.isoformat(), g.world.period_end.isoformat()],
         "data_cutoff": g.world.data_cutoff.isoformat(),
         "layers": LAYERS_IMPLEMENTED,
