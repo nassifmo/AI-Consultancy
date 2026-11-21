@@ -78,3 +78,12 @@ compare handling policies, and propose a next step based on service evidence and
 [quick start](../README.md), [test report](../TEST_REPORT.md) and the [pilot scope](../pilot_prospect/PILOT_ONE_PAGER.html).
 The demonstration uses synthetic records. Company access, held-out verification and company impact
 remain unconfirmed. The first proposed pilot is a read-only feasibility check with a support owner and data contact.
+
+## Agent replay and pilot economics (21 November 2026)
+
+The [replay guide](REPLAY_QUICKSTART.md) covers a local rehearsal and an opt-in
+live comparison of two model configurations on synthetic shipments. The
+[readiness walkthrough](READINESS_WALKTHROUGH.md) explains how to review the
+output before increasing the run size. The [pilot economics contract](PILOT_ECONOMICS_CONTRACT.md)
+sets out the reconciled service and financial inputs needed to assess a company
+deployment. Offline tests do not establish live model performance or company ROI.

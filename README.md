@@ -30,6 +30,8 @@ Open **Prepare company files** to preview a ZIP of CSV, JSON or JSONL extracts t
 
 The [pilot preparation guide](PILOT_PREPARATION.md) describes required records, missing-data behavior and remaining company-specific work. The [mapping guide](pilot/README.md) explains field profiles. A [read-only API collector](acquisition/README.md) prepares JSON extracts once a company endpoint and permissions are confirmed. Its pagination, retries and incomplete-run behavior are tested with mocked responses.
 
+For the new offline rehearsal and first live model run, see the [replay guide](docs/REPLAY_QUICKSTART.md) and [readiness walkthrough](docs/READINESS_WALKTHROUGH.md). For the separate financial comparison, see the [pilot economics contract](docs/PILOT_ECONOMICS_CONTRACT.md).
+
 ### Compare cost against your service priority
 
 The **Decision and next action** panel checks the selected critical failure limit, evidence for attribution, cost completeness and the stated basis for a business value before suggesting a step. Open **Decision evidence and downloads** for the linked critical cases and a shareable decision brief. Suggested actions go to the responsible service owner for review.

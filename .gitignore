@@ -6,6 +6,9 @@ datagen/datasets/*
 datagen/config/heldout.yaml
 datagen/handoff/
 
+# Keep reviewer-held suites and credentials outside the checkout.
+/reviewer_suites/
+
 # Local evaluator state, generated artifacts and credentials
 .venv/
 /runs/

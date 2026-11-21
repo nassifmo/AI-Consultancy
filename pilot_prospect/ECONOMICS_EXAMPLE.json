@@ -1,0 +1,60 @@
+{
+  "origin": "synthetic",
+  "payer": "example_carrier",
+  "currency": "USD",
+  "study_start": "2026-11-01",
+  "study_end_exclusive": "2026-11-15",
+  "scope_ref": "DEMO: shipment-status and delay enquiries in one support queue",
+  "comparable_scope_ref": "DEMO: same dates, eligibility, deadline and cost accounting basis",
+  "downstream_scope": "included",
+  "comparator": {
+    "label": "human",
+    "eligible_enquiries": 100,
+    "timely_correct_resolutions": {"verified": 50, "unknown": 5},
+    "critical_failures": {"verified": 0, "unknown": 0},
+    "active_work_minutes": "750",
+    "active_work_reconciliation_ref": "DEMO: complete comparator work logs"
+  },
+  "candidate": {
+    "label": "AI assisted",
+    "eligible_enquiries": 100,
+    "timely_correct_resolutions": {"verified": 70, "unknown": 5},
+    "critical_failures": {"verified": 0, "unknown": 1},
+    "active_work_minutes": "450",
+    "active_work_reconciliation_ref": "DEMO: complete candidate work logs"
+  },
+  "critical_failure_limit": "0.02",
+  "minimum_timely_correct_rate": "0.65",
+  "service_policy_ref": "DEMO: fictional quality limits, not a company policy",
+  "buckets": [
+    {
+      "bucket_id": "support-expense",
+      "kind": "handling",
+      "comparator_reconciliation_ref": "DEMO: scoped baseline support ledger",
+      "candidate_reconciliation_ref": "DEMO: scoped AI, support, QA and integration ledger",
+      "comparator": [
+        {"entry_id": "DEMO-SUP-1", "evidence_ref": "DEMO:HUM handling spend",
+         "payer": "example_carrier", "currency": "USD", "expense_date": "2026-11-12", "amount": "250.00"}
+      ],
+      "candidate": [
+        {"entry_id": "DEMO-SUP-2", "evidence_ref": "DEMO:AI handling spend",
+         "payer": "example_carrier", "currency": "USD", "expense_date": "2026-11-12", "amount": "330.00"}
+      ]
+    },
+    {
+      "bucket_id": "failed-dispatch-expense",
+      "kind": "downstream",
+      "comparator_reconciliation_ref": "DEMO: linked final truck-dispatch charges",
+      "candidate_reconciliation_ref": "DEMO: linked final truck-dispatch charges",
+      "downstream_linkage_ref": "DEMO: shipment references, dispatch cutoff, and charge/credit crosswalk",
+      "comparator": [
+        {"entry_id": "DEMO-DSP-1", "evidence_ref": "DEMO:baseline dispatch ledger",
+         "payer": "example_carrier", "currency": "USD", "expense_date": "2026-11-13", "amount": "220.00"}
+      ],
+      "candidate": [
+        {"entry_id": "DEMO-DSP-2", "evidence_ref": "DEMO:AI dispatch ledger",
+         "payer": "example_carrier", "currency": "USD", "expense_date": "2026-11-13", "amount": "90.00"}
+      ]
+    }
+  ]
+}

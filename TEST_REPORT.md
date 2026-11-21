@@ -1,5 +1,9 @@
 # Shipment evaluator meeting release verification
 
+## Local replay and finance checks, 21 November 2026
+
+The full benchmark suite passed 135 tests and 106 subtests after the replay and financial evidence changes. A scripted rehearsal recorded all 28 trials across 14 paired synthetic cases with no API calls. A separate acceptance check exercised a real scratchpad case creation, the identical reply without the case, and a wrong sibling-container reply. The first passed. The latter two were flagged as critical failures. The synthetic financial check produced a USD 4 point threshold. Removing downstream evidence left net expense reduction unknown; widening outcome missingness removed the finite worst-case threshold. See the [readiness walkthrough](docs/READINESS_WALKTHROUGH.md) for the expected behavior and the remaining live checks.
+
 ## Repository integration, 19 November 2026
 
 The combined checkout at the data-generator handoff regenerated 56 scenarios, 61 reference enquiries and the clean demo. The original generator and new evaluator suites passed **210 tests and 106 subtests**. The demo ZIP reproduced the folder analysis and the saved run bundle passed its hash checks. Two original scenario tests now check the expanded lifecycle outcomes and the separation of expected answers from the exports directory.
