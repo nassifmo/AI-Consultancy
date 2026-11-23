@@ -30,11 +30,11 @@ Open **Prepare company files** to preview a ZIP of CSV, JSON or JSONL extracts t
 
 The [pilot preparation guide](PILOT_PREPARATION.md) describes required records, missing-data behavior and remaining company-specific work. The [mapping guide](pilot/README.md) explains field profiles. A [read-only API collector](acquisition/README.md) prepares JSON extracts once a company endpoint and permissions are confirmed. Its pagination, retries and incomplete-run behavior are tested with mocked responses.
 
-For the new offline rehearsal and first live model run, see the [replay guide](docs/REPLAY_QUICKSTART.md) and [readiness walkthrough](docs/READINESS_WALKTHROUGH.md). For the separate financial comparison, see the [pilot economics contract](docs/PILOT_ECONOMICS_CONTRACT.md).
+Use the [replay guide](docs/REPLAY_QUICKSTART.md) for the scripted rehearsal, local Ollama development runs, and hosted model comparisons. The [readiness walkthrough](docs/READINESS_WALKTHROUGH.md) describes the checks before a hosted run. The [pilot economics contract](docs/PILOT_ECONOMICS_CONTRACT.md) explains the reconciled financial comparison.
 
 ### Compare cost against your service priority
 
-The **Decision and next action** panel checks the selected critical failure limit, evidence for attribution, cost completeness and the stated basis for a business value before suggesting a step. Open **Decision evidence and downloads** for the linked critical cases and a shareable decision brief. Suggested actions go to the responsible service owner for review.
+The **Decision and next action** panel shows the finding that drives the recommendation, the suggested reviewers, and the evidence that would change the recommendation. It checks the selected critical failure limit, attribution evidence, comparable costs and the basis for the business value. For verified identity and escalation failures it groups the affected enquiries and proposes replay tests tied to those checks. Open **Decision evidence and downloads** for case IDs, source references and the decision brief. Reviewers confirm the cause, choose a fix and approve any change to the rollout.
 
 After running an evaluation, open **Upgrade value**. Choose a pair of handling policies and the outcome you want to value. You can use a verified correct first answer, a verified resolution, or a verified resolution within a time target you set. Each outcome uses all eligible requests as its denominator. The existing **Comparison** view also reports first-answer accuracy among assessable replies.
 

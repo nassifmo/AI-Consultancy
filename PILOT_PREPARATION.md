@@ -30,6 +30,10 @@ flowchart LR
 | Workflow settings | A company grading policy can be selected before evaluation. Service thresholds and request profiles are versioned with each analysis. |
 | Repeatable local results | An identical input and configuration produces the same calculated result. Imports and run bundles are published atomically. |
 
+Under **Data readiness → Data quality and records to review**, the affected share divides unique affected rows by delivered export rows, overall and by file. Identical extra copies count as affected rows but not as extra service activity. A conflicting ID counts once in the ID column, while each supplied version is listed at its row location. Issue counts can overlap. Missing or unreadable files have no row denominator. Completeness of the original systems is a separate question.
+
+For prepared imports, the original-source mapping table uses its own denominator and lists rejected or unconvertible records separately. The issue browser links to the export and, where the mapping can be aligned, the original source location. Filter by file, issue, record or enquiry and download the full register as CSV. A disputed enquiry can be absent from the comparison population and still appear here. If a conflict or rejected record could affect eligibility or a critical service check, the dashboard requires review before it can suggest expansion. A disputed active-work total does not invalidate a separately proven service failure.
+
 ## Which data to request
 
 Start with a small authorized, consistently pseudonymized sample that includes successful cases, handoffs, corrections and unresolved work. Include related tables over the same period and confirm the last time covered by the extracts. Count the selected requests in the source system so we can reconcile the extracted population.
@@ -42,6 +46,20 @@ Start with a small authorized, consistently pseudonymized sample that includes s
 | Workforce management | Active work durations, timing method, pauses, concurrent work and after-contact work | Remaining human effort and capacity released |
 | Finance | Billing units and rates by effective period/model, invoices and credits, maintenance/setup scope, labour cost and currency | Reconciled costs and a defensible economic boundary |
 | Experiment or rollout owner | Allocation recorded before handling, introduction dates, eligibility and regional rules | Whether a comparison can estimate incremental contribution |
+
+### Measuring employee effort
+
+In the first authorized sample, we will compare three records for the same enquiry: the CRM case and replies, any contact or work-session logs, and a small sample of directly timed work. We will check the timing definition with the source owner before mapping a duration to `active_seconds`. Ticket opening and closure establish elapsed time. They leave effort unknown.
+
+| Potential source | What we would verify before using it |
+| --- | --- |
+| CRM work timer | Salesforce Omni-Channel Active Time is based on console tabs and can keep running while the employee uses another browser tab or window. The Zendesk Time Tracking app records time on ticket updates and supports pausing. Check timer configuration, manual edits, history and work in carrier portals. [Salesforce](https://help.salesforce.com/s/articleView?id=000382097&language=en_US&type=1), [Zendesk](https://support.zendesk.com/hc/en-us/articles/4408822487450-Using-the-Time-Tracking-app) |
+| Contact center records | Amazon Connect records interaction, hold and wrap-up durations. Link call legs or chat sessions to the enquiry, check concurrent contacts and preserve hold separately until we know how it was used. [Contact records](https://docs.aws.amazon.com/connect/latest/adminguide/ctr-data-model.html), [routing and concurrency](https://docs.aws.amazon.com/connect/latest/adminguide/routing-profiles.html) |
+| Representative time study | If routine logs are insufficient, time a sample of ordinary cases and AI handoffs or corrections under the same rules. Record breaks, switches, offline work and after-contact work. Show the sample size, coverage and uncertainty when applying a group estimate. [UK Treasury service-costing guidance](https://www.gov.uk/government/publications/service-costing-in-government/service-costing-in-government) |
+
+Ask for the work event ID, enquiry or case ID, a consistent pseudonymous employee ID, channel, timestamps with offsets, observed seconds, measurement method and the source's definitions for pauses, overlap and wrap-up. Check whether the logged duration already includes after-contact work. Count each worker's overlapping clock time once only when the source can establish its allocation. Leave unresolved overlaps outside the measured total. Work by two different employees can contribute both employees' effort.
+
+Rows labelled `estimated`, elapsed-time proxies and undocumented methods remain available for review. They leave measured effort and the affected labour cost incomplete. We can still verify the response, human correction and resolution from their own records. A time study could support a separately labelled capacity estimate. Actual payroll, overtime or vendor spend and a credible comparison are needed for a cash-savings claim. Synthetic active-work rows test what the evaluator does when time is observable. The tests also cover absent work logs, estimates and elapsed-time proxies without requiring the pilot to supply a precise duration for every case.
 
 ## Real-world problems and how we handle them
 

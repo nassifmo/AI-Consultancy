@@ -16,9 +16,10 @@ from evaluator.analysis import DEFAULT_CONFIG, analyze_exports
 from evaluator.exports import TABLES
 from evaluator.reporting import format_measure, label, make_downloads, metric_basis, metric_rows, render_decision_brief, write_run_bundle
 from evaluator.recommendation import VALUE_BASES, assess_recommendation, case_review_actions
-from evaluator.upgrade_value import assess_upgrade
+from evaluator.upgrade_value import assess_error_loss_scenario, assess_upgrade
 from evaluator.verification import _settings
 from evaluator.grading import grade_enquiry
+from input_quality_ui import render_input_quality
 from intake_ui import IMPORTS, render_company_import
 
 
@@ -158,7 +159,11 @@ def _readiness(result):
     columns = st.columns(3)
     columns[0].metric("Eligible initial requests", data.get("eligible_roots", 0))
     columns[1].metric("Handling groups", sum(1 for group in groups.values() if group.get("n", 0)))
-    columns[2].metric("Input issues", len(data.get("input_issues", [])))
+    quality = result.get("input_quality")
+    notices = quality.get("issues", []) if quality else data.get("input_issues", [])
+    columns[2].metric("Input issues", len(notices))
+    if quality:
+        render_input_quality(result)
     readiness = result.get("readiness_assessment", {})
     if readiness:
         st.subheader("What can we measure from these records?")
@@ -189,7 +194,7 @@ def _readiness(result):
     if data.get("files"):
         with st.expander("Input files and hashes"):
             st.dataframe(data["files"], hide_index=True)
-    if data.get("input_issues"):
+    if not quality and data.get("input_issues"):
         with st.expander("Input issues"):
             st.json(data["input_issues"])
     if result.get("limitations"):
@@ -334,7 +339,7 @@ def _upgrade_value(result):
     outcomes.metric("Change in verified successes per 1,000", f"{change * 1000:+.1f}" if change is not None else "Unavailable")
     threshold.metric("Break-even value per extra success" if loss_limit is None else "Break-even value per lost success",
                      format_measure(break_even if loss_limit is None else loss_limit, currency))
-    _render_decision(result, assessment)
+    decision_panel = st.container()
 
     if assessment["break_even_value_bounds"] is not None:
         lower, upper = assessment["break_even_value_bounds"]
@@ -397,12 +402,38 @@ def _upgrade_value(result):
             critical_checks.append(f"{label(arm)} {failures['numerator']}/{failures['denominator']}")
     if critical_checks:
         st.caption("Critical first failures among assessable requests · " + " · ".join(critical_checks))
+    with st.expander("Financial downside of wrong answers"):
+        st.write("Test what happens if wrong answers lead to extra charges, such as a failed truck trip or compensation.")
+        loss = st.number_input(
+            f"Assumed additional loss per 1,000 enquiries ({currency or 'currency'})",
+            min_value=0.0, value=None, step=100.0, placeholder="Optional", disabled=cost is None,
+            key=f"error_loss_{comparator}_{treatment}_{currency}",
+            help="Enter the extra loss for the selected policy relative to the comparator. Count only costs outside the ledger and the entered value per success.",
+        )
+        if loss is not None and cost is not None:
+            scenario = assess_error_loss_scenario(assessment, loss)
+            assessment["error_loss_scenario"] = scenario
+            st.metric("Cost change per request with assumed loss",
+                      format_measure(scenario["cost_change_with_loss_per_request"], currency))
+            if scenario["net_value_with_loss_bounds"] is not None:
+                st.metric("Illustrative net value per request with assumed loss",
+                          format_measure(scenario["net_value_with_loss_per_request"], currency))
+                low, high = scenario["net_value_with_loss_bounds"]
+                st.caption(f"Range with missing service outcomes {format_measure(low, currency)} to "
+                           f"{format_measure(high, currency)} per request.")
+            st.caption("The entered amount is hypothetical. If it could erase a favorable result, the recommendation asks for evidence before expanding.")
+        elif cost is None:
+            st.caption("Comparable scoped costs are needed to calculate this scenario.")
+    with decision_panel:
+        _render_decision(result, assessment, additional_loss_per_1000=loss if cost is not None else None)
     st.download_button("Download value assessment", json.dumps(assessment, indent=2, allow_nan=False),
                        file_name="upgrade_value.json", mime="application/json", on_click="ignore")
 
 
-def _render_decision(result, assessment):
+def _render_decision(result, assessment, *, additional_loss_per_1000=None):
     st.subheader("Decision and next action")
+    if (result.get("input_quality") or {}).get("review_required", {}).get("required"):
+        st.warning("Data issues need review before expansion. See Data readiness for the affected records.")
     left, right = st.columns(2)
     limit = left.number_input("Maximum critical failure rate (%)", min_value=0.0, max_value=100.0,
                               value=None, step=0.5, key="decision_critical_limit", placeholder="Set a limit",
@@ -421,10 +452,23 @@ def _render_decision(result, assessment):
         value_basis=basis if assessment["value_per_success"] is not None else None,
         value_evidence=value_evidence,
         max_critical_rate=limit / 100 if limit is not None else None,
+        additional_loss_per_1000=additional_loss_per_1000,
     )
     st.markdown(f"**{decision['title']}**")
     st.write(decision["reason"])
     st.write(decision["next_step"])
+    st.write(f"**Suggested reviewers**  {decision['suggested_reviewer']}")
+    st.write(f"**What would change the recommendation**  {decision['reconsider_when']}")
+    failure_reviews = decision["failure_reviews"]
+    if failure_reviews:
+        st.markdown(f"**What failed under {label(assessment['treatment'])}**")
+        for review in failure_reviews:
+            count = len(review["cases"])
+            st.write(f"**{review['finding']} · {count:,} {'enquiry' if count == 1 else 'enquiries'}**")
+            st.write(review["action"])
+            st.caption(review["retest"])
+    if decision["unclassified_failure_episode_ids"]:
+        st.caption("Some verified critical failures still need a case-level review to identify what to retest.")
     critical = decision["critical_check"]
     if critical["bounds"]:
         lower, upper = (format_measure(value, "rate") for value in critical["bounds"])
@@ -441,6 +485,10 @@ def _render_decision(result, assessment):
         st.caption("The range holds the selected value and cost allocation rules fixed.")
     elif decision["uncertainty_gap"]:
         st.caption(decision["uncertainty_gap"])
+    loss_scenario = decision["downstream_loss_scenario"]
+    if loss_scenario and loss_scenario["sampling_net_value_bounds"] is not None:
+        lower, upper = (format_measure(value, assessment["currency"]) for value in loss_scenario["sampling_net_value_bounds"])
+        st.caption(f"With the assumed downstream loss, the modeled range is {lower} to {upper} per request.")
     st.caption("The service owner reviews the recommendation. Synthetic examples illustrate the decision rules.")
     with st.expander("Decision evidence and downloads"):
         if critical["failure_episode_ids"]:
@@ -449,6 +497,11 @@ def _render_decision(result, assessment):
             st.caption("Find an ID in Enquiry evidence. The result file includes the full list.")
         if critical["unknown_episode_ids"]:
             st.write("**Enquiry IDs with unknown critical checks**  " + ", ".join(critical["unknown_episode_ids"][:8]))
+        if failure_reviews:
+            st.dataframe([
+                {"Finding": review["finding"], "Enquiry": case["enquiry_id"], "Source records": ", ".join(case["refs"])}
+                for review in failure_reviews for case in review["cases"][:5]
+            ], hide_index=True)
         left, right = st.columns(2)
         left.download_button("Download decision brief", render_decision_brief(decision),
                              file_name="shipment_ai_decision.html", mime="text/html", on_click="ignore")
@@ -503,9 +556,17 @@ def _enquiry_evidence(result):
     columns = st.columns(3)
     columns[0].metric("Service outcome", label(outcome.get("state") or "unknown"))
     failure = assessment.get("initial_failure")
-    columns[1].metric("Initial critical failure", "Unknown" if failure is None else "Yes" if failure else "No")
+    first = verification.get("initial_reply") or {}
+    identity = assessment.get("criteria", {}).get("shipment_identity", {})
+    ai_identity_failure = (failure is True and first.get("actor_type") == "ai_agent"
+                           and identity.get("passed") is False and identity.get("severity") == "critical")
+    failure_label = "Initial AI critical failure" if ai_identity_failure else "Initial critical failure"
+    columns[1].metric(failure_label, "Unknown" if failure is None else "Yes" if failure else "No")
     recovery = verification.get("human_recovery")
     columns[2].metric("Human recovery", "Unknown" if recovery is None else "Verified" if recovery else "No")
+    if ai_identity_failure and recovery is True:
+        st.warning("The AI made a critical error in its first answer. A human corrected it and resolved the enquiry. "
+                   "The error still counts against the AI.")
     if outcome.get("reason"):
         st.caption(outcome["reason"])
     if outcome.get("refs"):
@@ -532,6 +593,7 @@ def _enquiry_evidence(result):
         st.subheader("What to review and retest")
         for action in actions:
             st.write(action["action"])
+            st.caption(action["retest"])
             st.caption("Source records · " + ", ".join(action["refs"]))
     work = verification.get("human_work", {})
     if work:
@@ -540,6 +602,9 @@ def _enquiry_evidence(result):
             st.write(f"**Documented subtotal**  {format_measure(work['recorded_seconds'], 'seconds')}")
         if work.get("refs"):
             st.write("**Work records**  " + ", ".join(work["refs"]))
+        if work.get("unmeasured_refs"):
+            st.caption("These records do not establish active time. They are excluded from measured effort and labour cost. "
+                       + ", ".join(work["unmeasured_refs"]))
     timeline = assessment.get("timeline") or (record.get("timeline") if scope != "Comparison checkpoint" else None)
     if timeline is None and episode and episode.get("checkpoint"):
         boundary = episode["checkpoint"]

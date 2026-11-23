@@ -83,6 +83,27 @@ def _net_status(bounds):
     return "inconclusive_missing_evidence"
 
 
+def assess_error_loss_scenario(assessment, additional_loss_per_1000):
+    """Stress-test the selected comparison against an incremental downstream loss."""
+    if not _nonnegative_number(additional_loss_per_1000):
+        raise ValueError("The assumed additional loss must be a finite nonnegative number.")
+    loss_per_request = additional_loss_per_1000 / 1000
+    scope_cost = assessment["incremental_cost_per_request"]
+    initial_net = assessment["net_value_per_request"]
+    initial_bounds = assessment["net_value_bounds"]
+    cost = scope_cost + loss_per_request if scope_cost is not None else None
+    net = initial_net - loss_per_request if initial_net is not None else None
+    bounds = [value - loss_per_request for value in initial_bounds] if initial_bounds is not None else None
+    if not all(isfinite(value) for value in (cost, net, *(bounds or [])) if value is not None):
+        raise ValueError("The assumed additional loss exceeds the supported calculation range.")
+    return {
+        "additional_loss_per_1000_requests": additional_loss_per_1000,
+        "cost_change_with_loss_per_request": cost,
+        "net_value_with_loss_per_request": net,
+        "net_value_with_loss_bounds": bounds,
+    }
+
+
 def assess_upgrade(analysis, comparator, treatment, priority, target_hours=None, value_per_success=None):
     """Return a conditional comparison of cost and the selected service outcome.
 

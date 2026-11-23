@@ -115,6 +115,28 @@ class AnalysisTests(unittest.TestCase):
             self.assertEqual(result["group_metrics"]["agent_v1"]["n"], 1)
             self.assertEqual(result["group_metrics"]["agent_v1"]["human_minutes_per_request"]["value"], 5)
 
+    def test_estimated_and_elapsed_time_do_not_establish_human_effort_or_cost(self):
+        for method, active in (("estimated", "300"), ("ticket_elapsed", "360"), ("logged", "")):
+            with self.subTest(method=method, active=active), tempfile.TemporaryDirectory() as directory:
+                exports, _ = install_assignment(directory, "S32")
+                work = read_csv(exports / "agent_work.csv")
+                work[0].update(measurement_method=method, active_seconds=active)
+                write_csv(exports / "agent_work.csv", work)
+                (exports / "cost_parameters.json").write_text(json.dumps({
+                    "currency": "USD", "valid_from": "2026-03-01", "labor_rate_per_hour": 60,
+                }), encoding="utf-8")
+                result = analyze_exports(exports, POLICY)
+                enquiry, = result["enquiries"]
+                self.assertTrue(enquiry["initial_failure"])
+                self.assertTrue(enquiry["verification"]["human_recovery"])
+                self.assertEqual(enquiry["outcome"]["state"], "resolved")
+                self.assertIsNone(result["group_metrics"]["agent_v1"]["human_minutes_per_request"]["value"])
+                self.assertIsNone(result["cost_ledger"]["per_episode"]["ENQ-S32"]["total_cost"])
+                self.assertFalse(any(line["category"] == "human_work" for line in result["cost_ledger"]["entries"]))
+                kind = "active_work_unverified" if method == "logged" else "work_method_unverified"
+                self.assertTrue(any(issue["kind"] == kind and issue["record_id"] == "WRK-S32-1"
+                                    for issue in result["input_quality"]["issues"]))
+
     def test_unknown_assignment_stays_out_of_comparison(self):
         with tempfile.TemporaryDirectory() as directory:
             exports, record = install_assignment(directory, "S32")

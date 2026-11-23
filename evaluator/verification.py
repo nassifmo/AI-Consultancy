@@ -8,7 +8,7 @@ from math import isfinite
 import re
 
 from .casework import review_casework
-from .exports import load_exports, reference
+from .exports import MEASURED_WORK_METHODS, load_exports, reference
 from .grading import grade_enquiry
 from .replies import coordination_request, review_reply
 from .tracking import Tracking
@@ -52,6 +52,7 @@ def _work_time(data, rows, actor_ids, replies, runs, received, excluded_work_ids
     unknown = not data.is_complete("agent_work") or received is None or data.cutoff is None
     known = 0
     refs = []
+    unmeasured_refs = []
     intervals = defaultdict(list)
     observed_work = False
     for row in rows:
@@ -61,6 +62,10 @@ def _work_time(data, rows, actor_ids, replies, runs, received, excluded_work_ids
             continue
         if start is not None and received is not None and data.cutoff is not None and received <= start <= data.cutoff:
             observed_work = True
+            if row.get("measurement_method") not in MEASURED_WORK_METHODS:
+                unmeasured_refs.append(reference("agent_work", row))
+                unknown = True
+                continue
         overlap_at = excluded_work_ids.get(row["work_id"]) if excluded_work_ids else None
         if overlap_at is not None and data.cutoff is not None and overlap_at <= data.cutoff:
             unknown = True
@@ -73,7 +78,7 @@ def _work_time(data, rows, actor_ids, replies, runs, received, excluded_work_ids
         except (ValueError, TypeError):
             unknown = True
             continue
-        if not isfinite(duration) or not 0 <= duration <= (end - start).total_seconds() or not row.get("measurement_method"):
+        if not isfinite(duration) or not 0 <= duration <= (end - start).total_seconds():
             unknown = True
             continue
         intervals[row["agent_id"]].append((start, end, duration, reference("agent_work", row)))
@@ -102,7 +107,11 @@ def _work_time(data, rows, actor_ids, replies, runs, received, excluded_work_ids
           and not handoff and not unknown and all(data.is_complete(name) for name in ("responses", "agent_runs"))):
         only_ai = True
     total = None if unknown or not (refs or only_ai) else known
-    return {"active_seconds": total, "recorded_seconds": known if refs else None, "refs": refs, "ai_only_handling": only_ai}
+    result = {"active_seconds": total, "recorded_seconds": known if refs else None,
+              "refs": refs, "ai_only_handling": only_ai}
+    if unmeasured_refs:
+        result["unmeasured_refs"] = sorted(unmeasured_refs)
+    return result
 
 
 class Verifier:

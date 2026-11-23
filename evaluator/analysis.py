@@ -12,6 +12,7 @@ from .cohorts import ARMS, assemble_episodes
 from .comparisons import compare, design_diagnostics
 from .economics import build_cost_ledger, overlapping_work_ids
 from .exports import load_exports, reference
+from .input_quality import assess_input_quality
 from .metrics import summarize
 from .readiness import assess_readiness
 from .verification import Verifier
@@ -89,7 +90,7 @@ def _timeline(verifier, enquiry):
                    {"field": entry["field"], "new_value": entry.get("new_value")})
     for row in verifier.work[enquiry_id]:
         append("agent_work", row, "closed_at", "Human work recorded", row.get("agent_id"),
-               {"activity": row.get("activity"), "active_seconds": row.get("active_seconds"),
+               {"activity": row.get("activity"), "reported_active_seconds": row.get("active_seconds"),
                 "measurement_method": row.get("measurement_method")})
     return sorted(events, key=lambda event: (event["at"], event["event"], event["ref"]))
 
@@ -163,6 +164,7 @@ def analyze_exports(exports_path, policy, analysis_config=None):
         limitations.append("A randomized causal comparison is unsupported for this export.")
     readiness = assess_readiness(data, policy, verified=latest.values(), episodes=episodes,
                                  ledger=ledger, diagnostics=diagnostics)
+    quality = assess_input_quality(data, latest.values(), overlaps, episodes)
     return {
         "schema_version": "1.0", "run_provenance": _provenance(data, policy, config), "analysis_config": config,
         "data_readiness": {
@@ -175,6 +177,7 @@ def analyze_exports(exports_path, policy, analysis_config=None):
             **diagnostics,
         },
         "readiness_assessment": readiness,
+        "input_quality": quality,
         "enquiries": list(latest.values()), "episodes": episodes, "group_metrics": groups,
         "cost_ledger": ledger, "comparisons": comparisons, "limitations": limitations,
     }

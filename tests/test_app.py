@@ -35,16 +35,19 @@ class InterfaceTests(unittest.TestCase):
         self.assertEqual([tab.label for tab in app.tabs],
                          ["Data readiness", "Comparison", "Upgrade value", "Enquiry evidence", "Costs and settings"])
         values = {metric.label: metric.value for metric in app.metric}
-        self.assertEqual(values.get("Initial critical failure"), "Yes")
+        self.assertEqual(values.get("Initial AI critical failure"), "Yes")
         self.assertEqual(values.get("Human recovery"), "Verified")
         self.assertEqual(values.get("Service outcome"), "Resolved")
+        self.assertTrue(any("The error still counts against the AI." in item.value for item in app.warning))
         app.number_input[0].set_value(8)
         next(button for button in app.button if button.label == "Run evaluation").click().run()
         self.assertFalse(app.exception)
         self.assertTrue(any("8 days of comparison follow-up" in message.value for message in app.caption))
         next(button for button in app.button if button.label == "Prepare downloads").click().run()
         self.assertFalse(app.exception)
-        self.assertEqual(len(app.get("download_button")), 4)
+        downloads = [button.label for button in app.get("download_button")
+                     if button.label != "Download all data issues"]
+        self.assertEqual(len(downloads), 4)
 
     def test_upgrade_view_uses_the_selected_business_outcome_and_assumed_value(self):
         app = AppTest.from_file(ROOT / "app.py", default_timeout=25).run()
@@ -56,12 +59,22 @@ class InterfaceTests(unittest.TestCase):
         self.assertTrue(any("Agree on the critical failure limit" in item.value for item in app.markdown))
         app.number_input(key="decision_critical_limit").set_value(1.0).run()
         self.assertTrue(any("Review failures and retest" in item.value for item in app.markdown))
+        self.assertTrue(any("7 of 348 eligible enquiries" in item.value for item in app.markdown))
+        self.assertTrue(any("Shipment or container mismatch · 6 enquiries" in item.value for item in app.markdown))
+        self.assertTrue(any("Required escalation step missed · 1 enquiry" in item.value for item in app.markdown))
         app.selectbox(key="upgrade_priority").select("verified_resolution").run()
         self.assertFalse(app.exception)
         self.assertEqual(next(metric.value for metric in app.metric if metric.label == threshold), "24.35 USD")
         app.number_input(key="upgrade_value_verified_resolution_USD").set_value(25.0).run()
         self.assertFalse(app.exception)
         self.assertTrue(any("unknown outcomes leave" in warning.value for warning in app.warning))
+        loss_input = next(item for item in app.number_input if item.label.startswith("Assumed additional loss"))
+        loss_input.set_value(1000.0).run()
+        self.assertFalse(app.exception)
+        metrics = {item.label: item.value for item in app.metric}
+        self.assertIn("Illustrative net value per request with assumed loss", metrics)
+        self.assertAlmostEqual(float(metrics["Cost change per request with assumed loss"].split()[0]),
+                               float(metrics["Cost change per request"].split()[0]) + 1, places=2)
 
     def test_upload_only_materializes_recognized_exports_in_a_temporary_folder(self):
         body = zip_bytes((

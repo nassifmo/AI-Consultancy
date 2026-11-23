@@ -1,5 +1,38 @@
 # Shipment evaluator meeting release verification
 
+## Customer-facing ETA verification check, 23 November 2026
+
+In a temporary S28 copy, the sent message was changed from 11:00 to 17:00 local time while the structured ETA stayed at 11:00. The evaluator still marked the reply supported and reported zero ETA error. This is an open limitation when the delivered wording diverges from the structured claim. Before the pilot, validate the claim in the actual sent reply against tracking evidence available at the time.
+
+## Full local Ollama replay, 23 November 2026
+
+Ran all 14 checked-in synthetic shipment cases on the installed `qwen2.5:7b-instruct` model. The main run used six turns per enquiry and recorded all 14 trials through 65 local model calls. The rubric passed 2, failed 7 and left 5 ungraded because no final reply arrived within the turn limit. One of the seven graded failures was critical. All 14 trial bundles, verifier exports and separate reviewer records were checked. The main run's nonzero exit status indicates unfinished model replies. No paid API calls or company data were used.
+
+| Case | Main result | Finding |
+| --- | --- | --- |
+| R01 | Fail | Response did not satisfy the required format. |
+| R02 | Fail | Opened the required case. The final reply used an invalid shipment status. |
+| R03 | Ungraded | No final reply when asked about a shipment without a reference. |
+| R04 | Fail | Declined to verify an unavailable booking. The reply omitted the required `case_id` field. |
+| R05 | Ungraded | No final reply for the requested container in a booking with two containers. |
+| R06 | Ungraded | No final reply when asked for the latest visible status and ETA by bill of lading. |
+| R07 | Fail | Opened an unnecessary case for an intermediate-port enquiry. Final response format failed. |
+| R08 | Fail | Opened a case at exactly 24 hours of delay. The synthetic rule requires more than 24 hours. Final response format failed. |
+| R09 | Pass | Withheld an answer when tracking evidence was incomplete. |
+| R10 | Ungraded | Opened a case on a request with conflicting references and reached the turn limit. |
+| R11 | Critical failure | Missed the required case at 24 hours and one minute of delay. Final response format failed. |
+| R12 | Ungraded | No final reply when a current ETA was unavailable. |
+| R13 | Pass | Reported the requested container's discharge. |
+| R14 | Fail | Reported actual arrival without a visible record that supported it. |
+
+Retried the five unfinished cases in a separate run with eight turns. R10 returned a final reply and was graded as a critical failure for opening an unnecessary case. R03, R05, R06 and R12 still ended at the turn limit. The retry results do not replace the main run. Model records are in `runs/replay-ollama-all-2026-11-23/` and `runs/replay-ollama-retry-2026-11-23/`.
+
+The full software suite passed **153 tests and 109 subtests**. The scripted rehearsal recorded 28 trials and all 14 pairs without calling a provider. The dictionary and dependency checks passed. The clean demo and six bulk datasets produced valid JSON and the expected comparison-design status. All four pilot import rehearsals passed, and the synthetic economics example reproduced the $4.00 handling-only break-even. Hosted model responses and billing still require a separately authorized run.
+
+## Dashboard data quality, 22 November 2026
+
+The benchmark suite passed 146 tests and 106 subtests. Browser inspection of Damaged exports showed 10,143 of 213,150 delivered rows affected (4.8%) and 9,025 extra duplicate rows. The issue browser and no-match filter worked. Regression tests checked that conflicting enquiry rows stay in the review register after exclusion from the comparison, a conflicting reply can leave a critical check unknown, and a disputed work duration preserves an independently verified critical failure. A rejected original tracking record remained visible with its original row number and a separate denominator.
+
 ## Local replay and finance checks, 21 November 2026
 
 The full benchmark suite passed 135 tests and 106 subtests after the replay and financial evidence changes. A scripted rehearsal recorded all 28 trials across 14 paired synthetic cases with no API calls. A separate acceptance check exercised a real scratchpad case creation, the identical reply without the case, and a wrong sibling-container reply. The first passed. The latter two were flagged as critical failures. The synthetic financial check produced a USD 4 point threshold. Removing downstream evidence left net expense reduction unknown; widening outcome missingness removed the finite worst-case threshold. See the [readiness walkthrough](docs/READINESS_WALKTHROUGH.md) for the expected behavior and the remaining live checks.

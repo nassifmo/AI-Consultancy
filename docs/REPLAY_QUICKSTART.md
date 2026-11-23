@@ -14,6 +14,16 @@ From the shipment benchmark directory, in the same Python environment as the eva
 
 The scripted provider deliberately fails some cases. A successful rehearsal means the pipeline recorded all ten attempted trials with no real API requests and can trace executed actions. It is not a quality result for Luna or Terra.
 
+## Test a local Ollama model
+
+With Ollama running, use `ollama list` to find a local model and `ollama show <model>` to confirm it lists `tools` under capabilities. The model already installed for this project is `qwen2.5:7b-instruct`.
+
+```powershell
+.venv/Scripts/python.exe -m replay --ollama qwen2.5:7b-instruct --case-id R01 --case-id R02 --output runs/replay-ollama-01
+```
+
+R01 checks shipment status and ETA. R02 also checks the required case-opening path. Remove the case selectors to run all five smoke cases. The runner uses the same prompt, test tools, rubric and verifier as the hosted run. It saves the local tool calls, replies, timings, usage when available, and verifier output. This single-model development run uses the Ollama service on this laptop and needs no API key. Local compute costs are unmeasured. The single-model result provides no paired model comparison. [Ollama tool calling](https://docs.ollama.com/capabilities/tool-calling)
+
 ## First live run
 
 Set up the funded provider project and give each collaborator their own authorized key. Set `OPENAI_API_KEY` in each local session using your institution-approved secret handling. Keep keys and results private. Set an appropriate provider limit before the run. The initial comparison uses OpenAI GPT-6 Luna and GPT-6.1 Terra with low reasoning effort and standard processing. Claude is a proposed later cross-provider check and has no runner adapter yet.

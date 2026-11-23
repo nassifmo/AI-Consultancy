@@ -148,7 +148,7 @@ At least one of enquiry_id or case_id must be present. Elapsed ticket time is NO
 | `handle_seconds` | integer | no | Accept to close |
 | `acw_seconds` | integer | no | After-conversation work |
 | `activity` | enum: `handle_enquiry`, `handle_case`, `correct_ai_answer`, `follow_up` | yes | Type of work |
-| `measurement_method` | enum: `logged`, `timed`, `estimated` | yes | How effort was measured |
+| `measurement_method` | enum: `logged`, `timed`, `estimated` | yes | Use `logged` or `timed` only for observed active work. `estimated` is retained as evidence and excluded from measured effort and labour cost. |
 
 ### E9 ai_invoice (`ai_invoice.csv`)
 

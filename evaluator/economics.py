@@ -6,6 +6,8 @@ from decimal import Decimal, InvalidOperation
 import re
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+from .exports import MEASURED_WORK_METHODS
+
 
 AI_ARMS = {"agent_v1", "agent_v2"}
 USAGE_ITEMS = ("voice_minutes", "llm_tokens_in", "llm_tokens_out", "runs")
@@ -262,7 +264,7 @@ class _CostLedger:
                 if (
                     duration is None or day is None or end is None or self.checkpoints[root] is None
                     or end > self.checkpoints[root] or duration > Decimal(str((end - start).total_seconds()))
-                    or method not in {"logged", "timed", "estimated"} or not row.get("agent_id")
+                    or method not in MEASURED_WORK_METHODS or not row.get("agent_id")
                 ):
                     self.reasons[root].add("incomplete_human_effort")
                     continue
@@ -273,7 +275,7 @@ class _CostLedger:
                     continue
                 self.entry("human_work", day.isoformat()[:7], duration * self.labor_rate / 3600, self.labor_currency,
                            [ref, _ref(COST_PARAMETERS, "labor_rate_per_hour")], root, scope,
-                           method + "_active_seconds", estimated=method == "estimated")
+                           method + "_active_seconds")
             if active is not None and measured != active:
                 self.reasons[root].add("human_effort_without_matching_records")
 

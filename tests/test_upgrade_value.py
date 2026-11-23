@@ -1,6 +1,6 @@
 import unittest
 
-from evaluator.upgrade_value import assess_upgrade
+from evaluator.upgrade_value import assess_error_loss_scenario, assess_upgrade
 
 
 BASE = "agent_v1"
@@ -31,6 +31,17 @@ UNKNOWN = ("unknown", None, None)
 
 
 class UpgradeValueTests(unittest.TestCase):
+    def test_infrequent_expensive_errors_can_reverse_modeled_value(self):
+        analysis = _analysis([PASS, FAIL], [PASS, PASS])
+        result = assess_upgrade(analysis, BASE, UPGRADE, "verified_resolution", value_per_success=2)
+        scenario = assess_error_loss_scenario(result, 1000)
+        self.assertEqual(scenario["cost_change_with_loss_per_request"], 1.50)
+        self.assertEqual(scenario["net_value_with_loss_per_request"], -0.50)
+        self.assertEqual(scenario["net_value_with_loss_bounds"], [-0.50, -0.50])
+        self.assertEqual(result["net_value_per_request"], 0.50)
+        with self.assertRaisesRegex(ValueError, "nonnegative"):
+            assess_error_loss_scenario(result, -1)
+
     def test_break_even_and_net_value_for_higher_cost(self):
         analysis = _analysis([PASS, FAIL], [PASS, PASS])
         result = assess_upgrade(analysis, BASE, UPGRADE, "verified_resolution", value_per_success=2)

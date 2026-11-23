@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from replay.__main__ import PRICES, main, run_trial
 from replay.openai_provider import ProviderError
 from replay.world import load_cases
@@ -75,6 +77,50 @@ def test_cli_rehearsal_does_not_instantiate_live_client(tmp_path, monkeypatch):
         assert not any("truth" in path.name for path in exports.iterdir())
         verification = json.loads((exports.parent / "verification.json").read_text(encoding="utf-8"))
         assert len(verification["enquiries"]) == 1
+
+
+def test_ollama_feeds_tool_results_back_and_exports_without_cloud_cost(tmp_path, monkeypatch):
+    from replay.ollama_provider import OllamaProvider
+
+    def post(self, endpoint, payload):
+        if endpoint == "show":
+            return {"capabilities": ["completion", "tools"]}
+        assert endpoint == "chat"
+        assert payload["model"] == "local-test:7b"
+        assert not payload["stream"] and not self._session.trust_env
+        assert '"expected"' not in json.dumps(payload)
+        tail = payload["messages"][-1]
+        if tail["role"] == "user":
+            message = {"tool_calls": [{"function": {"name": "lookup_tracking", "arguments": {
+                "reference": "TEST-BKG-A", "container_ref": None,
+            }}}]}
+        else:
+            assert tail["tool_name"] == "lookup_tracking"
+            assert json.loads(tail["content"])["status"] == "ok"
+            message = {"content": "{}"}
+        return {"done": True, "done_reason": "stop", "message": {"role": "assistant", **message},
+                "prompt_eval_count": 60, "eval_count": 10}
+
+    monkeypatch.setattr(OllamaProvider, "_post", post)
+    output = tmp_path / "local"
+    assert main(["--ollama", "local-test:7b", "--case-id", "R01", "--output", str(output)]) == 0
+    summary = json.loads((output / "summary.json").read_text(encoding="utf-8"))
+    record = json.loads((output / "trials.jsonl").read_text(encoding="utf-8"))
+    assert summary["mode"] == "local_ollama_development"
+    assert summary["recorded_trials"] == 1 and summary["calls_attempted"] == 2
+    assert summary["paired_summary"] is None and summary["known_cost_estimate_usd"] is None
+    assert record["grade"]["overall"] is False and record["cost_estimate_usd"] is None
+    assert record["observed_usage"] == {"input_tokens": 120, "output_tokens": 20}
+    assert (output / record["canonical_exports"]).is_dir()
+
+
+def test_ollama_rejects_remote_model_alias(monkeypatch):
+    from replay.ollama_provider import OllamaProvider
+
+    provider = OllamaProvider()
+    monkeypatch.setattr(provider, "_post", lambda *args: {"capabilities": ["tools"], "remote_model": "example"})
+    with pytest.raises(ProviderError, match="runs on this laptop"):
+        provider.check_model("example")
 
 
 def test_verified_escalation_comes_from_world_and_excludes_future_history(tmp_path):

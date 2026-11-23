@@ -412,6 +412,21 @@ def import_source(source_path, profile, output_dir=None):
         "total": len(issues), "by_table": dict(sorted(counts_by_table.items())),
         "by_code": dict(sorted(Counter(issue["code"] for issue in issues).items())),
     }
+    # Carry diagnostic locations, without the original field values. Rejected
+    # rows cannot otherwise be listed after the mapped exports are loaded.
+    preparation_kinds = {"source_unavailable", "malformed_source_row", "missing_source_field",
+                         "conversion_failed", "unmapped_required_field", "missing_required_value"}
+    by_table = {}
+    for problem in issues:
+        if problem["table"] in summaries and problem["code"] in preparation_kinds:
+            by_table.setdefault(problem["table"], []).append(
+                {"kind": problem["code"], "row_number": problem.get("row"), "field": problem.get("field")})
+    metadata["quality_preparation"] = {
+        table: {"source_file": summary["source_file"],
+                "input_rows": summary["input_rows"] if summary["status"] == "mapped" else None,
+                "issues": by_table.get(table, [])}
+        for table, summary in summaries.items()
+    }
     source_manifest = [{"filename": name, "sha256": sha256(content).hexdigest(), "bytes": len(content)}
                        for name, content in sorted(retained.items())]
     importer_sha = sha256(Path(__file__).read_bytes()).hexdigest()

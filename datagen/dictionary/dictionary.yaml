@@ -183,7 +183,7 @@ files:
       - {name: handle_seconds, type: integer, required: false, description: "Accept to close"}
       - {name: acw_seconds, type: integer, required: false, description: "After-conversation work"}
       - {name: activity, type: enum, required: true, values: [handle_enquiry, handle_case, correct_ai_answer, follow_up], description: "Type of work"}
-      - {name: measurement_method, type: enum, required: true, values: [logged, timed, estimated], description: "How effort was measured"}
+      - {name: measurement_method, type: enum, required: true, values: [logged, timed, estimated], description: "Timing method. Use logged or timed only for observed active work. Estimated values are retained as evidence and excluded from measured effort and labour cost."}
 
   ai_invoice:
     id: E9

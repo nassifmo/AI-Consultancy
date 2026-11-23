@@ -31,7 +31,7 @@ class IntakeTests(unittest.TestCase):
             values = {card.label: card.value for card in app.metric}
             self.assertEqual(values["Service outcome"], "Resolved")
             self.assertEqual(values["Human recovery"], "Verified")
-            self.assertEqual(values["Initial critical failure"], "Yes")
+            self.assertEqual(values["Initial AI critical failure"], "Yes")
             analysis = app.session_state["shipment_analysis"][0]
             self.assertIn("readiness_assessment", analysis)
             self.assertEqual(len(analysis["readiness_assessment"]["capabilities"]), 7)

@@ -73,7 +73,36 @@ def render_decision_brief(decision):
     ]
     if decision.get("value_evidence"):
         facts.insert(-1, ("Value evidence supplied by reviewer", decision["value_evidence"]))
+    loss_scenario = decision.get("downstream_loss_scenario")
+    if loss_scenario:
+        facts.append(("Assumed additional loss per 1,000 enquiries",
+                      format_measure(loss_scenario["additional_loss_per_1000_requests"], currency)))
+        if loss_scenario["sampling_net_value_bounds"] is not None:
+            adjusted_range = " to ".join(format_measure(amount, currency)
+                                         for amount in loss_scenario["sampling_net_value_bounds"])
+            facts.append(("Modeled net value after assumed loss", f"{adjusted_range} per request"))
+    review = decision.get("input_quality_review")
+    if review and review.get("required"):
+        facts.append(("Unresolved data",
+                      f"{review['population_issues']} rows affecting eligibility, "
+                      f"{review['unresolved_critical_issues']} rows that could change a critical check. "
+                      "See the data issues register before expanding."))
     table = "".join(f"<tr><th scope='row'>{escape(name)}</th><td>{escape(item)}</td></tr>" for name, item in facts)
+    action_details = "".join(
+        f"<p><strong>{heading}</strong> {escape(decision[key])}</p>"
+        for key, heading in (("suggested_reviewer", "Suggested reviewers"),
+                             ("reconsider_when", "What would change the recommendation")) if decision.get(key)
+    )
+    failure_reviews = []
+    for finding in decision.get("failure_reviews", []):
+        cases = finding["cases"]
+        examples = ", ".join(case["enquiry_id"] for case in cases[:5])
+        case_count = f"{len(cases):,} {'enquiry' if len(cases) == 1 else 'enquiries'}"
+        failure_reviews.append(f"<li><strong>{escape(finding['finding'])} ({case_count})</strong> "
+                               f"{escape(finding['action'])} {escape(finding['retest'])} "
+                               f"Example enquiries {escape(examples)}.</li>")
+    failure_summary = ("<h2>Critical findings and proposed retests</h2><ul>" + "".join(failure_reviews) + "</ul>"
+                       if failure_reviews else "")
     origin = decision["dataset_origin"]
     notice = "Synthetic demonstration. The example does not measure company performance." if origin == "synthetic" else f"Dataset origin declared as {origin}."
     return f"""<!doctype html><html lang="en"><meta charset="utf-8">
@@ -86,7 +115,7 @@ th {{width: 43%}} small {{display: block; margin-top: 1.1rem}}
 @page {{margin: 17mm}} @media print {{body {{max-width: none; margin: 0; padding: 0; font-size: 10pt}}}}
 </style><body><header><h1>Shipment AI evaluation decision</h1><p>{escape(notice)}</p></header>
 <main><h2>{escape(decision['title'])}</h2><p>{escape(decision['reason'])}</p><p>{escape(decision['next_step'])}</p>
-<table>{table}</table><small>Analysis run {escape(str(decision['source_run_id'] or 'unavailable'))}. The value range uses the supplied value and existing cost scope. The critical failure check applies to this sample. A service owner reviews the recommendation.</small>
+{action_details}{failure_summary}<table>{table}</table><small>Analysis run {escape(str(decision['source_run_id'] or 'unavailable'))}. The value range uses the supplied value and existing cost scope. The critical failure check applies to this sample. A service owner reviews the recommendation.</small>
 </main></body></html>""".encode("utf-8")
 
 
@@ -110,6 +139,13 @@ def _csv(rows, leading_fields):
     writer.writeheader()
     writer.writerows({key: _csv_cell(value) for key, value in row.items()} for row in rows)
     return buffer.getvalue().encode("utf-8-sig")
+
+
+def input_quality_csv(result):
+    """List affected locations with source and export denominators kept separate."""
+    return _csv(result.get("input_quality", {}).get("issues", ()),
+                ("basis", "filename", "row_number", "record_id", "kind", "field",
+                 "impact", "enquiry_ids", "source_ref", "detail", "table"))
 
 
 def metric_rows(result):
@@ -190,6 +226,17 @@ def _summary_html(result):
         (item["title"], label(item["status"]), format_measure(item.get("coverage"), "rate"),
          " ".join(item.get("next_steps", []))) for item in capabilities
     ]) if capabilities else ""
+    quality = result.get("input_quality", {})
+    quality_summary = quality.get("summary", {})
+    review = quality.get("review_required", {})
+    quality_html = ""
+    if quality_summary:
+        quality_html = ("<h2>Input data quality</h2><p>"
+                        f"{quality_summary['affected_rows']:,} of {quality_summary['input_rows']:,} delivered rows "
+                        f"had issues ({format_measure(quality_summary['affected_fraction'], 'rate')}). "
+                        "The denominator excludes records that were never supplied.</p>")
+        if review.get("required"):
+            quality_html += "<p>Review the listed records before considering expansion.</p>"
     cash = ledger.get("realized_cash_savings")
     if isinstance(cash, dict):
         cash_text = format_measure(cash.get("value"), ledger.get("currency"))
@@ -232,6 +279,7 @@ Eligible initial requests {escape(str(readiness.get('eligible_roots', 'unavailab
 <p>Analysis {escape(str(provenance.get('run_id') or 'unavailable'))}.
 Grading policy {escape(str(provenance.get('policy_version') or 'unavailable'))}.</p>
 {f'<h2>Evidence readiness</h2><div class="table">{evidence_table}</div>' if evidence_table else ''}
+{quality_html}
 <h2>Service quality, human effort, and cost</h2>
 <div class="table">{_html_table(('Group', 'Measure', 'Result', 'Basis', 'Evidence gap'), summary_rows)}</div>
 <h2>Deployment comparisons</h2>
@@ -249,7 +297,7 @@ def make_downloads(result):
     """Render the same analysis for machine use, a spreadsheet, and review."""
     ledger = result.get("cost_ledger", {})
     entries = ledger.get("entries", [])
-    return {
+    downloads = {
         "analysis.json": _json(result),
         "group_metrics.csv": _csv(
             metric_rows(result), ("arm", "metric", "value", "unit", "numerator", "denominator", "coverage"),
@@ -259,6 +307,9 @@ def make_downloads(result):
         ),
         "summary.html": _summary_html(result).encode("utf-8"),
     }
+    if "input_quality" in result:
+        downloads["input_quality.csv"] = input_quality_csv(result)
+    return downloads
 
 
 def _dependencies():

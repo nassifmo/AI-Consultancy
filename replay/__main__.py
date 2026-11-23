@@ -12,6 +12,7 @@ import sys
 import time
 
 from .exports import export_and_verify
+from .ollama_provider import OllamaProvider
 from .openai_provider import OpenAIProvider, ProviderError, REASONING_EFFORT, REQUESTED_SERVICE_TIER
 from .world import ANSWERS, SYSTEM_PROMPT, WORLD_TOOLS, World, load_cases, public_trial_inputs
 
@@ -64,7 +65,7 @@ def _final_text(items):
     return "\n".join(parts)
 
 
-def run_trial(provider, model, case, *, before_call, max_turns, max_output_tokens):
+def run_trial(provider, model, case, *, before_call, max_turns, max_output_tokens, price_api=True):
     """Run against a fresh world. Provider replies are never proof a tool ran."""
     world = World(case)
     items = [{"role": "user", "content": public_trial_inputs(case)}]
@@ -92,11 +93,11 @@ def run_trial(provider, model, case, *, before_call, max_turns, max_output_token
         turns.append({key: turn.get(key) for key in (
             "response_id", "model", "status", "usage", "usage_details", "service_tier", "incomplete_reason")} | {
             "elapsed_seconds": round(time.perf_counter() - step_started, 4)})
-        priced = _cost(model, usage)
-        if priced is None:
+        if usage is None:
             metering_complete = False
         else:
-            observed_cost += priced
+            if price_api:
+                observed_cost += _cost(model, usage)
             for key in observed_usage:
                 observed_usage[key] += usage[key]
         if turn["status"] != "completed":
@@ -135,8 +136,9 @@ def run_trial(provider, model, case, *, before_call, max_turns, max_output_token
             "world_events": world.tool_events, "case_events": world.case_events,
             "answer": answer or None, "grade": grade, "tool_used": pending,
             "elapsed_seconds": round(time.perf_counter() - started, 4), "observed_usage": observed_usage,
-            "metering_complete": metering_complete, "known_cost_estimate_usd": str(observed_cost),
-            "cost_estimate_usd": str(observed_cost) if metering_complete else None}
+            "metering_complete": metering_complete,
+            "known_cost_estimate_usd": str(observed_cost) if price_api else None,
+            "cost_estimate_usd": str(observed_cost) if price_api and metering_complete else None}
 
 
 def _manifest(args, cases):
@@ -144,7 +146,7 @@ def _manifest(args, cases):
     for path in sorted(Path(__file__).parent.glob("*.py")):
         h.update(path.name.encode())
         h.update(path.read_bytes())
-    return {"schema_version": "shipment-replay-1", "split": args.split, "models": list(PRICES),
+    manifest = {"schema_version": "shipment-replay-1", "split": args.split, "models": list(PRICES),
             "case_source": "reviewer_supplied_synthetic" if args.suite else "checked_in_synthetic",
             "mode": "live_models_synthetic_shipments" if args.live else "protocol_rehearsal_only",
             "case_ids": [c["id"] for c in cases], "suite_sha256": h.hexdigest(),
@@ -154,6 +156,12 @@ def _manifest(args, cases):
             "rate_version": RATE_VERSION, "usd_per_million_input_output": PRICES,
             "call_input_token_allowance": SMALL_CALL_INPUT_ALLOWANCE,
             "limits": "Standard-rate equivalent before cache adjustments and tax. The local spend stop is approximate. Review provider billing, especially after a timeout."}
+    if args.ollama:
+        manifest.update(models=[args.ollama], mode="local_ollama_development", requested_reasoning_effort=None,
+                        requested_service_tier=None, rate_version=None, usd_per_million_input_output=None,
+                        local_estimated_spend_stop_usd=None, call_input_token_allowance=None,
+                        limits="Loopback inference with a local model. Hosted API pricing does not apply. Local compute cost is unmeasured.")
+    return manifest
 
 
 def _write(path, value):
@@ -162,8 +170,7 @@ def _write(path, value):
     temp.replace(path)
 
 
-def _schedule(cases, repeats):
-    models = tuple(PRICES)
+def _schedule(cases, repeats, models):
     for ix, c in enumerate(cases):
         for rep in range(1, repeats + 1):
             order = models if (ix + rep) % 2 else tuple(reversed(models))
@@ -229,7 +236,9 @@ def load_reviewer_suite(path):
 
 def _summary(manifest, records):
     by_model = {}
-    for model in PRICES:
+    models = manifest["models"]
+    local = manifest["mode"] == "local_ollama_development"
+    for model in models:
         rows = [r for r in records if r["requested_model"] == model]
         graded = [r["grade"] for r in rows if r["grade"] is not None]
         by_model[model] = {"recorded_trials": len(rows), "graded_trials": len(graded),
@@ -237,13 +246,18 @@ def _summary(manifest, records):
                            "critical_trials": sum(g["critical"] is True for g in graded),
                            "ungraded_trials": len(rows) - len(graded),
                            "unknown_metering_trials": sum(not r["metering_complete"] for r in rows),
-                           "known_cost_estimate_usd": str(sum(Decimal(r["known_cost_estimate_usd"]) for r in rows))}
+                           "known_cost_estimate_usd": None if local else str(sum(Decimal(r["known_cost_estimate_usd"]) for r in rows))}
+    summary = {"mode": manifest["mode"], "expected_trials": len(manifest["case_ids"]) * manifest["repeats"] * len(models),
+               "recorded_trials": len(records), "by_model": by_model,
+               "inference": "Descriptive sandbox results only. No company savings or causal impact."}
+    if local:
+        return summary | {"complete_pairs": 0, "paired_summary": None}
     pairs = {}
     for row in records:
         if row["grade"] is not None:
             pairs.setdefault((row["case_id"], row["repeat"]), {})[row["requested_model"]] = row
-    baseline, candidate = PRICES
-    complete = [(p[baseline], p[candidate]) for p in pairs.values() if set(p) == set(PRICES)]
+    baseline, candidate = models
+    complete = [(p[baseline], p[candidate]) for p in pairs.values() if set(p) == set(models)]
     n = len(complete)
     paired_status = {"both_passed": 0, "only_baseline_passed": 0, "only_candidate_passed": 0, "neither_passed": 0}
     for a, b in complete:
@@ -261,9 +275,7 @@ def _summary(manifest, records):
         "mean_latency_difference_seconds": round(sum(b["elapsed_seconds"] - a["elapsed_seconds"] for a, b in complete) / n, 4) if n else None,
         "mean_incremental_api_cost_usd": str(sum(b - a for a, b in priced_pairs) / len(priced_pairs)) if priced_pairs else None,
     }
-    return {"mode": manifest["mode"], "expected_trials": len(manifest["case_ids"]) * manifest["repeats"] * 2,
-            "recorded_trials": len(records), "complete_pairs": n, "paired_summary": paired_data,
-            "by_model": by_model, "inference": "Descriptive sandbox results only. No company savings or causal impact."}
+    return summary | {"complete_pairs": n, "paired_summary": paired_data}
 
 
 class RehearsalProvider:
@@ -303,15 +315,20 @@ def replay(args, cases, provider):
                 return False
             calls += 1
             trial_cost += estimate
+        elif args.ollama:
+            if calls >= args.max_api_calls:
+                return False
+            calls += 1
         return True
 
     try:
         with ((run / "trials.jsonl").open("x", encoding="utf-8") as stream,
               (run / "reviewer_cases.jsonl").open("x", encoding="utf-8") as review):
-            for case, repeat, model in _schedule(cases, args.repeats):
+            for case, repeat, model in _schedule(cases, args.repeats, manifest["models"]):
                 trial_cost = Decimal(0)
                 result = run_trial(provider, model, case, before_call=before_call,
-                                   max_turns=args.max_turns, max_output_tokens=args.max_output_tokens)
+                                   max_turns=args.max_turns, max_output_tokens=args.max_output_tokens,
+                                   price_api=not args.ollama)
                 record = {"case_id": case["id"], "repeat": repeat,
                           "finished_at": datetime.now(UTC).isoformat(), **result}
                 trial_dir = run / "observations" / f"trial-{len(records) + 1:04d}"
@@ -330,27 +347,31 @@ def replay(args, cases, provider):
                 }) + "\n")
                 review.flush()
                 records.append(record)
-                spend += Decimal(record["known_cost_estimate_usd"])
-                if args.live and (result["status"] in {"provider_error", "budget_or_call_limit"}
-                                  or not result["metering_complete"]):
+                if not args.ollama:
+                    spend += Decimal(record["known_cost_estimate_usd"])
+                if ((args.live or args.ollama) and result["status"] in {"provider_error", "budget_or_call_limit"}
+                        or args.live and not result["metering_complete"]):
                     break
     finally:
         overview = _summary(manifest, records) | {"calls_attempted": calls,
-                                                    "known_cost_estimate_usd": str(spend)}
+                                                    "known_cost_estimate_usd": None if args.ollama else str(spend)}
         _write(run / "summary.json", overview)
     return overview
 
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--live", action="store_true", help="Opt in to billable calls using OPENAI_API_KEY.")
+    provider_options = p.add_mutually_exclusive_group()
+    provider_options.add_argument("--live", action="store_true", help="Opt in to billable calls using OPENAI_API_KEY.")
+    provider_options.add_argument("--ollama", metavar="MODEL", help="Run one installed tool-capable Ollama model locally.")
     p.add_argument("--preflight", action="store_true", help="Print cases and settings without making calls.")
     p.add_argument("--split", choices=("smoke", "development", "challenge", "all"), default="smoke")
     p.add_argument("--suite", type=Path, help="Use a separately reviewed synthetic JSON suite instead of built-in cases.")
+    p.add_argument("--case-id", action="append", help="Run an individual case in the selected split. Repeat for several cases.")
     p.add_argument("--repeats", type=int, default=1)
     p.add_argument("--max-turns", type=int, default=4)
     p.add_argument("--max-output-tokens", type=int, default=800)
-    p.add_argument("--max-api-calls", type=int, default=50)
+    p.add_argument("--max-api-calls", type=int, default=50, help="Maximum provider turns for either live mode.")
     p.add_argument("--max-usd", type=Decimal, default=Decimal("2.00"), help="Approximate local USD stop; use a provider cap as well.")
     p.add_argument("--output", type=Path, help="A new output directory outside tracked source files.")
     try:
@@ -366,6 +387,12 @@ def main(argv=None):
         p.error(str(exc))
     if args.suite:
         args.split = "reviewer_suite"
+    if args.case_id:
+        selected = set(args.case_id)
+        missing = selected - {case["id"] for case in cases}
+        if missing:
+            p.error("case IDs not found in the selected suite or split: " + ", ".join(sorted(missing)))
+        cases = [case for case in cases if case["id"] in selected]
     if not cases:
         p.error("no cases in selected split")
     if args.preflight:
@@ -377,7 +404,12 @@ def main(argv=None):
     if args.live and not key:
         p.error("OPENAI_API_KEY is required for --live; run without --live to rehearse")
     try:
-        result = replay(args, cases, OpenAIProvider(key) if args.live else RehearsalProvider())
+        if args.ollama:
+            provider = OllamaProvider()
+            provider.check_model(args.ollama)
+        else:
+            provider = OpenAIProvider(key) if args.live else RehearsalProvider()
+        result = replay(args, cases, provider)
     except ProviderError as exc:
         p.error(str(exc))
     except FileExistsError:

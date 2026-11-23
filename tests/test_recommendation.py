@@ -71,6 +71,77 @@ class RecommendationTests(unittest.TestCase):
         self.assertEqual(decision["action"], "verify_critical_cases")
         self.assertEqual(decision["critical_check"]["bounds"], [1 / 72, 2 / 72])
 
+    def test_failed_checks_generate_sorted_case_evidence_and_retests(self):
+        data = trial()
+        first, second, third = data["episodes"][73:76]
+        mismatch = {"status": "unmet", "severity": "critical", "refs": ["responses.csv#reply-1"]}
+        first["criteria"] = {"shipment_identity": mismatch, "initial_escalation": {
+            "status": "unmet", "severity": "critical", "refs": ["case_history.csv#event-1"],
+        }}
+        second.update(initial_failure=True, criteria={"shipment_identity": {**mismatch, "refs": ["tracking_events.json#event-2"]}})
+        third.update(initial_failure=True, criteria={"shipment_identity": {**mismatch, "refs": []}})
+        result = recommend(data, max_critical_rate=.01)
+        self.assertEqual(result["action"], "redesign_and_retest")
+        self.assertIn("3 of 72", result["reason"])
+        identity, escalation = result["failure_reviews"]
+        self.assertEqual(identity["criterion"], "shipment_identity")
+        self.assertEqual(identity["cases"], [
+            {"enquiry_id": f"{CANDIDATE}-1", "refs": ["responses.csv#reply-1"]},
+            {"enquiry_id": f"{CANDIDATE}-2", "refs": ["tracking_events.json#event-2"]},
+        ])
+        self.assertEqual(escalation["cases"][0]["enquiry_id"], f"{CANDIDATE}-1")
+        self.assertEqual(result["unclassified_failure_episode_ids"], [f"{CANDIDATE}-3"])
+        self.assertIn("ambiguous reference", identity["retest"])
+        self.assertIn("fresh trial", result["reconsider_when"])
+        self.assertIn(b"Shipment or container mismatch (2 enquiries)", render_decision_brief(result))
+
+    def test_hypothetical_downstream_loss_can_hold_expansion_for_finance_review(self):
+        data = trial()
+        initial = recommend(data)
+        self.assertEqual(initial["action"], "consider_controlled_expansion")
+        stressed = recommend(data, additional_loss_per_1000=9000)
+        self.assertEqual(stressed["action"], "validate_downstream_loss")
+        self.assertEqual(stressed["net_uncertainty"], initial["net_uncertainty"])
+        self.assertEqual(stressed["downstream_loss_scenario"]["sampling_net_value_bounds"],
+                         [value - 9 for value in initial["net_uncertainty"]["bounds"]])
+        self.assertIn(b"Assumed additional loss", render_decision_brief(stressed))
+        self.assertEqual(recommend(data, additional_loss_per_1000=100)["action"], "consider_controlled_expansion")
+        self.assertEqual(recommend(data, additional_loss_per_1000=9000, max_critical_rate=.01)["action"],
+                         "redesign_and_retest")
+
+    def test_disputed_population_prevents_expansion_even_with_positive_modelled_value(self):
+        data = trial()
+        self.assertEqual(recommend(data)["action"], "consider_controlled_expansion")
+        review = {"required": True, "population_issues": 1, "unresolved_critical_issues": 0,
+                  "affected_enquiry_ids": ["ENQ-DISPUTED"],
+                  "reasons": ["Conflicting enquiry records may affect eligibility."]}
+        data["input_quality"] = {"review_required": review}
+        result = recommend(data)
+        self.assertEqual(result["action"], "review_source_conflicts")
+        self.assertEqual(result["input_quality_review"], review)
+        self.assertGreater(result["net_uncertainty"]["bounds"][0], 0)
+        self.assertEqual(result["critical_check"]["eligible"], 72)
+        self.assertEqual(result["critical_check"]["verified_failures"], 1)
+
+    def test_source_review_precedes_unsupported_design_and_preserves_known_critical_exceedance(self):
+        data = trial()
+        data["data_readiness"]["comparison_status"] = "incomplete_assignment"
+        review = {"required": True, "population_issues": 1, "unresolved_critical_issues": 2,
+                  "affected_enquiry_ids": ["ENQ-DISPUTED"],
+                  "reasons": ["Unresolved source conflicts."]}
+        data["input_quality"] = {"review_required": review}
+        self.assertEqual(recommend(data)["action"], "review_source_conflicts")
+        exceedance = recommend(data, max_critical_rate=0.01)
+        self.assertEqual(exceedance["action"], "redesign_and_retest")
+        self.assertEqual(exceedance["critical_check"]["failure_episode_ids"], [f"{CANDIDATE}-1"])
+        self.assertEqual(exceedance["input_quality_review"], review)
+
+    def test_nonblocking_quality_entry_leaves_existing_recommendation(self):
+        data = trial()
+        data["input_quality"] = {"review_required": {"required": False, "population_issues": 0,
+            "unresolved_critical_issues": 0, "affected_enquiry_ids": [], "reasons": []}}
+        self.assertEqual(recommend(data)["action"], "consider_controlled_expansion")
+
     def test_zero_recorded_critical_failures_cannot_establish_rare_event_safety(self):
         data = trial()
         for row in data["episodes"]:

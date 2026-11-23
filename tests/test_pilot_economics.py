@@ -40,6 +40,19 @@ def test_unassessed_downstream_cannot_make_net_known(input_data):
     assert r["assessment_status"] == "financial_evidence_incomplete"
 
 
+def test_costly_wrong_answer_reverses_financial_result_despite_better_service(input_data):
+    dispatch = input_data["buckets"][1]["candidate"]
+    dispatch.append(dict(dispatch[0], entry_id="DEMO-DSP-3", amount="400.00",
+                         evidence_ref="DEMO: net dispatch charge after relying on incorrect pickup advice"))
+    input_data["candidate"]["critical_failures"]["verified"] = 1
+    r = assess_pilot_economics(input_data)
+    assert r["service"]["verified_timely_correct_rate_difference"] == Decimal(".20")
+    assert r["service"]["gates"]["critical_failures"] == "within_limit"
+    assert r["observed_downstream_expense_reduction_per_enquiry"] == Decimal("-2.70")
+    assert r["observed_net_expense_reduction_per_enquiry"] == Decimal("-3.50")
+    assert r["assessment_status"] == "illustrative_only"
+
+
 def test_zero_reconciliation_and_missing_records_are_distinct(input_data):
     b = input_data["buckets"][1]
     b["candidate"] = []

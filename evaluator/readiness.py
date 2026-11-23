@@ -5,7 +5,7 @@ from math import isfinite
 
 from .cohorts import ARMS, METHODS
 from .economics import overlapping_work_ids
-from .exports import ANALYSIS_TABLES, TABLES
+from .exports import ANALYSIS_TABLES, MEASURED_WORK_METHODS, TABLES
 from .verification import Verifier
 
 
@@ -20,6 +20,18 @@ TIME_FIELDS = {
 }
 ASSIGNMENT_FIELDS = ("assigned_arm", "assignment_at", "root_enquiry_id", "contact_relation",
                      "assignment_unit_id", "assignment_method")
+JOIN_FIELDS = (
+    ("enquiries", "customer_id", "customers", False),
+    ("shipments", "customer_id", "customers", False),
+    ("tracking_events", "booking_ref", "shipments", False),
+    ("responses", "enquiry_id", "enquiries", False),
+    ("responses", "case_id", "cases", True),
+    ("agent_runs", "enquiry_id", "enquiries", False),
+    ("cases", "enquiry_id", "enquiries", False),
+    ("case_history", "case_id", "cases", False),
+    ("enquiries", "root_enquiry_id", "enquiries", False),
+    ("enquiries", "related_enquiry_id", "enquiries", True),
+)
 EXTRA_FIELDS = {
     "enquiries": ("stated_reference", "customer_message", *ASSIGNMENT_FIELDS),
     "shipments": ("container_refs", "destination", "planned_arrival"),
@@ -88,20 +100,8 @@ def _join_profiles(data, issues):
     ids = {table: {row.get(key) for row in tables.get(table, ()) if _present(row.get(key))}
            for table, key in (("customers", "customer_id"), ("shipments", "booking_ref"),
                               ("enquiries", "enquiry_id"), ("cases", "case_id"))}
-    specifications = (
-        ("enquiries", "customer_id", "customers", False),
-        ("shipments", "customer_id", "customers", False),
-        ("tracking_events", "booking_ref", "shipments", False),
-        ("responses", "enquiry_id", "enquiries", False),
-        ("responses", "case_id", "cases", True),
-        ("agent_runs", "enquiry_id", "enquiries", False),
-        ("cases", "enquiry_id", "enquiries", False),
-        ("case_history", "case_id", "cases", False),
-        ("enquiries", "root_enquiry_id", "enquiries", False),
-        ("enquiries", "related_enquiry_id", "enquiries", True),
-    )
     joins = []
-    for table, key, target, optional in specifications:
+    for table, key, target, optional in JOIN_FIELDS:
         rows = [row for row in tables.get(table, ()) if not optional or _present(row.get(key))]
         matched = sum(row.get(key) in ids[target] for row in rows)
         missing = sum(not _present(row.get(key)) for row in rows)
@@ -135,7 +135,7 @@ def _work_diagnostics(data, issues):
     cases = {row.get("case_id"): row.get("enquiry_id") for row in data.tables.get("cases", ())}
     for row in data.tables.get("agent_work", ()):
         method = row.get("measurement_method")
-        methods[method if method in {"logged", "timed", "estimated"} else "unrecognized"] += 1
+        methods[method if method in MEASURED_WORK_METHODS or method == "estimated" else "unrecognized"] += 1
         start = data.time("agent_work", row.get("accepted_at"))
         end = data.time("agent_work", row.get("closed_at"))
         try:
