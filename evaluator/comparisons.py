@@ -2,6 +2,7 @@
 
 from collections import Counter, defaultdict
 from datetime import date
+from math import fsum, isclose
 
 import numpy as np
 
@@ -137,6 +138,48 @@ def compare(groups, group_rows, status, config, ledger):
     return output
 
 
+def _randomization_limit(rollout, eligible):
+    dates = [date.fromisoformat(row["assignment_at"][:10]) for row in eligible]
+    start, end = min(dates), max(dates)
+    schedules = {row["assigned_arm"]: {} for row in eligible}
+    for record in rollout:
+        arm = record["agent_version"]
+        if arm not in schedules or record.get("region"):
+            continue
+        try:
+            day = date.fromisoformat(record["date"])
+        except (ValueError, TypeError):
+            return "A rollout effective date is invalid."
+        schedules[arm][day] = record
+    documented_shares = []
+    for schedule in schedules.values():
+        initial_date = max((day for day in schedule if day <= start), default=None)
+        if initial_date is None:
+            return "Each compared policy needs a concurrent allocation record from the first eligible assignment."
+        shares = set()
+        effective_records = [schedule[day] for day in schedule if initial_date <= day <= end]
+        for record in effective_records:
+            if record["arm_assignment_rule"] != "random_by_enquiry":
+                return "An active policy lacks enquiry-level random allocation during the comparison window."
+            share = record.get("traffic_share")
+            if share in (None, "") and len(effective_records) == 1:
+                continue  # Older exports document the random allocation without a share.
+            try:
+                share = float(share)
+            except (ValueError, TypeError):
+                return "Recorded allocation changes need usable traffic shares."
+            if not 0 < share <= 1:
+                return "Each compared policy needs a positive, valid traffic share throughout the comparison window."
+            shares.add(share)
+        if len(shares) > 1:
+            return "The current unadjusted comparison cannot account for changing allocation shares."
+        documented_shares.extend(shares)
+    total_share = fsum(documented_shares)
+    if (total_share > 1 and not isclose(total_share, 1)) or (len(schedules) > 1 and 1 in documented_shares):
+        return "The documented shares cannot allocate the same comparison population across these policies."
+    return None
+
+
 def design_diagnostics(data, episodes, unlinked_contacts):
     eligible = [row for row in episodes if row["eligible"]]
     rollout = data.tables["rollout_log"]
@@ -148,28 +191,15 @@ def design_diagnostics(data, episodes, unlinked_contacts):
         and not set(row["exclusion_reasons"]).intersection({"out_of_scope", "outside_study_period", "incomplete_followup"})
         for row in episodes
     )
-    declared_random = {}
-    for record in rollout:
-        if record["arm_assignment_rule"] != "random_by_enquiry" or record.get("region"):
-            continue
-        try:
-            since = date.fromisoformat(record["date"]).isoformat()
-        except (ValueError, TypeError):
-            continue
-        arm = record["agent_version"]
-        declared_random[arm] = min(since, declared_random.get(arm, since))
-    has_assignment_record = all(
-        row["assigned_arm"] in declared_random and row["assignment_at"][:10] >= declared_random[row["assigned_arm"]]
-        for row in eligible
-    )
+    randomization_limit = None
     if nonrandom or any(method != "randomized" for method in methods):
         status = "unsupported_design"
     elif not eligible or incomplete or unlinked_contacts or not data.is_complete("enquiries"):
         status = "incomplete_assignment"
-    elif not data.is_complete("rollout_log") or not has_assignment_record:
-        status = "unverified_randomization"
     else:
-        status = "randomized_assignment"
+        randomization_limit = (_randomization_limit(rollout, eligible) if data.is_complete("rollout_log")
+                               else "The rollout log is unavailable or incomplete.")
+        status = "unverified_randomization" if randomization_limit else "randomized_assignment"
     trends = defaultdict(lambda: {"eligible_roots": 0, "resolved": 0, "unknown": 0})
     intake_mix = Counter()
     for row in eligible:
@@ -181,7 +211,8 @@ def design_diagnostics(data, episodes, unlinked_contacts):
         trend["unknown"] += row["outcome"]["state"] == "unknown"
         intake_mix[(month, region, row["assigned_arm"], row.get("enquiry_type"))] += 1
     return {
-        "comparison_status": status, "methods": dict(methods), "rollout_records": rollout,
+        "comparison_status": status, "randomization_limit": randomization_limit,
+        "methods": dict(methods), "rollout_records": rollout,
         "required_for_regional_attribution": ["contemporaneous comparison regions", "credible common trends",
                                              "sufficient region-level inference", "aligned reference target population"],
         "monthly_trends": [{"month": month, "region": region, "arm": arm, **values}

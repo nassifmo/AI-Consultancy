@@ -45,6 +45,15 @@ _ARRIVAL_LOCATION = re.compile(
     r"(?P<place>[^\W\d_][\w '\-]{0,48}?)\s+(?=(?:on|at|between|by)\b|\d)",
     re.IGNORECASE,
 )
+_ETA_PREFIX_LOCATION = re.compile(
+    r"(?P<place>[^\W\d_][\w '\-]{0,48}?)\s+ETA\b",
+    re.IGNORECASE,
+)
+_ETA_MODIFIERS = {
+    "the", "our", "your", "its", "current", "latest", "updated", "revised", "new",
+    "confirmed", "unconfirmed", "estimated", "expected", "requested", "recorded", "vessel",
+    "ship", "shipment", "container", "destination",
+}
 MONTHS = {name: index for index, month in enumerate(
     ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"), 1
 ) for name in (month, month[:3])}
@@ -66,10 +75,21 @@ def conflicting_eta_passage(text, port_name):
     """Reject a release-time promise or an explicitly named different arrival location."""
     if not isinstance(text, str) or _FUTURE_ETA_UPDATE.search(text):
         return True
-    return bool(port_name and any(
-        not re.search(rf"\b{re.escape(port_name)}\b", place["place"], re.IGNORECASE)
-        for place in _ARRIVAL_LOCATION.finditer(text)
-    ))
+    if not port_name:
+        return False
+    places = [match["place"] for match in _ARRIVAL_LOCATION.finditer(text)]
+    places.extend(
+        " ".join(word for word in match["place"].split() if word.casefold() not in _ETA_MODIFIERS)
+        for clause in re.split(r"[.!?\n,;:]|\band\b", text, flags=re.IGNORECASE)
+        if (match := _ETA_PREFIX_LOCATION.match(clause.strip()))
+    )
+    return any(place and not re.search(rf"\b{re.escape(port_name)}\b", place, re.IGNORECASE) for place in places)
+
+
+def _unambiguous_eta_time(message, timestamp, port_name):
+    sentence = next((part[0] for part in SENTENCE_TEXT.finditer(message)
+                     if part.start() <= timestamp.start() < timestamp.end() <= part.end()), "")
+    return bool(sentence and not AMBIGUOUS_TIMING.search(sentence) and not conflicting_eta_passage(sentence, port_name))
 
 
 def _written_instant(match, sent, zone_name):
@@ -125,7 +145,8 @@ def sent_eta(message, sent, port_name, port_timezone):
             if date_before:
                 written = WRITTEN_TIME.match(message, date_before.start())
         timestamp = explicit or written
-        if timestamp is None or message[timestamp.end():].lstrip()[:1] not in {"", ".", ";", "!", "?"}:
+        if (timestamp is None or message[timestamp.end():].lstrip()[:1] not in {"", ".", ";", "!", "?"}
+                or not _unambiguous_eta_time(message, timestamp, port_name)):
             values.add(None)
             continue
         try:
@@ -159,9 +180,7 @@ def quoted_eta(quote, message, sent, port_name, port_timezone):
     if any(not timestamp.start() <= clock.start() < clock.end() <= timestamp.end()
            for clock in CLOCK_TIME.finditer(message)):
         return unknown
-    sentence = next((part[0] for part in SENTENCE_TEXT.finditer(message)
-                     if part.start() <= timestamp.start() < timestamp.end() <= part.end()), "")
-    if not sentence or AMBIGUOUS_TIMING.search(sentence) or conflicting_eta_passage(sentence, port_name):
+    if not _unambiguous_eta_time(message, timestamp, port_name):
         return unknown
     suffix = message[timestamp.end():].lstrip()
     if suffix[:1] not in {"", ".", ";", "!", "?", ")", "]"}:

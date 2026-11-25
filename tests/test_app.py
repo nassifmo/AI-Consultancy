@@ -13,6 +13,7 @@ from streamlit.testing.v1 import AppTest
 from app import unpack_exports
 from evaluator.analysis import analyze_exports
 from evaluator.claim_reader import EtaReading, ReplyClaims, StatusClaim
+from evaluator.exports import TABLES
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -97,7 +98,7 @@ class InterfaceTests(unittest.TestCase):
         threshold = "Break-even value per extra success"
         self.assertEqual(next(metric.value for metric in app.metric if metric.label == threshold), "9.73 USD")
         self.assertTrue(any("Agree on the critical failure limit" in item.value for item in app.markdown))
-        app.number_input(key="decision_critical_limit").set_value(1.0).run()
+        next(item for item in app.number_input if item.label == "Maximum critical failure rate (%)").set_value(1.0).run()
         self.assertTrue(any("Review failures and retest" in item.value for item in app.markdown))
         self.assertTrue(any("7 of 348 eligible enquiries" in item.value for item in app.markdown))
         self.assertTrue(any("Shipment or container mismatch · 6 enquiries" in item.value for item in app.markdown))
@@ -105,7 +106,7 @@ class InterfaceTests(unittest.TestCase):
         app.selectbox(key="upgrade_priority").select("verified_resolution").run()
         self.assertFalse(app.exception)
         self.assertEqual(next(metric.value for metric in app.metric if metric.label == threshold), "24.35 USD")
-        app.number_input(key="upgrade_value_verified_resolution_USD").set_value(25.0).run()
+        next(item for item in app.number_input if item.label.startswith("Value of one additional success")).set_value(25.0).run()
         self.assertFalse(app.exception)
         self.assertTrue(any("unknown outcomes leave" in warning.value for warning in app.warning))
         loss_input = next(item for item in app.number_input if item.label.startswith("Assumed additional loss"))
@@ -115,6 +116,29 @@ class InterfaceTests(unittest.TestCase):
         self.assertIn("Illustrative net value per request with assumed loss", metrics)
         self.assertAlmostEqual(float(metrics["Cost change per request with assumed loss"].split()[0]),
                                float(metrics["Cost change per request"].split()[0]) + 1, places=2)
+
+    def test_decision_value_and_approval_are_scoped_to_the_outcome(self):
+        app = AppTest.from_file(ROOT / "app.py", default_timeout=25).run()
+        app.number_input[1].set_value(200)
+        next(button for button in app.button if button.label == "Run evaluation").click().run()
+
+        def get_widget(widgets, label):
+            return next(item for item in widgets if item.label.startswith(label))
+
+        get_widget(app.number_input, "Value of one additional success").set_value(20.0).run()
+        get_widget(app.selectbox, "Basis for the value").select("company_estimate").run()
+        get_widget(app.text_input, "Source or assumption").set_value("Approved for this $20 scenario").run()
+        get_widget(app.number_input, "Value of one additional success").set_value(25.0).run()
+        self.assertEqual(get_widget(app.selectbox, "Basis for the value").value, "illustrative")
+        self.assertFalse(any(item.label.startswith("Source or assumption") for item in app.text_input))
+
+        get_widget(app.selectbox, "Basis for the value").select("company_estimate").run()
+        get_widget(app.text_input, "Source or assumption").set_value("Approval for one-hour outcome only").run()
+        get_widget(app.number_input, "Resolution time target").set_value(120).run()
+        self.assertFalse(app.exception)
+        self.assertIsNone(get_widget(app.number_input, "Value of one additional success").value)
+        self.assertEqual(get_widget(app.selectbox, "Basis for the value").value, "illustrative")
+        self.assertFalse(any(item.label.startswith("Source or assumption") for item in app.text_input))
 
     def test_upload_only_materializes_recognized_exports_in_a_temporary_folder(self):
         body = zip_bytes((
@@ -141,6 +165,7 @@ class InterfaceTests(unittest.TestCase):
         entries = {f"exports/{path.name}": path.read_bytes() for path in source.iterdir()}
         metadata = json.loads(entries["exports/export_metadata.json"])
         metadata.pop("dataset_origin")
+        metadata["source_completeness"] = dict.fromkeys(TABLES, "complete")
         entries["exports/export_metadata.json"] = json.dumps(metadata)
         messages = (
             ("The vessel has departed.", "failed"),

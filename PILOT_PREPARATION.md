@@ -47,6 +47,8 @@ Start with a small authorized, consistently pseudonymized sample that includes s
 | Finance | Billing units and rates by effective period/model, invoices and credits, maintenance/setup scope, labour cost and currency | Reconciled costs and a defensible economic boundary |
 | Experiment or rollout owner | Allocation recorded before handling, introduction dates, eligibility and regional rules | Whether a comparison can estimate incremental contribution |
 
+To verify routing, request a case-history event that identifies the destination queue or team. Map the carrier's queue names to the agreed Operations label. A generic escalation status leaves the destination unconfirmed.
+
 ### Measuring employee effort
 
 In the first authorized sample, we will compare three records for the same enquiry: the CRM case and replies, any contact or work-session logs, and a small sample of directly timed work. We will check the timing definition with the source owner before mapping a duration to `active_seconds`. Ticket opening and closure establish elapsed time. They leave effort unknown.

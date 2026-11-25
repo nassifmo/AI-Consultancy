@@ -99,6 +99,16 @@ class AcquisitionTests(unittest.TestCase):
                     collect(directory, pages)
                 self.assertEqual(list(Path(directory).iterdir()), [])
 
+    def test_overflowing_page_number_rejects_the_collection_without_publishing(self):
+        overflow = Response()
+        overflow.content = b'{"records":[{"measurement":1e400}],"next":null}'
+        with TemporaryDirectory() as directory:
+            pages = Session(Response({"records": [{"id": 1}], "next": "/cases?page=2"}), overflow)
+            with self.assertRaisesRegex(CollectionError, "nonfinite numeric value"):
+                collect(directory, pages)
+            self.assertTrue(overflow.closed)
+            self.assertEqual(list(Path(directory).iterdir()), [])
+
     def test_foreign_pagination_and_redirect_are_rejected_before_credential_forwarding(self):
         for response in (Response({"records": [], "next": "https://other.invalid/page"}),
                          Response({}, status=302, headers={"Location": "https://other.invalid/page"})):

@@ -1,5 +1,40 @@
 # Shipment evaluator meeting release verification
 
+## Component audit, 25 November 2026
+
+The combined evaluator and data-generation suite passed **365 tests and
+135 subtests**. The data dictionary and all four synthetic pilot
+rehearsals also passed.
+
+We reviewed source records and wrote down the expected behavior before checking
+the program. The examples use synthetic records. Each row gives a check Bahaa
+and Mohamad can repeat while reviewing the system.
+
+| Component | Reproduced check and current result | Where to review |
+| --- | --- | --- |
+| Intake | A short CSV row is rejected with its source row identified. A malformed JSONL line leaves intact lines available. An overflowing JSON number is rejected safely. Unconfirmed company coverage stays unknown even when the file opens. On the renamed S32 extract, the work record still traces back to its original row. | Prepare company files and Data readiness. |
+| Enquiry verification | In S28, an identical timestamp about a different port or qualified by an unverified condition cannot prove the requested ETA. An answer about a known different container fails identity. In S33, a generic escalation label cannot prove routing to Operations. Resolution can only be verified after the qualifying human reply and the required case work. | Enquiry evidence, including the original replies, tracking events and case history. |
+| KPIs | A follow-up linked through a disputed parent is withheld from the original request's totals. In a five-request check with one verified AI-only resolution and two unknowns, the verified rate is 20%, coverage is 60%, and the possible rate is 20% to 60%. | Comparison and the full results download. |
+| Attribution | The clean demo contains 1,108 eligible requests. Verified resolution for v1 is 8.16 percentage points above human handling. The sample interval is +1.86 to +14.58 points. Missing outcomes allow a difference of −17.03 to +24.54 points, so the current evidence does not establish a positive effect on underlying resolution. Staggered starts, paused policies and changing allocation shares no longer qualify for the unadjusted randomized comparison. | Comparison and Comparison readiness. |
+| Financial assessment | An invoice claiming 75 USD against zero recorded units blocks the total and preserves the documented subtotal. A 24 USD fixed charge in a follow-up month with no eligible allocation population remains unallocated and the affected total remains incomplete. The separate reconciled finance example returns an illustrative 4 USD break-even per additional timely, correct resolution. | Costs and settings, Upgrade value and the [pilot economics walkthrough](docs/PILOT_ECONOMICS_CONTRACT.md). |
+| Recommendation | With a 1% illustrative limit, seven known critical failures among 348 v1 requests trigger review and retest. Changing the amount or the time target clears the old financial evidence reference. The downloaded decision explains the reason, affected cases and proposed review. | Upgrade value and Decision evidence and downloads. |
+
+All six bulk datasets and the clean demo produced valid JSON. The check
+recounted verified and unknown resolutions independently from the case results,
+reconciled each reported billing line to its included, excluded and unallocated parts, and
+confirmed that the before-and-after and regional designs stayed descriptive.
+
+Two local Qwen runs on S28 tested the correct ETA and a departure-only reply.
+The correct reply resolved. The model left the departure-only exchange uncertain.
+The explicit reply check still flagged the omitted ETA and verified the failure
+using complete test evidence. This illustrates why the pilot needs a reviewed
+sample covering the company's wording, tracking history and workflows.
+
+Pilot validation still needs authorized source mappings and coverage, independent
+case reviews, approved service rules, a credible comparison and reconciled
+company costs. External QA labels and reconciled downstream expenses require
+separate preparation and review.
+
 ## Repository verification, 25 November 2026
 
 The combined evaluator and data-generation suite passed **344 tests and 124

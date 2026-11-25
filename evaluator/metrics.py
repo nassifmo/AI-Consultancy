@@ -88,8 +88,15 @@ def summarize_group(rows, currency):
     output["repeat_contact_rate"] = _flag(rows, "repeat_contact")
     output["required_action_compliance"] = _actions(rows)
     ai_only = sum(row["ai_only_handling"] is True for row in resolved)
-    output["ai_only_resolution_rate"] = _metric(ai_only, count, count, "rate", rows)
-    output["ai_only_resolution_rate"]["unknown"] = sum(row["ai_only_handling"] is None for row in resolved)
+    ai_only_unknown = sum(row["ai_only_handling"] is None for row in resolved) + sum(
+        row["outcome"]["state"] == "unknown" and row["ai_only_handling"] is not False for row in rows
+    )
+    output["ai_only_resolution_rate"] = {
+        **_metric(ai_only, count, count, "rate", rows),
+        "unknown": ai_only_unknown,
+        "coverage": (count - ai_only_unknown) / count if count else None,
+        "bounds": [ai_only / count, (ai_only + ai_only_unknown) / count] if count else None,
+    }
     output["human_minutes_per_request"] = _mean(rows, "active_seconds", "minutes/request", complete=True, scale=1 / 60)
     output["human_minutes_per_request_assessable"] = _mean(rows, "active_seconds", "minutes/request", scale=1 / 60)
     output["documented_human_minutes"] = _metric(

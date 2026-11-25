@@ -329,6 +329,10 @@ class _CostLedger:
             remaining_quantity = known_quantity
             for root, scope, source, quantity in records:
                 attributable = root is not None and scope in {"included", "excluded"}
+                if line is None and key in self.blocked_invoice_keys:
+                    if attributable:
+                        self.reasons[root].add("invalid_ai_usage_invoice")
+                    continue
                 if quantity is None or (line is None and quantity != ZERO):
                     if attributable:
                         self.reasons[root].add("missing_ai_meter_or_rate")
@@ -368,6 +372,9 @@ class _CostLedger:
 
     def fixed_costs(self, analysis_periods):
         ai_roots = defaultdict(list)
+        roots_with_usage = defaultdict(set)
+        for period, root in analysis_periods:
+            roots_with_usage[period].add(root)
         for root, episode in self.episodes.items():
             period = self.month(self.received[root])
             if episode["assigned_arm"] in AI_ARMS and period is not None:
@@ -381,6 +388,7 @@ class _CostLedger:
         months = sorted(set(ai_roots) | billed | blocked | {period for period, _ in analysis_periods})
         for period in months:
             roots = sorted(ai_roots[period])
+            affected_roots = roots or roots_with_usage[period]
             platform = self.rates.get((period, "platform_fee"))
             maintenance, setup = self.fixed_parameters(period)
             items = [
@@ -399,11 +407,16 @@ class _CostLedger:
                 ):
                     amount = None
                 if amount is None or currency is None:
-                    for root in roots:
+                    for root in affected_roots:
                         self.reasons[root].add("missing_" + category)
-                    if roots or category == "platform_fee" and period in blocked:
+                    if affected_roots or category == "platform_fee" and period in blocked:
                         self.issues.append({"code": "unresolved_fixed_cost", "period": period, "category": category})
                     continue
+                if amount and not roots and affected_roots:
+                    for root in affected_roots:
+                        self.reasons[root].add("unallocated_fixed_cost")
+                    self.issues.append({"code": "unallocated_fixed_cost", "period": period,
+                                        "category": category, "source": source})
                 self.allocate_fixed(period, category, amount, currency, source, estimated, roots)
 
     def fixed_parameters(self, period):

@@ -196,6 +196,8 @@ def _readiness(result):
         st.caption("Local AI reply reading was off for this run.")
     if data.get("comparison_status"):
         st.write(f"**Comparison readiness**  {label(data['comparison_status'])}")
+    if data.get("randomization_limit"):
+        st.caption(data["randomization_limit"])
     exclusions = data.get("exclusion_counts", {})
     if exclusions:
         st.dataframe(
@@ -233,9 +235,11 @@ def _comparisons(result):
             continue
         value = format_measure(row["value"], row.get("unit"))
         basis = metric_basis(row)
+        bounds = row.get("bounds")
         group_rows.append({
             "Group": label(row["arm"]), "Measure": _metric_name(row["metric"]), "Result": value,
             "Basis": basis, "Coverage": format_measure(row.get("coverage"), "fraction"),
+            "Range with unknowns": " to ".join(format_measure(bound, row["unit"]) for bound in bounds) if bounds else "",
             "Evidence gap": label(row["reason"]) if row.get("reason") else "",
         })
     st.subheader("Service quality, human effort, and costs")
@@ -328,9 +332,13 @@ def _upgrade_value(result):
         value=60, step=1, key=f"upgrade_target_{followup_minutes}",
         help="Count requests whose resolution was verified and occurred within this many minutes of intake.",
     )
+    decision_scope = f"{result['run_provenance']['run_id']}:{comparator}:{treatment}"
+    value_scope = f"{decision_scope}:{priority}"
+    if priority == "verified_resolution_within_target":
+        value_scope += f":{target_minutes}"
     value = right.number_input(
         f"Value of one additional success ({currency or 'currency'})", min_value=0.0, value=None,
-        step=0.50, format="%.2f", placeholder="Optional", key=f"upgrade_value_{priority}_{currency}",
+        step=0.50, format="%.2f", placeholder="Optional", key=f"upgrade_value:{value_scope}",
         disabled=currency is None,
         help=f"Enter what one extra {success_names[priority]} is worth beyond costs already in the ledger.",
     )
@@ -418,7 +426,7 @@ def _upgrade_value(result):
         loss = st.number_input(
             f"Assumed additional loss per 1,000 enquiries ({currency or 'currency'})",
             min_value=0.0, value=None, step=100.0, placeholder="Optional", disabled=cost is None,
-            key=f"error_loss_{comparator}_{treatment}_{currency}",
+            key=f"error_loss:{decision_scope}",
             help="Enter the extra loss for the selected policy relative to the comparator. Count only costs outside the ledger and the entered value per success.",
         )
         if loss is not None and cost is not None:
@@ -436,26 +444,28 @@ def _upgrade_value(result):
         elif cost is None:
             st.caption("Comparable scoped costs are needed to calculate this scenario.")
     with decision_panel:
-        _render_decision(result, assessment, additional_loss_per_1000=loss if cost is not None else None)
+        _render_decision(result, assessment, decision_scope, value_scope,
+                         additional_loss_per_1000=loss if cost is not None else None)
     st.download_button("Download value assessment", json.dumps(assessment, indent=2, allow_nan=False),
                        file_name="upgrade_value.json", mime="application/json", on_click="ignore")
 
 
-def _render_decision(result, assessment, *, additional_loss_per_1000=None):
+def _render_decision(result, assessment, decision_scope, value_scope, *, additional_loss_per_1000=None):
     st.subheader("Decision and next action")
     if (result.get("input_quality") or {}).get("review_required", {}).get("required"):
         st.warning("Data issues need review before expansion. See Data readiness for the affected records.")
     left, right = st.columns(2)
     limit = left.number_input("Maximum critical failure rate (%)", min_value=0.0, max_value=100.0,
-                              value=None, step=0.5, key="decision_critical_limit", placeholder="Set a limit",
+                              value=None, step=0.5, key=f"decision_critical_limit:{decision_scope}", placeholder="Set a limit",
                               help="Use the limit agreed with the service owner. Unknown results can increase the possible failure rate.")
+    value_scope += f":{assessment['value_per_success']}"
     basis = right.selectbox("Basis for the value per success", list(VALUE_BASES),
-                            format_func=VALUE_BASES.get, key="decision_value_basis",
+                            format_func=VALUE_BASES.get, key=f"decision_value_basis:{value_scope}",
                             disabled=assessment["value_per_success"] is None)
     value_evidence = None
     if basis != "illustrative" and assessment["value_per_success"] is not None:
         value_evidence = st.text_input("Source or assumption for this business value", max_chars=280,
-                                       key="decision_value_evidence",
+                                       key=f"decision_value_evidence:{value_scope}:{basis}",
                                        help="Give a short reference to the finance record or approved estimate. Leave out private details.")
     decision = assess_recommendation(
         result, assessment["comparator"], assessment["treatment"], assessment["priority"],

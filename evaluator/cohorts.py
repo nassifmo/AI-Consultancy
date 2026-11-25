@@ -40,9 +40,15 @@ def _members(verifier):
         for row in verifier.enquiries
     }
     continuations, disputed = defaultdict(list), defaultdict(list)
-    for row in verifier.enquiries:
-        if row.get("contact_relation") != "continuation":
-            continue
+    linked = set()
+    pending = (row for row in verifier.enquiries if row.get("contact_relation") == "continuation")
+
+    def contact_order(row):
+        key = row["enquiry_id"]
+        at = received[key]
+        return at is None, at, key
+
+    for row in sorted(pending, key=contact_order):
         key = row["enquiry_id"]
         root_id = row.get("root_enquiry_id")
         parent_id = row.get("related_enquiry_id")
@@ -53,16 +59,16 @@ def _members(verifier):
                 and root.get("contact_relation") in {"initial", "new_request"}
                 and root.get("root_enquiry_id") == root_id
                 and parent.get("root_enquiry_id") == root_id
+                and (parent_id == root_id or parent_id in linked)
                 and row.get("customer_id") == parent.get("customer_id") == root.get("customer_id")
                 and row.get("assigned_arm") == root.get("assigned_arm")
                 and row.get("assignment_unit_id") == root.get("assignment_unit_id")
                 and row.get("assignment_method") == root.get("assignment_method")
                 and data.time("enquiries", row.get("assignment_at")) == data.time("enquiries", root.get("assignment_at"))):
             continuations[root_id].append(row)
+            linked.add(key)
         elif root_id:
             disputed[root_id].append(at)
-    for rows in continuations.values():
-        rows.sort(key=lambda row: (received[row["enquiry_id"]], row["enquiry_id"]))
     return received, continuations, disputed
 
 

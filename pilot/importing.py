@@ -11,7 +11,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from evaluator.exports import ANALYSIS_KEYS, ANALYSIS_TABLES, TABLES
+from evaluator.exports import ANALYSIS_KEYS, ANALYSIS_TABLES, TABLES, finite_json_float
 
 
 SCHEMA_VERSION = "1.0"
@@ -39,7 +39,8 @@ def _unique_object(pairs):
 def _read_json(text):
     def reject(value):
         raise ValueError(f"Unsupported JSON number {value}.")
-    return json.loads(text, object_pairs_hook=_unique_object, parse_constant=reject)
+    return json.loads(text, object_pairs_hook=_unique_object, parse_constant=reject,
+                      parse_float=finite_json_float)
 
 
 def _filename(value):
@@ -255,11 +256,16 @@ def _source_rows(content, specification):
         return rows
     if kind == "jsonl":
         rows = []
-        for line in text.splitlines():
+        for line in text.split("\n"):
             if line.strip():
                 if len(rows) == MAX_ROWS:
                     raise ValueError("The source table exceeds the 250,000 record preparation limit.")
-                rows.append(_read_json(line))
+                try:
+                    rows.append(_read_json(line))
+                except ValueError:
+                    # Keep the record position for preparation diagnostics and retain
+                    # the exact file in the source bundle.
+                    rows.append(None)
         return rows
     records = _read_json(text)
     if specification.get("records_path"):
@@ -289,7 +295,8 @@ def _table(root, table, specification, retained, issues, provenance):
     conflicted = set()
     for index, record in enumerate(records, 1):
         current = {**location, "row": index}
-        if not isinstance(record, dict) or None in record:
+        if (not isinstance(record, dict) or None in record
+                or specification["format"] == "csv" and None in record.values()):
             issues.append({**current, "code": "malformed_source_row", "detail": "Source row is not a regular record."})
             continue
         row = _mapped_row(record, specification["columns"], issues, current)

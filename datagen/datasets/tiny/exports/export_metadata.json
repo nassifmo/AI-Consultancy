@@ -1,4 +1,5 @@
 {
+  "dataset_origin": "synthetic",
   "study_period": [
     "2026-01-01T00:00:00+00:00",
     "2026-02-01T00:00:00+00:00"

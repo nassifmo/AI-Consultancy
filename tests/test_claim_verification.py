@@ -6,8 +6,10 @@ import json
 from pathlib import Path
 import shutil
 
+import pytest
+
 from evaluator.claim_reader import ActionClaim, EtaReading, ReplyClaims, StatusClaim
-from evaluator.exports import load_exports
+from evaluator.exports import TABLES, load_exports
 from evaluator.verification import Verifier, verify_exports
 
 
@@ -40,6 +42,14 @@ def _exports(tmp_path, message):
     rows[0]["message_text"] = message
     _write(exports / "responses.csv", rows)
     return exports
+
+
+def _declare_company_scenario(exports, origin="company"):
+    path = exports / "export_metadata.json"
+    metadata = json.loads(path.read_text(encoding="utf-8"))
+    path.write_text(json.dumps({
+        **metadata, "dataset_origin": origin, "source_completeness": dict.fromkeys(TABLES, "complete"),
+    }), encoding="utf-8")
 
 
 def _case_history(exports, opened, routed=None, actor="agent_v1", case_id="CAS-V1"):
@@ -107,9 +117,7 @@ def test_reader_unavailable_or_missing_claim_never_reuses_status_log(tmp_path):
 
 def test_rules_only_mode_does_not_trust_company_structured_status(tmp_path):
     exports = _exports(tmp_path, f"{ARRIVED} {ETA}")
-    path = exports / "export_metadata.json"
-    metadata = json.loads(path.read_text(encoding="utf-8"))
-    path.write_text(json.dumps({**metadata, "dataset_origin": "company"}), encoding="utf-8")
+    _declare_company_scenario(exports)
 
     result = _result(exports)
     assert result["outcome"]["state"] == "unknown"
@@ -210,9 +218,7 @@ def test_ai_understands_eta_request_and_omission_in_natural_phrasing(tmp_path):
     question = "How long until she gets to Rotterdam?"
     exports = _exports(tmp_path, message)
     _set_customer_message(exports, question)
-    path = exports / "export_metadata.json"
-    info = json.loads(path.read_text(encoding="utf-8"))
-    path.write_text(json.dumps({**info, "dataset_origin": "unconfirmed"}), encoding="utf-8")
+    _declare_company_scenario(exports, "unconfirmed")
 
     assert _result(exports)["outcome"]["state"] == "unknown"
     result = _result(exports, ExchangeReader({message: "omitted"}))
@@ -291,6 +297,83 @@ def test_a_model_cannot_verify_another_ports_eta_or_a_promised_update(tmp_path):
         assert result["outcome"]["state"] == "unknown"
         assert result["criteria"]["eta_request_answered"]["status"] == "unknown"
         assert result["criteria"]["eta_accuracy"].get("eta_error_seconds") is None
+
+
+@pytest.mark.parametrize("message", [
+    "The current Antwerp ETA is 2026-03-16T10:00:00Z.",
+    "If the vessel remains on schedule, the ETA is 2026-03-16T10:00:00Z.",
+])
+def test_matching_timestamp_with_ambiguous_scope_is_not_a_verified_eta(tmp_path, message):
+    exports = _exports(tmp_path, message)
+    _declare_company_scenario(exports)
+
+    class TimeOnlyReader(ExchangeReader):
+        def interpret_eta(self, question, reply):
+            return EtaReading(intent="arrival_time", response="provided", request_quote=question,
+                              reply_quote="2026-03-16T10:00:00Z")
+
+    for reader in (None, TimeOnlyReader({})):
+        result = _result(exports, reader)
+        assert result["outcome"]["state"] == "unknown"
+        assert result["criteria"]["eta_accuracy"]["status"] == "unknown"
+        assert result["criteria"]["eta_accuracy"].get("eta_error_seconds") is None
+        if "Antwerp" in message:
+            assert result["criteria"]["eta_request_answered"]["status"] == "unknown"
+
+
+@pytest.mark.parametrize(("identifier", "identity", "outcome"), [
+    ("SYNU9000006", "unmet", "failed"),
+    ("SYNU9555555", "unknown", "unknown"),
+    ("SYNU9000003", "met", "resolved"),
+])
+def test_visible_reference_controls_eta_scope(tmp_path, identifier, identity, outcome):
+    reply = f"For {identifier}, the Rotterdam ETA is 2026-03-16T10:00:00Z."
+    exports = _exports(tmp_path, reply)
+    _declare_company_scenario(exports)
+
+    # The structured reply still names the requested booking and contains the right timestamp.
+    for reader in (None, ExchangeReader({reply: "provided"})):
+        result = _result(exports, reader)
+        assert result["criteria"]["shipment_identity"]["status"] == identity
+        assert result["outcome"]["state"] == outcome
+        if outcome == "failed":
+            assert result["initial_failure"] is True
+            assert "shipments.csv#BKG-T-OTHER" in result["verification"]["initial_reply"]["refs"]
+
+
+def test_resolution_time_waits_for_correct_reply_even_if_case_already_closed(tmp_path):
+    fixture = ORIGINAL.parent.parent / "S33" / "exports"
+    exports = shutil.copytree(fixture, tmp_path / "exports")
+    responses = exports / "responses.csv"
+    rows, fields = _read(responses)
+    rows[-1]["sent_at"] = "2026-03-13T10:00:00+00:00"
+    _write(responses, rows, fields)
+
+    result = _result(exports)
+    assert result["outcome"]["state"] == "resolved"
+    assert result["verification"]["human_recovery"] is True
+    assert result["verification"]["resolved_at"] == rows[-1]["sent_at"]
+
+
+@pytest.mark.parametrize("destination", ["", "Billing", "Operations", "queue-record"])
+def test_company_delay_escalation_requires_evidence_of_operations_routing(tmp_path, destination):
+    fixture = ORIGINAL.parent.parent / "S33" / "exports"
+    exports = shutil.copytree(fixture, tmp_path / "exports")
+    _declare_company_scenario(exports)
+    history = exports / "case_history.csv"
+    rows, fields = _read(history)
+    changes, = [row for row in rows if row["new_value"] == "escalated"]
+    if destination == "queue-record":
+        rows.append({**changes, "history_id": "ROUTE-S33", "field": "queue", "old_value": "Support",
+                     "new_value": "Operations"})
+    else:
+        changes["destination_queue"] = destination
+    _write(history, rows, [*fields, "destination_queue"])
+
+    result = _result(exports)
+    confirmed = destination in {"Operations", "queue-record"}
+    assert result["outcome"]["state"] == ("resolved" if confirmed else "unknown")
+    assert result["criteria"]["escalation_deadline"]["status"] == ("unmet" if confirmed else "unknown")
 
 
 def test_mislabeled_arrival_estimate_does_not_erase_human_recovery():

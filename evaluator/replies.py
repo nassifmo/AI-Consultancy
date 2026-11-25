@@ -24,6 +24,9 @@ COORDINATION_REQUEST = re.compile(r"\bwhich\b.{0,45}\bteam\b.{0,40}\bnotify\b", 
 LOCAL_CUTOFF = re.compile(r"\beta of (\d{1,2}):(\d{2}) local time or earlier\b", re.IGNORECASE)
 MONITORING_DECISION = re.compile(r"\bnotify the (morning|afternoon)(?: monitoring)? team\b", re.IGNORECASE)
 TIMING_CONSTRAINT = re.compile(r"\b(pickup|deadline|cutoff|appointment|before|after|by \d)\b", re.IGNORECASE)
+REFERENCE_QUALIFIER = re.compile(
+    r"\b(?:not|ignore|disregard|previously|earlier|mistakenly|incorrectly)\b", re.IGNORECASE,
+)
 
 
 @dataclass
@@ -99,7 +102,7 @@ def _sent_run(data, reply: dict, sent: datetime, runs: list[dict]) -> dict | Non
     return matched[0] if len(matched) == 1 else None
 
 
-def _identity(tracking, target, reply: dict, run: dict | None) -> bool | None:
+def _identity(tracking, target, reply: dict, run: dict | None, text_targets) -> bool | None:
     if target is None:
         return None
     sent_booking = tracking.resolve(reply.get("shipment_reference"))
@@ -117,6 +120,19 @@ def _identity(tracking, target, reply: dict, run: dict | None) -> bool | None:
         return False
     if (reply.get("shipment_reference") and sent_booking is None) or (reply.get("container_reference") and sent_container is None):
         return None
+    text_matches = [
+        None if match is None else (
+            match.shipment["booking_ref"] == target.shipment["booking_ref"]
+            and (not target.container or not match.container or match.container == target.container)
+        )
+        for match in text_targets
+    ]
+    if False in text_matches:
+        return (False if all(matches is False for matches in text_matches)
+                and not REFERENCE_QUALIFIER.search(reply.get("message_text") or "") else None)
+    if None in text_matches:
+        return None
+    sent_targets.extend(text_targets)
     tool_identities = {
         (match.shipment["booking_ref"], match.container) for match in tool_targets if match is not None
     }
@@ -203,9 +219,17 @@ def review_reply(data, tracking, enquiry: dict, reply: dict, runs: list[dict], s
         result.refs.append(reference("agent_runs", run))
     if target is not None:
         result.refs.append(reference("shipments", target.shipment))
-    identity = _identity(tracking, target, reply, run)
+    text_targets = [tracking.resolve(identifier) for identifier in tracking.references_in_text(reply.get("message_text"))]
+    result.refs.extend(ref for ref in dict.fromkeys(
+        reference("shipments", match.shipment) for match in text_targets if match is not None
+    ) if ref not in result.refs)
+    identity = _identity(tracking, target, reply, run, text_targets)
     result.evidence["shipment_identity"] = {"passed": identity, "refs": result.refs.copy()}
     if identity is not True:
+        if claim_reader is not None and text_targets and mentions_status(reply.get("message_text")):
+            result.reply_claims = review_claims(
+                claim_reader, data, tracking, target, enquiry, reply, sent, settings, cases, histories,
+            )
         result.verdict = "failed" if identity is False else "unknown"
         result.matches_record = identity
         result.reason = "The reply used the wrong shipment or container." if identity is False else "The requested and reported shipment could not be reliably linked."
@@ -235,7 +259,7 @@ def review_reply(data, tracking, enquiry: dict, reply: dict, runs: list[dict], s
     non_answer = eta_response in {"omitted", "declared_unavailable"}
     if eta_text and eta_response == "provided" and known_response == "unknown":
         observed, precision, eta_basis = quoted_eta(reading.reply_quote, message, sent, port_name, port_timezone)
-        if conflicting_eta_passage(reading.reply_quote, port_name):
+        if conflicting_eta_passage(message, port_name):
             eta_response = result.requested_eta["state"] = "unknown"
     if eta_text:
         result.evidence["eta_request_answered"] = {

@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 import hashlib
 import io
 import json
+from math import isfinite
 from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -55,12 +56,11 @@ class ExportData:
     def is_complete(self, table: str) -> bool:
         """Check an explicit source-owner declaration when one accompanies the export.
 
-        Historical benchmark packages predate completeness declarations. Their
-        existing interpretation is retained when the key is absent. Imported
-        pilot profiles always supply the key, with unknown as the default.
+        Historical synthetic benchmarks predate completeness declarations.
+        Other exports require explicitly confirmed coverage.
         """
         declarations = self.metadata.get("source_completeness")
-        if declarations is None:
+        if "source_completeness" not in self.metadata:
             return table in self.available
         return (isinstance(declarations, dict) and declarations.get(table) == "complete"
                 and table in self.available)
@@ -107,8 +107,16 @@ def _invalid_constant(value: str) -> None:
     raise ValueError(f"Invalid JSON value {value!r}.")
 
 
+def finite_json_float(value: str) -> float:
+    number = float(value)
+    if not isfinite(number):
+        raise ValueError("JSON contains a number outside the supported range.")
+    return number
+
+
 def _read_json(source: str):
-    return json.loads(source, object_pairs_hook=_object, parse_constant=_invalid_constant)
+    return json.loads(source, object_pairs_hook=_object, parse_constant=_invalid_constant,
+                      parse_float=finite_json_float)
 
 
 def _read_metadata(source: str) -> dict:
@@ -241,6 +249,11 @@ def load_exports(path: Path, *, analysis: bool = False) -> ExportData:
     metadata = _load_file(root, "export_metadata.json", "export_metadata", data, _read_metadata)
     if metadata is not None:
         data.metadata = metadata
+        if metadata.get("dataset_origin") != "synthetic":
+            # Successfully reading a file only proves the supplied rows could be read.
+            metadata.setdefault("source_completeness", {})
+        if "source_completeness" in metadata and not isinstance(metadata["source_completeness"], dict):
+            metadata["source_completeness"] = {}
         data.cutoff = data.time("export_metadata", metadata.get("data_cutoff"))
         if data.cutoff is not None:
             data.available.add("export_metadata")

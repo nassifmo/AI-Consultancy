@@ -6,6 +6,7 @@ import shutil
 import tempfile
 import unittest
 
+from evaluator.exports import TABLES
 from evaluator.verification import verify_exports
 
 
@@ -137,7 +138,10 @@ class ExportVerificationTests(unittest.TestCase):
             exports = shutil.copytree(SCENARIOS / "S28" / "exports", Path(directory) / "exports")
             meta_path = exports / "export_metadata.json"
             metadata = json.loads(meta_path.read_text(encoding="utf-8"))
-            meta_path.write_text(json.dumps({**metadata, "dataset_origin": "company"}), encoding="utf-8")
+            meta_path.write_text(json.dumps({
+                **metadata, "dataset_origin": "company",
+                "source_completeness": dict.fromkeys(TABLES, "complete"),
+            }), encoding="utf-8")
             response_path = exports / "responses.csv"
             with response_path.open(encoding="utf-8", newline="") as stream:
                 row = next(csv.DictReader(stream))
@@ -174,6 +178,7 @@ class ExportVerificationTests(unittest.TestCase):
             meta_path = exports / "export_metadata.json"
             metadata = json.loads(meta_path.read_text(encoding="utf-8"))
             self.assertEqual(metadata.pop("dataset_origin"), "synthetic")
+            metadata["source_completeness"] = dict.fromkeys(TABLES, "complete")
             response_path = exports / "responses.csv"
             with response_path.open(encoding="utf-8", newline="") as stream:
                 response = next(csv.DictReader(stream))

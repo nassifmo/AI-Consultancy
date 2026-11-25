@@ -3,6 +3,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+import re
 
 from .exports import reference
 
@@ -24,6 +25,8 @@ _EVENT_TYPE = {
     "GTIN": "EQUIPMENT", "LOAD": "EQUIPMENT", "DISC": "EQUIPMENT", "GTOT": "EQUIPMENT",
 }
 _ETA_PRIORITY = {"PLN": 0, "EST": 1, "ACT": 2}
+_IDENTIFIER_WORD = re.compile(r"\b[A-Z0-9][A-Z0-9_-]{3,79}\b", re.IGNORECASE)
+_CONTAINER_IDENTIFIER = re.compile(r"[A-Z]{4}\d{7}", re.IGNORECASE)
 
 
 def _key(value):
@@ -138,6 +141,14 @@ class Tracking:
         if len(bookings) != 1 or len(containers) > 1:
             return None
         return next((target for target in targets if target.container), targets[0])
+
+    def references_in_text(self, text):
+        """Find indexed shipment aliases and container-shaped IDs in delivered text."""
+        return list(dict.fromkeys(
+            word for word in _IDENTIFIER_WORD.findall(text or "")
+            if _key(word) in self.aliases or _key(word) in self.conflicting_aliases
+            or _CONTAINER_IDENTIFIER.fullmatch(word)
+        ))
 
     def _through_cutoff(self, as_of):
         if as_of is None or as_of.utcoffset() is None:

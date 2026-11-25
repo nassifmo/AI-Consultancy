@@ -39,8 +39,16 @@ def _unique_object(pairs):
 def _parse_json(content):
     def reject(_):
         raise CollectionError("The source JSON contains a nonfinite numeric value.")
+
+    def finite_float(value):
+        number = float(value)
+        if not isfinite(number):
+            reject(value)
+        return number
+
     try:
-        return json.loads(content, object_pairs_hook=_unique_object, parse_constant=reject)
+        return json.loads(content, object_pairs_hook=_unique_object, parse_constant=reject,
+                          parse_float=finite_float)
     except (UnicodeError, json.JSONDecodeError) as error:
         raise CollectionError("The source did not return valid UTF-8 JSON.") from None
 

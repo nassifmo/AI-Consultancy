@@ -7,6 +7,7 @@ import shutil
 from tempfile import TemporaryDirectory
 import unittest
 
+from evaluator.exports import TABLES, load_exports
 from evaluator.verification import verify_exports
 
 
@@ -70,6 +71,47 @@ class CompletenessTests(unittest.TestCase):
         result = self._evaluate("S32", {"responses": "unknown", "tracking_events": "complete"})
         self.assertIsNone(result["verification"]["initial_reply"])
         self.assertEqual(result["outcome"]["state"], "unknown")
+
+    def test_canonical_company_file_presence_does_not_confirm_absence_of_handoff(self):
+        with TemporaryDirectory() as directory:
+            exports = shutil.copytree(ROOT / "datagen" / "datasets" / "scenarios" / "S28" / "exports",
+                                      Path(directory) / "exports")
+            path = exports / "export_metadata.json"
+            metadata = json.loads(path.read_text(encoding="utf-8"))
+            metadata.pop("dataset_origin", None)
+            replies = exports / "responses.csv"
+            with replies.open(encoding="utf-8", newline="") as stream:
+                row, = list(csv.DictReader(stream))
+            row["message_text"] = "The vessel has departed."
+            with replies.open("w", encoding="utf-8", newline="") as stream:
+                writer = csv.DictWriter(stream, row.keys())
+                writer.writeheader()
+                writer.writerow(row)
+            inputs = (
+                ({"dataset_origin": "company"}, "unknown", "unknown"),
+                ({}, "unknown", "unknown"),
+                ({"source_completeness": None}, "unknown", "unknown"),
+                ({"source_completeness": {"responses": "complete", "tracking_events": "complete"}},
+                 "unknown", "unmet"),
+                ({"source_completeness": dict.fromkeys(TABLES, "complete")}, "failed", "unmet"),
+            )
+            for declarations, outcome, reply_grade in inputs:
+                with self.subTest(declarations=declarations):
+                    path.write_text(json.dumps({**metadata, **declarations}), encoding="utf-8")
+                    result, = verify_exports(exports, POLICY)["enquiries"]
+                    self.assertEqual(result["outcome"]["state"], outcome)
+                    self.assertEqual(result["criteria"]["eta_request_answered"]["status"], reply_grade)
+
+    def test_overflowing_canonical_json_is_reported_as_an_invalid_file(self):
+        with TemporaryDirectory() as directory:
+            exports = Path(directory) / "exports"
+            exports.mkdir()
+            (exports / "cost_parameters.json").write_text('{"labor_rate_per_hour":1e400}', encoding="utf-8")
+            data = load_exports(exports, analysis=True)
+            self.assertIsNone(data.cost_parameters)
+            self.assertEqual(data.files["cost_parameters.json"]["status"], "invalid")
+            self.assertTrue(any(issue["table"] == "cost_parameters" and issue["code"] == "invalid_file"
+                                for issue in data.issues))
 
 
 if __name__ == "__main__":

@@ -13,8 +13,8 @@ import numpy as np
 from scipy.stats import binom
 
 from evaluator.analysis import DEFAULT_CONFIG, analyze_exports, validate_config
-from evaluator.comparisons import cluster_weights, compare, interval_from_samples
-from evaluator.exports import EXPORT_FILENAMES
+from evaluator.comparisons import cluster_weights, compare, design_diagnostics, interval_from_samples
+from evaluator.exports import EXPORT_FILENAMES, ExportData
 from evaluator.grading import grade_enquiry
 from evaluator.metrics import summarize
 
@@ -115,6 +115,30 @@ class AnalysisTests(unittest.TestCase):
             self.assertEqual(result["group_metrics"]["agent_v1"]["n"], 1)
             self.assertEqual(result["group_metrics"]["agent_v1"]["human_minutes_per_request"]["value"], 5)
 
+    def test_continuation_cannot_inherit_assignment_through_a_disputed_parent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            exports, root = install_assignment(directory, "S32")
+            parent = dict(root, enquiry_id="DISPUTED", related_enquiry_id=root["enquiry_id"],
+                          contact_relation="continuation", assigned_arm="agent_v2",
+                          received_at="2026-03-15T13:01:00+00:00")
+            child = dict(root, enquiry_id="CHILD", related_enquiry_id=parent["enquiry_id"],
+                         contact_relation="continuation", received_at="2026-03-15T13:02:00+00:00")
+            write_csv(exports / "enquiries.csv", [child, root, parent])
+            replies = read_csv(exports / "responses.csv")
+            replies[1].update(enquiry_id="CHILD", purpose="answer")
+            write_csv(exports / "responses.csv", replies)
+            work = read_csv(exports / "agent_work.csv")
+            work[0].update(enquiry_id="CHILD")
+            write_csv(exports / "agent_work.csv", work)
+
+            result = analyze_exports(exports, POLICY)
+            episode, = result["episodes"]
+            self.assertEqual(episode["contacts"], [root["enquiry_id"]])
+            self.assertEqual(episode["outcome"]["state"], "unknown")
+            self.assertIsNone(episode["active_seconds"])
+            self.assertEqual(result["data_readiness"]["unlinked_continuations"], ["CHILD", "DISPUTED"])
+            self.assertEqual(result["data_readiness"]["comparison_status"], "incomplete_assignment")
+
     def test_estimated_and_elapsed_time_do_not_establish_human_effort_or_cost(self):
         for method, active in (("estimated", "300"), ("ticket_elapsed", "360"), ("logged", "")):
             with self.subTest(method=method, active=active), tempfile.TemporaryDirectory() as directory:
@@ -211,6 +235,52 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(v2_effect["metrics"]["verified_resolution_rate"]["estimate"], -50)
         self.assertEqual(v2_effect["metrics"]["cost_per_request"]["estimate"], 5)
         self.assertFalse(v1_effect["metrics"]["verified_resolution_rate"]["causal_interpretation"])
+
+    def test_ai_only_resolution_preserves_uncertainty_in_outcome_or_handling(self):
+        inputs = [
+            ("resolved", True), ("resolved", None), ("unknown", True),
+            ("unknown", False), ("escalated_open", None),
+        ]
+        rows = [dict(outcome_row(str(index), "agent_v1", state, None, None), ai_only_handling=handling)
+                for index, (state, handling) in enumerate(inputs)]
+        groups, _ = summarize(rows, "USD")
+        metric = groups["agent_v1"]["ai_only_resolution_rate"]
+        self.assertEqual(metric["numerator"], 1)
+        self.assertEqual(metric["denominator"], 5)
+        self.assertEqual(metric["value"], 0.2)
+        self.assertEqual(metric["unknown"], 2)
+        self.assertEqual(metric["coverage"], 0.6)
+        self.assertEqual(metric["bounds"], [0.2, 0.6])
+
+    def test_randomized_labels_require_concurrent_stable_rollout_evidence(self):
+        first, second = "2026-03-01", "2026-03-10"
+
+        def rollout(day, arm, share):
+            return {"date": day, "agent_version": arm, "arm_assignment_rule": "random_by_enquiry",
+                    "traffic_share": str(share)}
+
+        def episode(day, arm):
+            at = day + "T12:00:00+00:00"
+            return {"eligible": True, "exclusion_reasons": [], "assigned_arm": arm,
+                    "assignment_method": "randomized", "assignment_at": at,
+                    "received_at": at, "outcome": {"state": "resolved"}}
+
+        human, ai = "human_baseline", "agent_v1"
+        stable = [rollout(first, human, 0.5), rollout(first, ai, 0.5)]
+        episodes = [episode(first, human), episode(second, ai)]
+        cases = [
+            ("constant", stable, "randomized_assignment"),
+            ("sequential", [rollout(first, human, 1), rollout(second, ai, 1)], "unverified_randomization"),
+            ("paused", stable + [rollout(second, human, 0), rollout(second, ai, 1)], "unverified_randomization"),
+            ("shifted", stable + [rollout(second, human, 0.2), rollout(second, ai, 0.8)], "unverified_randomization"),
+            ("oversubscribed", [rollout(first, human, 0.8), rollout(first, ai, 0.9)], "unverified_randomization"),
+            ("unchanged", stable + [rollout(second, human, 0.5), rollout(second, ai, 0.5)], "randomized_assignment"),
+        ]
+        for name, records, expected in cases:
+            with self.subTest(name=name):
+                data = ExportData(tables={"rollout_log": records}, available={"enquiries", "rollout_log"})
+                diagnostics = design_diagnostics(data, episodes, 0)
+                self.assertEqual(diagnostics["comparison_status"], expected)
 
     def test_bootstrap_known_null_calibration(self):
         n = 500

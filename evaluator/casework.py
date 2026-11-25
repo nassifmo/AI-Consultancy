@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
+from .claim_checks import _operations_route, historical_benchmark
 from .exports import ExportData, reference
 from .replies import _sent_run
 
@@ -40,7 +41,7 @@ def _initial_run(data: ExportData, runs: list[dict], reply: dict, sent: datetime
     return _sent_run(data, reply, sent, runs)
 
 
-def _initial_actions(data, reply, runs, changes, opened_at, trigger, due, case_ref):
+def _initial_actions(data, reply, runs, creation, routes, trigger, due, case_ref):
     if not reply:
         return None, set()
     sent = data.time("responses", reply.get("sent_at"))
@@ -66,14 +67,13 @@ def _initial_actions(data, reply, runs, changes, opened_at, trigger, due, case_r
         refs.append(reference("agent_runs", run))
 
     observations = {}
-    for criterion, status, tool in (
-        ("opened_case", "new", "create_case"),
-        ("routed_to_operations", "escalated", "escalate_case"),
+    for criterion, events, tool in (
+        ("opened_case", creation, "create_case"),
+        ("routed_to_operations", routes, "escalate_case"),
     ):
         matching = [
-            (when, change) for when, change in changes
-            if when >= trigger and change.get("new_value") == status
-            and (status != "new" or when == opened_at)
+            (when, change) for when, change in events
+            if when >= trigger
             and change.get("changed_by") in ({actor, "ai_agent"} if ai_reply else {actor})
             and (not ai_reply or when <= sent or tool in actions)
             and bool(change.get("changed_by"))
@@ -81,9 +81,7 @@ def _initial_actions(data, reply, runs, changes, opened_at, trigger, due, case_r
         if matching:
             observations[criterion] = True
             refs.append(reference("case_history", matching[0][1]))
-        elif case_ref and ai_reply and tool in actions and not any(
-            change.get("new_value") == status for _, change in changes
-        ):
+        elif case_ref and ai_reply and tool in actions and not events and historical_benchmark(data):
             # The CRM case corroborates the trace, but the trace has no action timestamp.
             observations[criterion] = True
             refs.append(case_ref)
@@ -150,14 +148,13 @@ def review_casework(
     visible_case_ids = set(result.case_ids)
     known_ai_actors = {row["agent_version"] for row in runs if isinstance(row.get("agent_version"), str)}
     known_ai_actors.update({None, "", "ai_agent", "system"})
-    linked_status = []
+    linked_changes = []
     for change in histories:
         changed = data.time("case_history", change.get("changed_at"))
         if change.get("case_id") in visible_case_ids and _in_view(received, cutoff, changed):
             if change.get("changed_by") not in known_ai_actors:
                 result.human_actor_ids.add(change["changed_by"])
-            if change.get("field") == "status":
-                linked_status.append((changed, change))
+            linked_changes.append((changed, change))
     if required is not True or trigger_at is None:
         return result
 
@@ -173,19 +170,23 @@ def review_casework(
     opened, case = candidates[0] if candidates else (None, None)
     case_ref = reference("cases", case) if case is not None else None
     case_id = case["case_id"] if case is not None else None
-    changes = sorted(
-        ((when, change) for when, change in linked_status if change.get("case_id") == case_id),
+    case_changes = sorted(
+        ((when, change) for when, change in linked_changes if change.get("case_id") == case_id),
         key=lambda item: item[0],
     )
+    changes = [(when, change) for when, change in case_changes if change.get("field") == "status"]
     if case is not None and any(
-        row.get("case_id") == case_id and row.get("field") == "status" and
+        row.get("case_id") == case_id and row.get("field") in {"status", "owner", "queue", "team", "routing"} and
         (data.time("case_history", row.get("changed_at")) or cutoff) <= cutoff
         for row in data.conflicts.get("case_history", [])
     ):
         return result
 
     due = trigger_at + timedelta(hours=escalation_hours)
-    initial_actions, tools = _initial_actions(data, initial_reply, runs, changes, opened, trigger_at, due, case_ref)
+    creation = [(when, change) for when, change in changes if when == opened and change.get("new_value") == "new"]
+    routes = [(when, change) for when, change in case_changes
+              if when >= opened and _operations_route(data, case, change)]
+    initial_actions, tools = _initial_actions(data, initial_reply, runs, creation, routes, trigger_at, due, case_ref)
     if initial_actions is not None:
         result.evidence["initial_escalation"] = initial_actions
     if case is None:
@@ -193,8 +194,7 @@ def review_casework(
 
     result.follow_up_required = True
     opened_ref = [case_ref]
-    route = next(((when, change) for when, change in changes
-                  if when >= opened and change.get("new_value") == "escalated"), None)
+    route = routes[0] if routes else None
     if route:
         routed_at, transition = route
         opened_ref.append(reference("case_history", transition))
@@ -230,7 +230,7 @@ def review_casework(
         return result
     status = _case_status(changes, visible_close)
     closure = case.get("closure_code")
-    routed = route is not None or "escalate_case" in tools
+    routed = route is not None or historical_benchmark(data) and "escalate_case" in tools
     if status == "open" and routed:
         state = "escalated_open"
     elif status == "closed" and closure in UNRESOLVED_CODES:

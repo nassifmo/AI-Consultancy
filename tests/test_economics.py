@@ -155,6 +155,49 @@ class EconomicsTests(TestCase):
         self.assertIn("missing_platform_fee", result["per_episode"]["A1"]["unknown_reasons"])
         self.assertFalse(any(item["category"] == "platform_fee" for item in result["entries"]))
 
+    def test_contradictory_billed_amount_blocks_cost_even_with_zero_metered_usage(self):
+        data, episodes = finance_data()
+        for row in data.tables["agent_runs"]:
+            row["tokens_out"] = 0
+        line = next(row for row in data.tables["ai_invoice"] if row["line_item"] == "llm_tokens_out")
+        line.update(quantity="0", amount="75")
+
+        result = build_cost_ledger(data, episodes)
+
+        self.assertEqual(result["per_episode"]["H"]["total_cost"], 1)
+        for arm in ("A1", "A2"):
+            cost = result["per_episode"][arm]
+            self.assertIsNone(cost["total_cost"])
+            self.assertIn("invalid_ai_usage_invoice", cost["unknown_reasons"])
+        self.assertEqual(result["per_episode"]["A1"]["known_cost"], 13)
+
+    def test_usage_in_later_month_with_no_allocation_population_leaves_total_incomplete(self):
+        data, episodes = finance_data()
+        episodes[1]["checkpoint"] = "2026-02-05T10:00:00Z"
+        data.tables["agent_runs"].append(run("r3", "F", start="2026-02-01T10:00:10Z", end="2026-02-01T10:01:10Z"))
+        for item, quantity, rate, amount in (
+            ("voice_minutes", "1", "0.60", "0.60"),
+            ("llm_tokens_in", "4", "0.10", "0.40"),
+            ("llm_tokens_out", "2", "0.20", "0.40"),
+            ("runs", "1", "0.50", "0.50"),
+            ("platform_fee", "1", "24", "24"),
+        ):
+            data.tables["ai_invoice"].append({
+                "period": "2026-02", "line_item": item, "quantity": quantity, "unit_price": rate,
+                "amount": amount, "currency": "USD",
+            })
+
+        result = build_cost_ledger(data, episodes)
+
+        cost = result["per_episode"]["A1"]
+        self.assertEqual(cost["known_cost"], 15.30)
+        self.assertIsNone(cost["total_cost"])
+        self.assertIn("unallocated_fixed_cost", cost["unknown_reasons"])
+        self.assertEqual(result["per_episode"]["A2"]["total_cost"], 11.90)
+        platform = next(line for line in result["reconciliation"]
+                        if line["period"] == "2026-02" and line["category"] == "platform_fee")
+        self.assertEqual(platform["unallocated"], 24)
+
     def test_unfamiliar_invoice_category_keeps_affected_cost_incomplete(self):
         data, episodes = finance_data()
         data.tables["ai_invoice"].append({

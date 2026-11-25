@@ -343,6 +343,10 @@ class Verifier:
                                            if row["actor_type"] == "human" and row.get("actor_id")}
         work = [row for row in self.work[enquiry_id] if not row.get("case_id") or row["case_id"] in casework.case_ids]
         resolved = result["outcome"]["state"] == "resolved"
+        resolved_at = None
+        if resolved:
+            delivered_at = data.time("responses", last.reply["sent_at"])
+            resolved_at = max(delivered_at, casework.resolved_at or delivered_at).isoformat()
         recovered = None
         if result["outcome"]["state"] != "unknown" and result["initial_failure"] is not None:
             recovered = resolved and result["initial_failure"] and last.reply["actor_type"] == "human"
@@ -351,10 +355,7 @@ class Verifier:
             "last_reply": self._reply_summary(last),
             "escalation": {"required": required, "trigger_at": trigger.isoformat() if trigger else None, "refs": trigger_refs},
             "case_ids": casework.case_ids,
-            "resolved_at": (
-                (casework.resolved_at or data.time("responses", last.reply["sent_at"])).isoformat()
-                if resolved else None
-            ),
+            "resolved_at": resolved_at,
             "human_recovery": recovered,
             "repeat_contact": repeat,
             "human_work": _work_time(data, work, actors, responses, runs, received, self.excluded_work_ids),

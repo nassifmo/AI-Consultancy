@@ -158,6 +158,51 @@ class PilotIngestionTests(unittest.TestCase):
             self.assertEqual(result["exports"]["agent_work.csv"][0]["active_seconds"], "")
             self.assertTrue(any(issue["code"] == "malformed_source_row" for issue in result["issues"]))
 
+    def test_short_csv_record_does_not_look_like_an_intentionally_blank_link(self):
+        mapping = profile()
+        mapping["metadata"]["source_completeness"] = {"enquiries": "complete"}
+        mapping["tables"]["enquiries"]["columns"]["related_enquiry_id"] = "parent"
+        raw = ("ticket,account,opened,category,question,parent\n"
+               "T1,C1,2026-10-10T10:00:00+00:00,tracking,Where?\n"
+               "T2,C1,2026-10-10T10:00:00+00:00,tracking,When?,\n")
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "tickets.csv").write_text(raw, encoding="utf-8")
+            result = import_source(root, mapping, root / "prepared")
+            self.assertEqual(result["status"], "needs_review")
+            self.assertEqual(result["exports"]["export_metadata.json"]["source_completeness"]["enquiries"], "partial")
+            self.assertEqual([row["enquiry_id"] for row in result["exports"]["enquiries.csv"]], ["T2"])
+            self.assertEqual(result["issues"][0]["row"], 1)
+            self.assertEqual(result["issues"][0]["code"], "malformed_source_row")
+            self.assertEqual(result["row_provenance"][0]["row"], 2)
+
+    def test_invalid_jsonl_lines_are_isolated_without_splitting_unicode_text(self):
+        mapping = profile()
+        mapping["metadata"]["source_completeness"] = {"enquiries": "complete"}
+        mapping["tables"]["enquiries"].update(file="tickets.jsonl", format="jsonl")
+        first = {"ticket": "T1", "account": "C1", "opened": "2026-10-10T10:00:00+00:00",
+                 "category": "tracking", "question": "First line\u2028second line"}
+        record = json.dumps(first, ensure_ascii=False)
+        rows = [
+            record,
+            '{"ticket":',
+            record[:-1] + ', "extra": 1e400}',
+            json.dumps(dict(first, ticket="T2")),
+        ]
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "tickets.jsonl"
+            source.write_text("\n".join(rows) + "\n", encoding="utf-8")
+            result = import_source(root, mapping, root / "prepared")
+            self.assertEqual(result["exports"]["export_metadata.json"]["source_completeness"]["enquiries"], "partial")
+            self.assertEqual(result["tables"]["enquiries"]["input_rows"], 4)
+            self.assertEqual([row["enquiry_id"] for row in result["exports"]["enquiries.csv"]], ["T1", "T2"])
+            self.assertEqual(result["exports"]["enquiries.csv"][0]["customer_message"], first["question"])
+            self.assertEqual([(issue["code"], issue["row"]) for issue in result["issues"]],
+                             [("malformed_source_row", 2), ("malformed_source_row", 3)])
+            self.assertEqual([entry["row"] for entry in result["row_provenance"]], [1, 4])
+            self.assertEqual((Path(result["bundle_path"]) / "raw" / source.name).read_bytes(), source.read_bytes())
+
     def test_dropped_continuation_makes_repeat_evidence_incomplete(self):
         mapping = json.loads((EXAMPLE / "profile.json").read_text(encoding="utf-8"))
         policy = json.loads((ROOT / "evaluator" / "policy.json").read_text(encoding="utf-8"))

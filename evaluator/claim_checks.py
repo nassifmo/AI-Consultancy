@@ -38,8 +38,6 @@ _FIRST_PERSON = re.compile(
     re.IGNORECASE,
 )
 _QUOTED_CASE = re.compile(r"\b(?:case|ticket)(?:\s+(?:id|number))?(?:\s+|\s*[:#]\s*)#?([\w-]*\d[\w-]*)\b", re.IGNORECASE)
-_IDENTIFIER_WORD = re.compile(r"\b[A-Z0-9][A-Z0-9_-]{3,79}\b", re.IGNORECASE)
-_CONTAINER_IDENTIFIER = re.compile(r"[A-Z]{4}\d{7}", re.IGNORECASE)
 _OPERATIONS = {"operations", "ops", "operations team"}
 
 
@@ -85,8 +83,7 @@ def _check_status(tracking, target, claim, sent, settings):
                         **fields)
     shipment_ref = reference("shipments", target.shipment)
     identifiers = [claim.reference] if claim.reference else []
-    identifiers.extend(word for word in _IDENTIFIER_WORD.findall(quote)
-                       if word.upper() in tracking.aliases or _CONTAINER_IDENTIFIER.fullmatch(word))
+    identifiers.extend(tracking.references_in_text(quote))
     for identifier in dict.fromkeys(identifiers):
         fields["reference"] = identifier
         match = tracking.resolve(identifier)
