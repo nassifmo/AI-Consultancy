@@ -21,7 +21,7 @@ flowchart LR
 | --- | --- |
 | CSV, JSON and JSONL preparation | A mapping profile states which source field supplies each evaluator field. Nested JSON records and tool-call lists are supported. |
 | Read-only JSON API collection | The configurable collector fetches pages, retries transient failures, respects rate-limit delays, and publishes a local snapshot after the configured extraction completes. Its tests use mocked endpoints. |
-| File import on the website | Open **Prepare company files**, select the profile and source ZIP, inspect the mapping preview, then save and use the prepared files. |
+| File import and approval | Open **Prepare company files**, preview and review the original records, inspect any trial mapping, and select **Approve for evaluation**. The evaluator checks the approval and file fingerprints before using the reviewed company extract. |
 | Reusable mapping example | **Preview synthetic company extract** demonstrates the complete import on renamed copies of S32's records. |
 | Evidence readiness | **Data readiness** reports what the records can support, missing fields, timestamp interpretation, broken links, allocation coverage and incomplete histories. |
 | Completeness declarations | Company imports start with source coverage unknown. A source owner can declare complete or partial coverage for a specified extraction. Unverified history cannot establish the first answer, zero human work or an omitted action. |

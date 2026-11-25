@@ -142,6 +142,8 @@ def _provenance(data, policy, config, claim_extraction=None):
         "evaluator_sha256": sources.hexdigest(), "python_version": platform.python_version(),
         "dependencies": dependencies, "analysis_config": config,
     }
+    if data.intake_approval:
+        snapshot["intake_approval"] = data.intake_approval
     if claim_extraction is not None:
         snapshot["claim_extraction"] = claim_extraction
     # Include the findings used for AI-assisted runs in the run identity.
@@ -152,7 +154,7 @@ def _provenance(data, policy, config, claim_extraction=None):
 def analyze_exports(exports_path, policy, analysis_config=None, *, claim_reader=None):
     """Return a reproducible analysis using operational exports only."""
     config = validate_config(analysis_config)
-    data = load_exports(exports_path, analysis=True)
+    data = load_exports(exports_path, analysis=True, require_approval=True)
     overlaps = overlapping_work_ids(data)
     verifier = Verifier(data, policy, excluded_work_ids=overlaps, claim_reader=claim_reader)
     enquiries = sorted(verifier.enquiries, key=lambda row: row["enquiry_id"])

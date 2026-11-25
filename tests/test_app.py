@@ -6,6 +6,7 @@ from pathlib import Path
 import stat
 import unittest
 from unittest.mock import patch
+from tempfile import TemporaryDirectory
 from zipfile import ZipFile, ZipInfo
 
 from streamlit.testing.v1 import AppTest
@@ -14,6 +15,7 @@ from app import unpack_exports
 from evaluator.analysis import analyze_exports
 from evaluator.claim_reader import EtaReading, ReplyClaims, StatusClaim
 from evaluator.exports import TABLES
+from pilot.approval import approve_exports
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -166,6 +168,7 @@ class InterfaceTests(unittest.TestCase):
         metadata = json.loads(entries["exports/export_metadata.json"])
         metadata.pop("dataset_origin")
         metadata["source_completeness"] = dict.fromkeys(TABLES, "complete")
+        metadata["tracking_creation_visibility_ref"] = "Synthetic fixture visibility matches record creation"
         entries["exports/export_metadata.json"] = json.dumps(metadata)
         messages = (
             ("The vessel has departed.", "failed"),
@@ -178,8 +181,11 @@ class InterfaceTests(unittest.TestCase):
                     b"The vessel has departed. The current Rotterdam ETA is 16 March at 11:00 local time.",
                     message.encode("utf-8"),
                 )
-                with unpack_exports(zip_bytes(entries.items())) as exports:
-                    result = analyze_exports(exports, policy)
+                with TemporaryDirectory() as saved, unpack_exports(zip_bytes(entries.items())) as exports:
+                    with self.assertRaisesRegex(ValueError, "reviewed and approved"):
+                        analyze_exports(exports, policy)
+                    approved = approve_exports(exports, saved, reviewer="Fixture reviewer", note="Checked the reply history.")
+                    result = analyze_exports(approved["exports_path"], policy)
                 self.assertEqual(result["data_readiness"]["dataset_origin"], "unconfirmed")
                 enquiry = result["enquiries"][0]
                 self.assertEqual(enquiry["outcome"]["state"], outcome)

@@ -426,7 +426,7 @@ class Verifier:
 
 def verify_exports(exports_path, policy, *, claim_reader=None):
     """Evaluate an exports directory using no benchmark answer files."""
-    data = load_exports(exports_path)
+    data = load_exports(exports_path, require_approval=True)
     evaluator = Verifier(data, policy, claim_reader=claim_reader)
     enquiries = [evaluator.evaluate(enquiry) for enquiry in evaluator.enquiries]
     return {
@@ -434,5 +434,6 @@ def verify_exports(exports_path, policy, *, claim_reader=None):
         "export_rule_version": data.metadata.get("rule_version"),
         "data_cutoff": data.cutoff.isoformat() if data.cutoff else None,
         "input_issues": data.issues,
+        **({"intake_approval": data.intake_approval} if data.intake_approval else {}),
         "enquiries": enquiries,
     }

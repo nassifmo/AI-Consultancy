@@ -11,7 +11,7 @@ from .verification import Verifier
 
 TIME_FIELDS = {
     "enquiries": ("received_at", "assignment_at"),
-    "tracking_events": ("event_created_datetime", "event_datetime"),
+    "tracking_events": ("event_created_datetime", "event_available_datetime", "event_datetime"),
     "responses": ("sent_at",),
     "agent_runs": ("started_at", "ended_at"),
     "cases": ("opened_at", "closed_at"),

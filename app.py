@@ -22,6 +22,7 @@ from evaluator.verification import _settings
 from evaluator.grading import grade_enquiry
 from input_quality_ui import render_input_quality
 from intake_ui import IMPORTS, render_company_import
+from pilot.approval import APPROVAL_FILENAME, read_approval
 
 
 HERE = Path(__file__).resolve().parent
@@ -32,7 +33,7 @@ MAX_UPLOAD = 100 * 1024**2
 MAX_EXPANSION = 300 * 1024**2
 EXPORT_FILES = {filename for filename, _ in TABLES.values()} | {
     "export_metadata.json", "ai_invoice.csv", "staffing.csv", "rollout_log.csv",
-    "cost_parameters.json", "service_rules.yaml",
+    "cost_parameters.json", "service_rules.yaml", APPROVAL_FILENAME,
 }
 DEMONSTRATIONS = {
     "Three handling policies · clean demo": DATASETS / "release_1" / "demo" / "exports",
@@ -46,7 +47,7 @@ DEMONSTRATIONS = {
     "S32 · Wrong container with human recovery": DATASETS / "scenarios" / "S32" / "exports",
     "S33 · Missed escalation with human recovery": DATASETS / "scenarios" / "S33" / "exports",
 }
-UPLOAD = "Upload an exports ZIP"
+UPLOAD = "Upload an approved exports ZIP"
 
 
 @contextmanager
@@ -100,7 +101,7 @@ def _available_demos():
     if prepared:
         path = Path(prepared)
         if path.is_dir() and path.resolve().is_relative_to(IMPORTS.resolve()):
-            datasets["Prepared company files"] = path
+            datasets["Approved company files"] = path
     return datasets
 
 
@@ -187,6 +188,15 @@ def _readiness(result):
     provenance = result.get("run_provenance", {})
     if provenance.get("policy_version"):
         st.write(f"**Applied grading policy**  {provenance['policy_version']}")
+    if approval := provenance.get("intake_approval"):
+        with st.expander("Approved intake revision"):
+            st.text(approval["approval_id"])
+            st.text(f"Reviewed by {approval['reviewer']} · {approval['approved_at']}")
+            st.text(approval["review_note"])
+            if approval["limitations"]:
+                st.write("**Limitations recorded at approval**")
+                for note in approval["limitations"]:
+                    st.text(note)
     extraction = provenance.get("claim_extraction")
     if extraction:
         st.write(f"**Reply reader**  Local Ollama · {extraction['model']}")
@@ -752,7 +762,7 @@ def main():
     st.set_page_config(page_title="Shipment AI value evaluator", layout="wide")
     _apply_theme()
     st.title("Shipment AI value evaluator")
-    render_company_import()
+    render_company_import(unpack_exports)
     demos = _available_demos()
     settings = st.session_state.get("shipment_settings", DEFAULT_CONFIG)
     with st.form("shipment_analysis_controls"):
@@ -767,8 +777,8 @@ def main():
             help="Repeated draws of existing customers estimate sampling uncertainty. Each request keeps its assigned handling group.",
         )
         upload = st.file_uploader(
-            "Optional exports ZIP", type=["zip"],
-            help="Select Upload an exports ZIP as the evidence source to analyze an upload.",
+            "Optional approved exports ZIP", type=["zip"],
+            help="Use Prepare company files to review a new export. This option reuses a previously approved snapshot.",
         )
         with st.expander("Company service rules"):
             policy_upload = st.file_uploader("Grading policy (optional JSON)", type=["json"], key="company_policy")
@@ -796,8 +806,9 @@ def main():
             with st.spinner("Checking records and comparing handling policies"):
                 if dataset == UPLOAD:
                     if upload is None:
-                        raise ValueError("Choose an exports ZIP before running the evaluation.")
+                        raise ValueError("Choose an approved exports ZIP before running the evaluation.")
                     with unpack_exports(upload.getvalue()) as path:
+                        read_approval(path, required=True)
                         result = analyze_exports(path, policy, config, claim_reader=reader)
                 else:
                     result = analyze_exports(demos[dataset], policy, config, claim_reader=reader)
@@ -807,7 +818,7 @@ def main():
             st.error(str(error))
     result_state = st.session_state.get("shipment_analysis")
     if result_state is None:
-        st.write("Choose a demonstration dataset or upload operational exports to start.")
+        st.write("Choose a demonstration dataset or prepare and approve company files to start.")
         return
     result, dataset_name, policy = result_state
     origin = result.get("data_readiness", {}).get("dataset_origin")

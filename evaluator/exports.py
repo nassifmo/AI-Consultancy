@@ -52,6 +52,7 @@ class ExportData:
     files: dict = field(default_factory=dict)
     input_rows: dict[str, list] = field(default_factory=dict, repr=False)
     row_issues: dict[str, list[dict]] = field(default_factory=dict, repr=False)
+    intake_approval: dict | None = None
 
     def is_complete(self, table: str) -> bool:
         """Check an explicit source-owner declaration when one accompanies the export.
@@ -231,7 +232,7 @@ def _read_table(data: ExportData, table: str, rows: list, columns: tuple[str, ..
         data.available.add(table)
 
 
-def load_exports(path: Path, *, analysis: bool = False) -> ExportData:
+def load_exports(path: Path, *, analysis: bool = False, require_approval: bool = False) -> ExportData:
     """Load only the whitelisted files directly inside an exports directory."""
     path = Path(path)
     if path.name.casefold() != "exports" or path.is_symlink():
@@ -268,4 +269,15 @@ def load_exports(path: Path, *, analysis: bool = False) -> ExportData:
                 data.files[filename]["status"] = "partially_valid"
     if analysis:
         data.cost_parameters = _load_file(root, "cost_parameters.json", "cost_parameters", data, _read_metadata)
+    if require_approval:
+        from pilot.approval import read_approval
+
+        standalone_benchmark = (data.metadata.get("dataset_origin") == "synthetic"
+                                and not data.metadata.get("preparation_id"))
+        data.intake_approval = read_approval(root, required=not standalone_benchmark)
+        if data.intake_approval is not None:
+            expected = data.intake_approval["input_files"]
+            if any(info.get("sha256") != expected.get(name, {}).get("sha256")
+                   for name, info in data.files.items()):
+                raise ValueError("An export changed as it was loaded. Use a verified approved snapshot.")
     return data

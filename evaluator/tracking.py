@@ -40,6 +40,12 @@ def _containers(shipment):
     return ()
 
 
+def creation_time_is_visibility(metadata):
+    """Use creation time only for the benchmark or a reviewed source agreement."""
+    proxy = metadata.get("tracking_creation_visibility_ref")
+    return metadata.get("dataset_origin") == "synthetic" or isinstance(proxy, str) and bool(proxy.strip())
+
+
 @dataclass(frozen=True)
 class Target:
     shipment: dict
@@ -59,6 +65,7 @@ class Snapshot:
 class _Event:
     row: dict
     recorded: datetime | None
+    available: datetime | None
     occurred: datetime | None
     conflicting: bool
 
@@ -82,6 +89,7 @@ class Tracking:
         self.conflicting_aliases = defaultdict(set)
         self.events = defaultdict(list)
         self.unscoped_events = "tracking_events" in data.unscoped
+        self.creation_is_visibility = creation_time_is_visibility(data.metadata)
         for shipment in data.tables.get("shipments", ()):
             self._index_shipment(shipment)
         for shipment in data.conflicts.get("shipments", ()):
@@ -105,9 +113,18 @@ class Tracking:
     def _index_event(self, row, conflicting=False):
         booking = _key(row.get("booking_ref"))
         if booking:
+            recorded = self.data.time("tracking_events", row.get("event_created_datetime"))
+            visibility_value = row.get("event_available_datetime")
+            if visibility_value in (None, "") and self.creation_is_visibility:
+                available = recorded
+            else:
+                available = self.data.time("tracking_events", visibility_value)
+                if available is not None and recorded is not None and available < recorded:
+                    available = None
             self.events[booking].append(_Event(
                 row,
-                self.data.time("tracking_events", row.get("event_created_datetime")),
+                recorded,
+                available,
                 self.data.time("tracking_events", row.get("event_datetime")),
                 conflicting,
             ))
@@ -184,7 +201,10 @@ class Tracking:
             container = _key(event.row.get("container_ref"))
             if container and container not in allowed_containers:
                 continue
-            if event.recorded is not None and event.recorded > as_of:
+            if event.available is not None and event.available > as_of:
+                continue
+            if (event.available is None and event.row.get("event_available_datetime") in (None, "")
+                    and event.recorded is not None and event.recorded > as_of):
                 continue
             if event.classifier == "ACT" and event.occurred is not None and event.occurred > as_of:
                 continue
@@ -221,7 +241,8 @@ class Tracking:
                 not destination or (not location and intermediate_arrival)
             )
             uncertain = (
-                uncertain_scope or event.conflicting or event.recorded is None or event.occurred is None
+                uncertain_scope or event.conflicting or event.recorded is None
+                or event.available is None or event.occurred is None
                 or _key(event.row.get("event_type")) != _EVENT_TYPE[event.code]
                 or event.classifier not in _ETA_PRIORITY
             )
@@ -278,9 +299,12 @@ class Tracking:
             return None, None, [plan_ref]
         deadline = plan + timedelta(hours=delay_hours)
         revisions = {
-            event.recorded for event in self._scoped(target, through)
-            if event.code == "ARRI" and event.recorded is not None and received < event.recorded <= through
+            event.available for event in self._scoped(target, through)
+            if event.code == "ARRI" and event.available is not None and received < event.available <= through
         }
+        if through > received:
+            # Later unconfirmed revisions may affect whether an escalation became due.
+            revisions.add(through)
         unknown = False
         refs = {plan_ref}
         for time in (received, *sorted(revisions)):

@@ -5,11 +5,13 @@ from math import isfinite
 
 from .exports import ANALYSIS_KEYS, ANALYSIS_TABLES, MEASURED_WORK_METHODS, TABLES
 from .readiness import JOIN_FIELDS, TIME_FIELDS, _present
+from .tracking import creation_time_is_visibility
 
 
 DEFINITIONS = TABLES | ANALYSIS_TABLES
 CRITICAL_SOURCES = {"shipments", "tracking_events", "responses", "agent_runs", "cases", "case_history"}
-DISPUTES = {"conflicting_record_id", "malformed_row", "missing_record_id", "malformed_steps"}
+DISPUTES = {"conflicting_record_id", "malformed_row", "missing_record_id", "malformed_steps",
+            "tracking_visibility_unverified", "visibility_before_creation"}
 METER_FIELDS = {"tokens_in", "tokens_out", "voice_seconds", "model_rate", "input_tokens", "output_tokens"}
 STAMP = {"responses": "sent_at", "tracking_events": "event_created_datetime", "agent_runs": "started_at",
          "cases": "opened_at", "case_history": "changed_at"}
@@ -21,6 +23,8 @@ MESSAGES = {
     "missing_required_field": "A required value is missing.",
     "malformed_steps": "The run does not contain a valid sequence of tool records.",
     "uninterpretable_timestamp": "The timestamp does not establish an unambiguous instant.",
+    "tracking_visibility_unverified": "This tracking update has no verified time of availability to the support channel.",
+    "visibility_before_creation": "The reported availability time precedes record creation. Confirm the timestamp definitions.",
     "missing_link": "A required link is missing.",
     "unmatched_link": "No matching record was found in the target export.",
     "unverified_enquiry_link": "The case could not be reliably linked to an enquiry.",
@@ -199,6 +203,15 @@ def assess_input_quality(data, verified, overlap_ids, episodes=()):
             for key in TIME_FIELDS.get(table, ()):
                 if _present(row.get(key)) and data.time(table, row.get(key)) is None:
                     add("uninterpretable_timestamp", number, row, identifier, key)
+            if table == "tracking_events":
+                key = "event_available_datetime"
+                value = row.get(key)
+                visible = data.time(table, value)
+                created = data.time(table, row.get("event_created_datetime"))
+                if visible is None and (value not in (None, "") or not creation_time_is_visibility(data.metadata)):
+                    add("tracking_visibility_unverified", number, row, identifier, key)
+                elif visible is not None and created is not None and visible < created:
+                    add("visibility_before_creation", number, row, identifier, key)
             for key, target, optional in joins[table]:
                 value = row.get(key)
                 if not _present(value):

@@ -8,6 +8,7 @@ import unittest
 
 from evaluator.exports import TABLES
 from evaluator.verification import verify_exports
+from pilot.approval import approve_exports
 
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -141,6 +142,7 @@ class ExportVerificationTests(unittest.TestCase):
             meta_path.write_text(json.dumps({
                 **metadata, "dataset_origin": "company",
                 "source_completeness": dict.fromkeys(TABLES, "complete"),
+                "tracking_creation_visibility_ref": "Synthetic publication fixture",
             }), encoding="utf-8")
             response_path = exports / "responses.csv"
             with response_path.open(encoding="utf-8", newline="") as stream:
@@ -151,7 +153,9 @@ class ExportVerificationTests(unittest.TestCase):
                         writer = csv.DictWriter(stream, row.keys())
                         writer.writeheader()
                         writer.writerow({**row, "message_text": message})
-                    result, = verify_exports(exports, POLICY)["enquiries"]
+                    reviewed = approve_exports(exports, Path(directory) / "approved", reviewer="Test reviewer",
+                                               note="Reviewed the synthetic evidence fixture.")
+                    result, = verify_exports(reviewed["exports_path"], POLICY)["enquiries"]
                     grade = result["criteria"]["eta_accuracy"]
                     reply = result["verification"]["initial_reply"]
                     self.assertEqual(grade.get("eta_error_seconds"), seconds)
@@ -179,6 +183,7 @@ class ExportVerificationTests(unittest.TestCase):
             metadata = json.loads(meta_path.read_text(encoding="utf-8"))
             self.assertEqual(metadata.pop("dataset_origin"), "synthetic")
             metadata["source_completeness"] = dict.fromkeys(TABLES, "complete")
+            metadata["tracking_creation_visibility_ref"] = "Synthetic publication fixture"
             response_path = exports / "responses.csv"
             with response_path.open(encoding="utf-8", newline="") as stream:
                 response = next(csv.DictReader(stream))
@@ -190,7 +195,9 @@ class ExportVerificationTests(unittest.TestCase):
                           {"dataset_origin": "unconfirmed"}, {"dataset_origin": "synthetic"}):
                 with self.subTest(label=label):
                     meta_path.write_text(json.dumps({**metadata, **label}), encoding="utf-8")
-                    result, = verify_exports(exports, POLICY)["enquiries"]
+                    reviewed = approve_exports(exports, Path(directory) / "approved", reviewer="Test reviewer",
+                                               note="Reviewed the synthetic evidence fixture.")
+                    result, = verify_exports(reviewed["exports_path"], POLICY)["enquiries"]
                     grade = result["criteria"]["eta_accuracy"]
                     benchmark = label.get("dataset_origin") == "synthetic"
                     self.assertEqual(result["outcome"]["state"], "resolved" if benchmark else "unknown")

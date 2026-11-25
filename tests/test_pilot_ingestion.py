@@ -10,6 +10,7 @@ import unittest
 from unittest.mock import patch
 
 from evaluator.verification import verify_exports
+from pilot.approval import approve_exports
 from pilot.importing import import_source, validate_profile
 
 
@@ -54,7 +55,11 @@ class PilotIngestionTests(unittest.TestCase):
             self.assertTrue((bundle / "raw" / "tracking.jsonl").is_file())
             self.assertTrue((bundle / "preparation.json").is_file())
             self.assertFalse((Path(first["exports_path"]) / "preparation.json").exists())
-            result = verify_exports(Path(first["exports_path"]), policy)["enquiries"][0]
+            with self.assertRaisesRegex(ValueError, "reviewed and approved"):
+                verify_exports(Path(first["exports_path"]), policy)
+            approved = approve_exports(first["exports_path"], Path(temporary) / "approved",
+                                       reviewer="Fixture reviewer", note="Reviewed the synthetic mappings.")
+            result = verify_exports(Path(approved["exports_path"]), policy)["enquiries"][0]
             self.assertEqual(result["outcome"]["state"], "resolved")
             self.assertIs(result["initial_failure"], True)
             self.assertIs(result["verification"]["human_recovery"], True)
@@ -223,7 +228,10 @@ class PilotIngestionTests(unittest.TestCase):
             self.assertEqual(metadata["declared_source_completeness"]["enquiries"], "complete")
             self.assertEqual(metadata["source_completeness"]["enquiries"], "partial")
             self.assertEqual(metadata["preparation_issue_counts"]["by_code"]["malformed_source_row"], 1)
-            result = verify_exports(Path(prepared["exports_path"]), policy)["enquiries"][0]
+            approved = approve_exports(prepared["exports_path"], directory / "approved", reviewer="Fixture reviewer",
+                                       note="The rejected record leaves continuation evidence incomplete.",
+                                       limitations=["Repeat-contact evidence is incomplete."])
+            result = verify_exports(Path(approved["exports_path"]), policy)["enquiries"][0]
             self.assertIsNone(result["verification"]["repeat_contact"]["same_unresolved_request"])
 
     def test_optional_conversion_downgrades_completeness_and_duplicates_do_not(self):

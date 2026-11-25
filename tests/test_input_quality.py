@@ -7,6 +7,7 @@ import shutil
 from evaluator.analysis import analyze_exports
 from evaluator.recommendation import assess_recommendation
 from evaluator.reporting import input_quality_csv
+from pilot.approval import approve_exports
 from pilot.importing import import_source
 from qa.pilot_readiness import EXAMPLE
 
@@ -92,7 +93,9 @@ def test_mapped_source_rejection_has_original_row_and_distinct_denominator(tmp_p
         stream.write('"unusable source row"\n')
     mapping = json.loads((EXAMPLE / "profile.json").read_text(encoding="utf-8"))
     prepared = import_source(source, mapping, tmp_path / "prepared")
-    result = analyze_exports(Path(prepared["exports_path"]), POLICY)
+    approved = approve_exports(prepared["exports_path"], tmp_path / "a", reviewer="Synthetic review",
+                              note="Reviewed the malformed source record and its impact on tracking evidence.")
+    result = analyze_exports(Path(approved["exports_path"]), POLICY)
     quality = result["input_quality"]
     table = next(row for row in quality["preparation"] if row["table"] == "tracking_events")
     assert (table["input_rows"], table["affected_rows"]) == (count + 1, 1)

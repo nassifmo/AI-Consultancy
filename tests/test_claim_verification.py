@@ -11,6 +11,7 @@ import pytest
 from evaluator.claim_reader import ActionClaim, EtaReading, ReplyClaims, StatusClaim
 from evaluator.exports import TABLES, load_exports
 from evaluator.verification import Verifier, verify_exports
+from pilot.approval import approve_exports
 
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -49,6 +50,7 @@ def _declare_company_scenario(exports, origin="company"):
     metadata = json.loads(path.read_text(encoding="utf-8"))
     path.write_text(json.dumps({
         **metadata, "dataset_origin": origin, "source_completeness": dict.fromkeys(TABLES, "complete"),
+        "tracking_creation_visibility_ref": "Synthetic publication fixture",
     }), encoding="utf-8")
 
 
@@ -69,6 +71,10 @@ def _case_history(exports, opened, routed=None, actor="agent_v1", case_id="CAS-V
 
 
 def _result(exports, reader=None):
+    meta = json.loads((exports / "export_metadata.json").read_text(encoding="utf-8"))
+    if meta.get("dataset_origin") != "synthetic":
+        exports = approve_exports(exports, exports.parent / "approved", reviewer="Test reviewer",
+                                  note="Reviewed the synthetic evidence fixture.")["exports_path"]
     result, = verify_exports(exports, POLICY, claim_reader=reader)["enquiries"]
     return result
 

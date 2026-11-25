@@ -9,6 +9,7 @@ import unittest
 
 from evaluator.exports import TABLES, load_exports
 from evaluator.verification import verify_exports
+from pilot.approval import approve_exports
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,6 +80,7 @@ class CompletenessTests(unittest.TestCase):
             path = exports / "export_metadata.json"
             metadata = json.loads(path.read_text(encoding="utf-8"))
             metadata.pop("dataset_origin", None)
+            metadata["tracking_creation_visibility_ref"] = "Synthetic publication fixture"
             replies = exports / "responses.csv"
             with replies.open(encoding="utf-8", newline="") as stream:
                 row, = list(csv.DictReader(stream))
@@ -98,7 +100,9 @@ class CompletenessTests(unittest.TestCase):
             for declarations, outcome, reply_grade in inputs:
                 with self.subTest(declarations=declarations):
                     path.write_text(json.dumps({**metadata, **declarations}), encoding="utf-8")
-                    result, = verify_exports(exports, POLICY)["enquiries"]
+                    reviewed = approve_exports(exports, Path(directory) / "approved", reviewer="Test reviewer",
+                                               note="Reviewed completeness assumptions for the synthetic fixture.")
+                    result, = verify_exports(reviewed["exports_path"], POLICY)["enquiries"]
                     self.assertEqual(result["outcome"]["state"], outcome)
                     self.assertEqual(result["criteria"]["eta_request_answered"]["status"], reply_grade)
 

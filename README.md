@@ -20,7 +20,7 @@ The lock file records the tested Windows and Python 3.11 environment. `requireme
 
 After setup, you can also double-click `Launch evaluator.cmd` on Windows.
 
-Choose **Three handling policies · clean demo**, leave follow-up at **7 days**, then select **Run evaluation**. Use **S32 · Wrong container with human recovery** for the case walkthrough. See the [five-minute meeting guide](MEETING_DEMO.md), [advisor summary](ADVISOR_SUMMARY.md), and [test report](TEST_REPORT.md). To try **Upload an exports ZIP**, generate `meeting_release/demo_exports.zip` with the packaging command below.
+Choose **Three handling policies · clean demo**, leave follow-up at **7 days**, then select **Run evaluation**. Use **S32 · Wrong container with human recovery** for the case walkthrough. See the [five-minute meeting guide](MEETING_DEMO.md), [advisor summary](ADVISOR_SUMMARY.md), and [test report](TEST_REPORT.md). To review an exports archive, generate `meeting_release/demo_exports.zip` and choose **Evaluator exports ZIP** under **Prepare company files**.
 
 To try AI-assisted reading of the actual sent reply, start Ollama, choose **S28 · Vessel status and ETA**, and enable **Read sent replies with local AI**. The **Enquiry evidence** tab shows which claims the tracking or case records support. See [reply reader setup and limits](EVALUATOR_GRADING.md#read-sent-replies-with-local-ai).
 
@@ -28,7 +28,7 @@ To try AI-assisted reading of the actual sent reply, start Ollama, choose **S28 
 
 Start with the [client one-pager](pilot_prospect/PILOT_ONE_PAGER.html), the [five-minute pilot demo](pilot_prospect/FIVE_MINUTE_DEMO.md) and the [sample decision brief](pilot_prospect/DEMO_DECISION.html). Use the [intake and validation plan](pilot_prospect/INTAKE_AND_VALIDATION.md) and [independent review sheet](pilot_prospect/INDEPENDENT_REVIEW_SHEET.md) to scope a first authorized sample. The [synthetic pilot rehearsal](qa/pilot_readiness.md) reproduces the full preparation and analysis path on complete and damaged inputs.
 
-Open **Prepare company files** to preview a ZIP of CSV, JSON or JSONL extracts through a versioned mapping profile. Use **Preview synthetic company extract** to try the process. Save the prepared files, choose **Run evaluation**, and review which measurements the data can support. The original records and mapping remain traceable in a local import bundle.
+Open **Prepare company files** to review mapped CSV, JSON or JSONL sources or a standardized exports ZIP. Use **Preview synthetic company extract** to try the process. Inspect the mapped rows and issues, record evidence for any corrections, then **Approve for evaluation**. Choose **Run evaluation** to use that reviewed version. The source files and mapping remain traceable in the local import bundle. The approval and exact export fingerprints accompany the results.
 
 The [pilot preparation guide](PILOT_PREPARATION.md) describes required records, missing-data behavior and remaining company-specific work. The [mapping guide](pilot/README.md) explains field profiles. A [read-only API collector](acquisition/README.md) prepares JSON extracts once a company endpoint and permissions are confirmed. Its pagination, retries and incomplete-run behavior are tested with mocked responses.
 

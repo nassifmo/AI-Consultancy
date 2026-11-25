@@ -1,5 +1,35 @@
 # Shipment evaluator meeting release verification
 
+## Reviewed intake and tracking availability
+
+The combined repository suite passed **387 tests and 135 subtests**.
+The dictionary check passed, and an approved ZIP reproduced the same analysis after upload.
+
+The Streamlit test exercises the synthetic company extract through preview,
+review, approval and evaluation. A renamed booking column exercises the trial
+conversion. The active mapping stays unchanged until the reviewer supplies
+evidence and applies the suggestion. The review records the selected path and
+the revised profile. A second check traces the 300 active seconds to the original
+work-session record.
+
+The CLI rehearsal confirms that a draft cannot be evaluated and that the
+approved copy preserves the wrong-container finding and verified human recovery.
+The approved file fingerprints and reviewer record appear in run provenance.
+Changing an approved input invalidates the existing approval. The four
+synthetic intake rehearsals also verify this review gate.
+
+In the tracking test, a revised ETA created at 09:55 is first made available
+at 10:05. The old ETA remains the reference for the 10:00 reply, and the
+revised ETA is used after publication. Unknown availability restricts the
+affected tracking check. A separate test exercises a documented creation-time
+proxy.
+
+A live local Ollama smoke test using Qwen2.5 7B Instruct selected
+`Shipment_Booking_Reference` for `booking_ref` from synthetic field names.
+Human review still determines whether the field has the right meaning.
+Carrier mappings, source coverage and availability timestamps need confirmation
+on an authorized sample.
+
 ## Component audit, 25 November 2026
 
 The combined evaluator and data-generation suite passed **365 tests and

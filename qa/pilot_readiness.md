@@ -1,6 +1,6 @@
 # Synthetic pilot rehearsal
 
-Run this check from the shipment benchmark directory. It prepares the same synthetic enquiry from four variations of the mixed-format source extract. It compares the evaluator's result with expected findings read directly from the fixture. No network access or company records are used.
+Run this check from the shipment benchmark directory. It prepares the same synthetic enquiry from four variations of the mixed-format source extract. It checks that each draft is blocked, approves the reviewed export, and compares the evaluator's result with expected findings read directly from the fixture. No network access or company records are used.
 
 ```powershell
 .venv/Scripts/python.exe -B -m qa.pilot_readiness

@@ -14,4 +14,9 @@ Publish a new immutable prepared bundle by supplying an output directory.
 .venv/Scripts/python.exe -m pilot import --source pilot/examples/renamed_shipment/source --profile pilot/examples/renamed_shipment/profile.json --output pilot_imports
 ```
 
-Give the evaluator the `exports` directory inside the returned bundle. The `raw` directory, mapping profile and preparation record preserve the source evidence and remain outside evaluator inputs. The example declares its source tables complete because it was built from a complete fixture. An actual source needs a documented extraction window and completeness assessment. Fields such as assignment, related contacts, active work and finance values remain missing unless a mapped source provides them.
+Review the draft `exports` directory using `pilot inspect-exports`. Then use
+`pilot approve` as described in the [intake guide](../../README.md) and give the
+evaluator the approved exports path. The original bundle retains the `raw`
+directory, mapping profile and preparation record. This synthetic example
+declares complete coverage for its supplied sources. A company extract needs
+its own documented extraction window and completeness assessment.

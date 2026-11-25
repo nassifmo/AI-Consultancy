@@ -92,12 +92,12 @@ def _matches(issue, query):
     return any(query in str(value).casefold() for value in values if value is not None)
 
 
-def _reset_page():
-    st.session_state.pop("input_quality_page", None)
+def _reset_page(key):
+    st.session_state.pop(key, None)
 
 
 @st.fragment
-def render_input_quality(result):
+def render_input_quality(result, *, key_prefix="input_quality", preparing=False):
     """Keep affected-row counts distinct from files or records with unknown coverage."""
     quality = result["input_quality"]
     st.subheader("Data quality and records to review")
@@ -122,7 +122,9 @@ def render_input_quality(result):
     missing, partial = summary.get("files_unavailable"), summary.get("files_partial")
     if missing is not None or partial is not None:
         st.caption(f"Files unavailable: {_count(missing)}. Files flagged partial: {_count(partial)}.")
-    if review.get("required"):
+    if review.get("required") and preparing:
+        st.warning("Some disputed records may change which enquiries count or which critical checks can be verified.")
+    elif review.get("required"):
         st.warning("Review these records before expanding the AI workflow. Some issues may change a critical check "
                    "or which enquiries count in the comparison.")
         population, critical = review.get("population_issues"), review.get("unresolved_critical_issues")
@@ -166,17 +168,18 @@ def render_input_quality(result):
         filenames = ["All files", *labels]
         kinds = ["All issues", *sorted({i["kind"] for i in issues if i.get("kind")})]
         # Reset selections if a new dataset does not contain the old filter value.
-        for key, choices in (("input_quality_file", filenames), ("input_quality_kind", kinds)):
+        file_key, kind_key, page_key = (f"{key_prefix}_{part}" for part in ("file", "kind", "page"))
+        for key, choices in ((file_key, filenames), (kind_key, kinds)):
             if key in st.session_state and st.session_state[key] not in choices:
                 del st.session_state[key]
-        selected_file = first.selectbox("Filter by file", filenames, key="input_quality_file", on_change=_reset_page)
-        selected_kind = second.selectbox("Filter by issue", kinds, key="input_quality_kind",
-                                         on_change=_reset_page,
+        selected_file = first.selectbox("Filter by file", filenames, key=file_key, on_change=_reset_page, args=(page_key,))
+        selected_kind = second.selectbox("Filter by issue", kinds, key=kind_key,
+                                         on_change=_reset_page, args=(page_key,),
                                          format_func=lambda kind: _label(kind, _KINDS) if kind != "All issues" else kind)
-        query = st.text_input("Find by record ID, enquiry ID or row", key="input_quality_search",
-                              on_change=_reset_page).strip().casefold()
+        query = st.text_input("Find by record ID, enquiry ID or row", key=f"{key_prefix}_search",
+                              on_change=_reset_page, args=(page_key,)).strip().casefold()
         st.download_button("Download all data issues", input_quality_csv(result), file_name="input_quality.csv",
-                           mime="text/csv", on_click="ignore")
+                           mime="text/csv", on_click="ignore", key=f"{key_prefix}_download")
         matches = [i for i in issues
                    if (selected_file == "All files" or i.get("filename") == selected_file)
                    and (selected_kind == "All issues" or i.get("kind") == selected_kind)
@@ -185,9 +188,9 @@ def render_input_quality(result):
             st.info("No issues match these filters.")
             return
         pages = (len(matches) + _PAGE_SIZE - 1) // _PAGE_SIZE
-        if st.session_state.get("input_quality_page", 1) > pages:
-            _reset_page()
-        page = st.selectbox("Page", range(1, pages + 1), key="input_quality_page") if pages > 1 else 1
+        if st.session_state.get(page_key, 1) > pages:
+            _reset_page(page_key)
+        page = st.selectbox("Page", range(1, pages + 1), key=page_key) if pages > 1 else 1
         start = (page - 1) * _PAGE_SIZE
         stop = min(start + _PAGE_SIZE, len(matches))
         st.caption(f"Showing {start + 1:,}–{stop:,} of {len(matches):,} matching items ({len(issues):,} listed in total).")

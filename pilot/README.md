@@ -2,12 +2,64 @@
 
 Use a mapping profile to convert local CSV, JSON or JSONL exports into the evaluator's existing file format. The adapter reads the named files, converts explicitly mapped fields and records source hashes and row references. It can preview the conversion without saving or publish a reproducible bundle.
 
+## Review and approve the data
+
+In Streamlit, open **Prepare company files**. Select a profile and a source ZIP
+or select the individual CSV, JSON and JSONL files. **Evaluator exports ZIP**
+previews files that already use our format. **Preview synthetic company extract**
+exercises the same workflow using shipment case S32.
+
+1. **Files received** lists mapped, withheld, duplicate and conflicting records,
+   the study period and the evidence cutoff.
+2. **Mapping preview** lets you compare an original record with its mapped
+   values and trace the output back to the source.
+3. **Review issues** shows searchable checks and a downloadable issue register.
+   For a missing source path, review a proposed mapping or edit the profile
+   manually. Previewing a trial leaves the current draft in place. Applying a
+   trial requires a reviewer note and reruns the input checks. Optional Ollama
+   suggestions use field paths and schema details on this computer. Values from
+   customer records stay in the local review.
+4. **Approval** records a reviewer and the unresolved evidence. **Approve for
+   evaluation** publishes one reviewed copy and selects it for **Run evaluation**.
+   A study period, evidence cutoff and identifiable enquiry are required.
+
+An approved bundle preserves the exact export files and a review record
+`exports/intake_approval.json`. That record includes the approval ID, time,
+reviewer, mapping revision when applicable, decisions, evidence limitations,
+and file fingerprints. The evaluator verifies the fingerprints before use and
+includes the review in its run provenance. Use a new approval after changing the
+data. The local review records the reviewer's attestation.
+
+The command line can review and approve exports from a prepared bundle or from
+an existing standardized extract:
+
+```powershell
+.venv/Scripts/python.exe -m pilot inspect-exports --source <draft-exports>
+.venv/Scripts/python.exe -m pilot approve --source <draft-exports> --output pilot_imports --reviewer "Reviewer name" --note "Review evidence and outstanding limitations"
+.venv/Scripts/python.exe -m evaluator --exports <approved-exports> --analyze
+```
+
+Reviewed company exports and intentionally synthetic benchmark exports are
+supported. Company exports need source coverage declarations for conclusions
+that depend on complete histories.
+
+## Tracking history available at reply time
+
+Map `tracking_events.event_available_datetime` to the first time the specific
+support channel could retrieve the event. Preserve its creation and occurrence
+timestamps separately. A clearly identified source-owner confirmation can
+support creation-time fallback through `metadata.tracking_creation_visibility_ref`.
+An explicit availability time takes precedence. If the evidence cannot
+establish when a relevant revision was available, the affected historical
+check remains unknown. Synthetic benchmarks can use their recorded creation
+times.
+
 ```python
 from pilot import import_source
 
 preview = import_source(source_directory, profile)
 prepared = import_source(source_directory, profile, output_directory)
-exports_directory = prepared["exports_path"]
+draft_exports = prepared["exports_path"]
 ```
 
 ## Mapping profile
