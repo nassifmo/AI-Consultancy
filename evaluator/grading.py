@@ -9,8 +9,8 @@ OUTCOME_STATES = {
 }
 IMPACTS = ("minor", "material", "critical")
 SPECIFICATION_FIELDS = {
-    "method", "applies_when", "critical", "steps", "critical_steps",
-    "zero_score_early_seconds", "zero_score_late_seconds",
+    "method", "applies_when", "default_applicability", "critical", "steps", "critical_steps",
+    "zero_score_early_seconds", "zero_score_late_seconds", "zero_score_on_cutoff_crossing",
 }
 
 
@@ -57,8 +57,16 @@ def _binary(specification: dict, record: dict) -> dict:
 
 def _distance(specification: dict, record: dict) -> dict:
     observed, reference = _instant(record.get("observed_at")), _instant(record.get("reference_at"))
+    claim = {key: record[key] for key in ("eta_claim_basis", "eta_display_precision_seconds",
+                                         "structured_eta_disagrees", "structured_eta_at") if key in record}
     if observed is None or reference is None:
-        return _unknown("The quoted and reference times both need known UTC offsets.")
+        reason = {
+            "sent_eta_needs_review": "The ETA in the sent message needs review before a timestamp can be assigned.",
+            "no_eta_in_sent_message": "The sent message does not supply an identifiable ETA.",
+        }.get(record.get("eta_claim_basis"), "The quoted and reference times both need known UTC offsets.")
+        if observed is not None:
+            reason = "The matching reference timestamp at reply time is unverified."
+        return {**_unknown(reason), **claim}
     deviation = (observed - reference).total_seconds()
     cutoff = _instant(record.get("decision_cutoff_at"))
     crosses_cutoff = None if cutoff is None else ((observed <= cutoff) != (reference <= cutoff))
@@ -66,18 +74,27 @@ def _distance(specification: dict, record: dict) -> dict:
     if crosses_cutoff and severity != "critical":
         severity = "material"
     limit = specification.get("zero_score_early_seconds" if deviation < 0 else "zero_score_late_seconds")
-    result = {
-        "status": "met" if deviation == 0 else "measured",
+    cutoff_penalty = bool(crosses_cutoff and specification.get("zero_score_on_cutoff_crossing"))
+    score = 0.0 if cutoff_penalty else _linear_score(abs(deviation), limit)
+    reasons = []
+    if record.get("structured_eta_disagrees"):
+        reasons.append("The sent ETA differs from the structured claim. The score uses the sent ETA.")
+    if crosses_cutoff:
+        reasons.append("The quoted and reference times fall on opposite sides of the documented decision cutoff.")
+    elif severity == "unknown":
+        reasons.append("The timing difference is measured. Its operational impact needs more context.")
+    return {
+        **claim,
+        "status": "met" if deviation == 0 else "unmet" if score == 0 else "measured",
         "severity": severity,
+        "observed_at": observed.isoformat(),
+        "reference_at": reference.isoformat(),
         "eta_error_seconds": deviation,
         "crosses_decision_cutoff": crosses_cutoff,
-        "score": _linear_score(abs(deviation), limit),
+        "score": score,
+        "timing_failure_score": None if score is None else 100 - score,
+        **({"reason": " ".join(reasons)} if reasons else {}),
     }
-    if crosses_cutoff:
-        result["reason"] = "The quoted and reference times fall on opposite sides of the documented decision cutoff."
-    elif severity == "unknown":
-        result["reason"] = "The timing difference is measured. Its importance needs more context."
-    return result
 
 
 def _deadline(specification: dict, record: dict) -> dict:
@@ -136,6 +153,10 @@ def _validate_specification(criterion_id: str, specification: object) -> None:
         condition = specification["applies_when"]
         if not isinstance(condition, str) or not condition.strip():
             raise ValueError(f"{criterion_id}: applies_when must name an applicability condition.")
+    if "default_applicability" in specification and (
+        "applies_when" not in specification or specification["default_applicability"] is not False
+    ):
+        raise ValueError(f"{criterion_id}: default_applicability may only exclude an absent condition.")
     if "critical" in specification and (method != "binary" or not isinstance(specification["critical"], bool)):
         raise ValueError(f"{criterion_id}: use critical only as a boolean on a binary check.")
     if method == "checklist":
@@ -155,6 +176,11 @@ def _validate_specification(criterion_id: str, specification: object) -> None:
                 raise ValueError(f"{criterion_id}: {name} must be a positive number on a compatible timing check.")
     if method == "distance" and ("zero_score_early_seconds" in specification) != ("zero_score_late_seconds" in specification):
         raise ValueError(f"{criterion_id}: specify both scoring limits for signed distance.")
+    if "zero_score_on_cutoff_crossing" in specification and (
+        method != "distance" or not isinstance(specification["zero_score_on_cutoff_crossing"], bool)
+        or "zero_score_early_seconds" not in specification
+    ):
+        raise ValueError(f"{criterion_id}: a cutoff override requires a boolean and configured signed-distance limits.")
 
 
 def _names(value: object) -> bool:
@@ -167,7 +193,7 @@ def _grade_criterion(specification: dict, conditions: dict, record: object) -> d
                      if method == "checklist" else {})
     condition = specification.get("applies_when")
     if condition is not None:
-        applies = conditions.get(condition)
+        applies = conditions.get(condition, specification.get("default_applicability"))
         if applies is False:
             return {
                 "method": method, "status": "not_applicable", "severity": "none",

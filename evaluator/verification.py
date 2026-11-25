@@ -8,9 +8,11 @@ from math import isfinite
 import re
 
 from .casework import review_casework
+from .claim_checks import historical_benchmark, mentions_action, mentions_status
+from .eta_handoff import review_eta_handoff
 from .exports import MEASURED_WORK_METHODS, load_exports, reference
 from .grading import grade_enquiry
-from .replies import coordination_request, review_reply
+from .replies import ETA_REQUEST, coordination_request, explicit_eta_request, interpret_exchange, review_reply
 from .tracking import Tracking
 
 
@@ -115,7 +117,7 @@ def _work_time(data, rows, actor_ids, replies, runs, received, excluded_work_ids
 
 
 class Verifier:
-    def __init__(self, data, policy, *, excluded_work_ids=()):
+    def __init__(self, data, policy, *, excluded_work_ids=(), claim_reader=None):
         self.data = data
         self.policy = policy
         self.settings = _settings(policy)
@@ -129,6 +131,7 @@ class Verifier:
         self.work = _index(data.tables["agent_work"], "enquiry_id")
         self.related = _index(self.enquiries, "related_enquiry_id")
         self.excluded_work_ids = excluded_work_ids
+        self.claim_reader = claim_reader
         self.enquiries_by_id = {row["enquiry_id"]: row for row in self.enquiries}
         self.case_candidates = _index(data.tables["cases"], "enquiry_id")
         for case in data.tables["cases"]:
@@ -239,6 +242,18 @@ class Verifier:
         start, end = (self.data.time("enquiries", value) for value in period)
         return start <= received < end if start and end and start <= end else None
 
+    def _contains_update(self, enquiry, row):
+        if row["purpose"] != "case_update":
+            return False
+        if self.claim_reader is None and historical_benchmark(self.data):
+            return bool(row.get("claimed_eta") or row.get("claimed_status"))
+        text = row.get("message_text") or ""
+        if ETA_REQUEST.search(text) or mentions_status(text) or mentions_action(text):
+            return True
+        reading = interpret_exchange(self.claim_reader, enquiry.get("customer_message") or "", text)
+        return bool(reading and reading.state == "classified" and reading.intent == "arrival_time"
+                    and reading.response in {"provided", "declared_unavailable"})
+
     def evaluate(self, enquiry):
         data, settings = self.data, self.settings
         enquiry_id = enquiry["enquiry_id"]
@@ -254,10 +269,6 @@ class Verifier:
         responses = [row for _, row in ordered]
         runs = [row for _, row in self._visible("agent_runs", self.runs[enquiry_id], "ended_at", received)]
         first_candidates = [(at, row) for at, row in ordered if row["purpose"] in ANSWER_PURPOSES]
-        final_candidates = [
-            (at, row) for at, row in ordered if row["purpose"] in ANSWER_PURPOSES
-            or (row["purpose"] == "case_update" and (row.get("claimed_eta") or row.get("claimed_status")))
-        ]
         missing_replies = any(data.time("responses", row["sent_at"]) is None for row in self.responses[enquiry_id])
         conflicted_replies = any(
             (at := data.time("responses", row.get("sent_at"))) is None or data.cutoff is None or at <= data.cutoff
@@ -265,13 +276,25 @@ class Verifier:
         )
         response_order_known = data.is_complete("responses") and not (
             missing_replies or conflicted_replies or "responses" in data.unscoped)
+        final_candidates = [
+            (at, row) for at, row in ordered
+            if response_order_known and (row["purpose"] in ANSWER_PURPOSES or self._contains_update(enquiry, row))
+        ]
         first = first_candidates[0][1] if (first_candidates and response_order_known
                 and first_candidates[0][1]["purpose"] == "answer"
                 and (len(first_candidates) == 1 or first_candidates[0][0] != first_candidates[1][0])) else None
         final = final_candidates[-1][1] if (final_candidates and response_order_known
                 and (len(final_candidates) == 1 or final_candidates[-1][0] != final_candidates[-2][0])) else None
-        initial = review_reply(data, self.tracking, enquiry, first, runs, settings) if first else None
-        last = initial if final is first else review_reply(data, self.tracking, enquiry, final, runs, settings) if final else None
+        cases = self.cases[enquiry_id]
+        histories = [change for case in cases for change in self.history[case["case_id"]]]
+        options = {"claim_reader": self.claim_reader, "cases": cases, "histories": histories}
+        initial = review_reply(data, self.tracking, enquiry, first, runs, settings, **options) if first else None
+        last = initial if final is first else (
+            review_reply(data, self.tracking, enquiry, final, runs, settings, **options) if final else None
+        )
+        for review in (initial,) if last is initial else (initial, last):
+            if review:
+                self._review_eta_follow_up(enquiry, review, cases, histories, runs)
 
         required, trigger, trigger_refs = None, None, []
         if received is not None and data.cutoff is not None and received <= data.cutoff:
@@ -294,8 +317,6 @@ class Verifier:
         elif enquiry["enquiry_type"] == "delay" or required is True:
             profile = "shipment_delay"
 
-        cases = self.cases[enquiry_id]
-        histories = [change for case in cases for change in self.history[case["case_id"]]]
         casework = review_casework(
             data, enquiry, cases, histories, responses if response_order_known else [], runs,
             required=required, trigger_at=trigger,
@@ -308,7 +329,9 @@ class Verifier:
             "escalation_required": required,
             "follow_up_required": casework.follow_up_required,
             "eta_reply_in_scope": initial.eta_in_scope if initial else None,
+            "eta_requested": explicit_eta_request(enquiry) or bool(initial and initial.requested_eta),
             "status_reply_in_scope": initial.status_in_scope if initial else None,
+            "sent_action_claim_in_scope": bool(initial.action_in_scope) if initial else None,
         }
         evidence = dict(initial.evidence) if initial else {}
         evidence.update(casework.evidence)
@@ -338,10 +361,23 @@ class Verifier:
         }
         return {**group, **result}
 
+    def _review_eta_follow_up(self, enquiry, review, cases, histories, runs):
+        requested = review.requested_eta or {}
+        if requested.get("state") not in {"omitted", "declared_unavailable"}:
+            return
+        handoff = review_eta_handoff(self.data, enquiry, review.reply, cases, histories, runs)
+        requested["handoff"] = handoff
+        review.refs = list(dict.fromkeys([*review.refs, *handoff["refs"]]))
+        if requested["state"] == "declared_unavailable" and (handoff["state"] == "not_recorded" or handoff["pending"] is False):
+            if review.verdict != "failed":
+                review.reason = "The reply says the ETA is unavailable and the records show no pending handoff."
+            review.verdict = "failed"
+            review.matches_record = False
+
     def _reply_summary(self, review):
         if review is None:
             return None
-        return {
+        summary = {
             "actor_type": review.reply["actor_type"],
             "actor_id": review.reply.get("actor_id") or None,
             "sent_at": self.data.time("responses", review.reply["sent_at"]).isoformat(),
@@ -350,6 +386,13 @@ class Verifier:
             "reason": review.reason,
             "refs": review.refs,
         }
+        if review.reply_claims is not None:
+            summary["reply_claims"] = review.reply_claims
+        if review.requested_eta is not None:
+            summary["requested_eta"] = review.requested_eta
+        if review.eta_interpretation is not None:
+            summary["eta_interpretation"] = review.eta_interpretation
+        return summary
 
     def _outcome(self, enquiry_ref, responses, last, casework, required, repeat, order_known):
         if casework.outcome and casework.outcome["state"] != "resolved":
@@ -360,6 +403,14 @@ class Verifier:
             return None
         if repeat["same_unresolved_request"] is True:
             return {"state": "failed", "refs": last.refs + repeat["refs"]}
+        handoff = (last.requested_eta or {}).get("handoff")
+        if handoff:
+            if casework.outcome and casework.outcome["state"] == "resolved":
+                return {"state": "failed", "refs": last.refs + casework.outcome["refs"]}
+            if handoff["pending"] is True:
+                return {"state": "escalated_open", "refs": last.refs}
+            if handoff["state"] == "unknown" or (handoff["state"] == "verified" and handoff["pending"] is None):
+                return None
         if last.verdict == "failed" and "responses" in self.data.available:
             return {"state": "failed", "refs": last.refs}
         if last.verdict == "supported" and casework.outcome:
@@ -372,10 +423,10 @@ class Verifier:
         return None
 
 
-def verify_exports(exports_path, policy):
+def verify_exports(exports_path, policy, *, claim_reader=None):
     """Evaluate an exports directory using no benchmark answer files."""
     data = load_exports(exports_path)
-    evaluator = Verifier(data, policy)
+    evaluator = Verifier(data, policy, claim_reader=claim_reader)
     enquiries = [evaluator.evaluate(enquiry) for enquiry in evaluator.enquiries]
     return {
         "policy_version": policy["version"],

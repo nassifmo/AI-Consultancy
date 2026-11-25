@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 
+from .claim_reader import OllamaClaimReader
 from .grading import grade_enquiry
 from .verification import verify_exports
 
@@ -17,6 +18,8 @@ def main() -> int:
     parser.add_argument("--analyze", action="store_true", help="Compare assigned groups and calculate costs.")
     parser.add_argument("--analysis-config", type=Path, help="Optional JSON analysis settings.")
     parser.add_argument("--output-dir", type=Path, help="Parent directory for the immutable analysis bundle.")
+    parser.add_argument("--ollama-model", metavar="MODEL", help="Use an installed local model to read questions and replies.")
+    parser.add_argument("--max-claim-reads", type=int, help="Limit local interpretation and extraction calls (default: 25).")
     options = parser.parse_args()
     if (options.enquiry is None) == (options.exports is None):
         parser.error("Supply either a normalized enquiry or --exports.")
@@ -24,21 +27,29 @@ def main() -> int:
         parser.error("--analyze requires --exports.")
     if not options.analyze and (options.analysis_config is not None or options.output_dir is not None):
         parser.error("--analysis-config and --output-dir require --analyze.")
+    if options.ollama_model is not None and options.exports is None:
+        parser.error("--ollama-model requires --exports.")
+    if options.max_claim_reads is not None and options.ollama_model is None:
+        parser.error("--max-claim-reads requires --ollama-model.")
     try:
+        reader = None
+        if options.ollama_model is not None:
+            limit = 25 if options.max_claim_reads is None else options.max_claim_reads
+            reader = OllamaClaimReader(options.ollama_model, max_reads=limit)
         policy = json.loads(options.policy.read_text(encoding="utf-8-sig"))
         if options.analyze:
             from .analysis import analyze_exports
 
             config = (json.loads(options.analysis_config.read_text(encoding="utf-8-sig"))
                       if options.analysis_config else None)
-            result = analyze_exports(options.exports, policy, config)
+            result = analyze_exports(options.exports, policy, config, claim_reader=reader)
             if options.output_dir:
                 from .reporting import write_run_bundle
 
                 path = write_run_bundle(options.output_dir, result, policy)
                 print(path, file=sys.stderr)
         elif options.exports is not None:
-            result = verify_exports(options.exports, policy)
+            result = verify_exports(options.exports, policy, claim_reader=reader)
         else:
             source = sys.stdin.read() if options.enquiry == "-" else Path(options.enquiry).read_text(encoding="utf-8-sig")
             result = grade_enquiry(policy, json.loads(source.lstrip("\ufeff")))

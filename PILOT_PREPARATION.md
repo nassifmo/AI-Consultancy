@@ -70,6 +70,7 @@ Rows labelled `estimated`, elapsed-time proxies and undocumented methods remain 
 | Duplicates or conflicting IDs | Preserve the evidence and flag conflicts. Exact duplicates count once in the evaluator. |
 | Missing offset or ambiguous local time | Require the original offset or an explicit source zone. Leave ambiguous measurements unverified. |
 | Only the current tracking snapshot is retained | Historical answer accuracy remains unknown until publication history or an equivalent trusted snapshot is available. |
+| The export contains an internal ETA without a sent ETA | For company and unlabeled exports, review the customer reply or transcript. An internal timestamp alone leaves the requested ETA unverified. |
 | Different IDs across systems | Agree a customer/case/booking/container mapping from source evidence and check join coverage. Avoid guessing the correct booking from the desired answer. |
 | Sampled traces or omitted failures | Mark source coverage partial. An empty log is insufficient to infer zero work or success. |
 | Ticket elapsed time supplied without active work | Show elapsed service time and request a validated timer or representative time study for effort. |

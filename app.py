@@ -13,6 +13,7 @@ from zipfile import BadZipFile, ZIP_DEFLATED, ZIP_STORED, ZipFile
 import streamlit as st
 
 from evaluator.analysis import DEFAULT_CONFIG, analyze_exports
+from evaluator.claim_reader import OllamaClaimReader
 from evaluator.exports import TABLES
 from evaluator.reporting import format_measure, label, make_downloads, metric_basis, metric_rows, render_decision_brief, write_run_bundle
 from evaluator.recommendation import VALUE_BASES, assess_recommendation, case_review_actions
@@ -41,6 +42,7 @@ DEMONSTRATIONS = {
     "Identical agent policies": DATASETS / "release_1" / "null_effect" / "exports",
     "Before and after rollout": DATASETS / "release_1" / "confounded" / "exports",
     "Staged regional rollout": DATASETS / "release_1" / "staged" / "exports",
+    "S28 · Vessel status and ETA": DATASETS / "scenarios" / "S28" / "exports",
     "S32 · Wrong container with human recovery": DATASETS / "scenarios" / "S32" / "exports",
     "S33 · Missed escalation with human recovery": DATASETS / "scenarios" / "S33" / "exports",
 }
@@ -127,6 +129,8 @@ def _apply_theme():
 def _metric_name(key):
     if key == "human_minutes_per_enquiry":
         return "Active human minutes per request"
+    if key == "eta_request_answered":
+        return "Requested ETA answered"
     return label(key)
 
 
@@ -183,6 +187,13 @@ def _readiness(result):
     provenance = result.get("run_provenance", {})
     if provenance.get("policy_version"):
         st.write(f"**Applied grading policy**  {provenance['policy_version']}")
+    extraction = provenance.get("claim_extraction")
+    if extraction:
+        st.write(f"**Reply reader**  Local Ollama · {extraction['model']}")
+        st.caption(f"Local model calls {extraction['reads']} of {extraction['max_reads']} allowed. "
+                   "Each extracted claim is checked against operational records. See Enquiry evidence for review items.")
+    else:
+        st.caption("Local AI reply reading was off for this run.")
     if data.get("comparison_status"):
         st.write(f"**Comparison readiness**  {label(data['comparison_status'])}")
     exclusions = data.get("exclusion_counts", {})
@@ -511,6 +522,7 @@ def _render_decision(result, assessment, *, additional_loss_per_1000=None):
 
 def _reply_details(verification):
     rows = []
+    claims = []
     for key, phase in (("initial_reply", "First answer"), ("last_reply", "Latest answer")):
         reply = verification.get(key)
         if reply:
@@ -520,10 +532,42 @@ def _reply_details(verification):
                 "Sent": reply.get("sent_at") or "Unknown",
                 "Actor": actor,
                 "Verdict": label(reply.get("verdict") or "unknown"),
+                "Reason": reply.get("reason"),
                 "Evidence": ", ".join(reply.get("refs", [])),
             })
+            requested_eta = reply.get("requested_eta") or {}
+            if requested_eta:
+                rows[-1]["Requested ETA"] = label(requested_eta["state"])
+                rows[-1]["Classification basis"] = "AI reading" if requested_eta.get("basis") == "ai" else "Rules"
+                handoff = requested_eta.get("handoff")
+                if handoff:
+                    rows[-1]["Human handoff"] = label(handoff["state"])
+                    rows[-1]["Handoff evidence"] = handoff["reason"]
+            interpretation = reply.get("eta_interpretation")
+            if interpretation:
+                if interpretation["state"] != "classified":
+                    rows[-1]["AI reading"] = label(interpretation["state"])
+                for field, heading in (("request_quote", "Quoted request"), ("reply_quote", "Quoted reply")):
+                    if interpretation[field]:
+                        rows[-1][heading] = interpretation[field]
+            extraction = reply.get("reply_claims")
+            if extraction is not None:
+                for finding in extraction.get("findings", []):
+                    claims.append({
+                        "Phase": phase,
+                        "Customer saw": finding.get("quote"),
+                        "Claim": label(finding.get("value") or "unknown"),
+                        "Verdict": label(finding.get("verdict") or "unknown"),
+                        "Reason": finding.get("reason"),
+                        "Evidence": ", ".join(finding.get("refs", [])),
+                    })
+                if extraction.get("state") != "extracted":
+                    st.caption(f"{phase} claim extraction · {label(extraction.get('state') or 'unknown')}")
     if rows:
         st.dataframe(rows, hide_index=True)
+    if claims:
+        st.subheader("Claims in sent replies")
+        st.dataframe(claims, hide_index=True)
 
 
 def _enquiry_evidence(result):
@@ -557,14 +601,12 @@ def _enquiry_evidence(result):
     columns[0].metric("Service outcome", label(outcome.get("state") or "unknown"))
     failure = assessment.get("initial_failure")
     first = verification.get("initial_reply") or {}
-    identity = assessment.get("criteria", {}).get("shipment_identity", {})
-    ai_identity_failure = (failure is True and first.get("actor_type") == "ai_agent"
-                           and identity.get("passed") is False and identity.get("severity") == "critical")
-    failure_label = "Initial AI critical failure" if ai_identity_failure else "Initial critical failure"
+    ai_failure = failure is True and first.get("actor_type") == "ai_agent"
+    failure_label = "Initial AI critical failure" if ai_failure else "Initial critical failure"
     columns[1].metric(failure_label, "Unknown" if failure is None else "Yes" if failure else "No")
     recovery = verification.get("human_recovery")
     columns[2].metric("Human recovery", "Unknown" if recovery is None else "Verified" if recovery else "No")
-    if ai_identity_failure and recovery is True:
+    if ai_failure and recovery is True:
         st.warning("The AI made a critical error in its first answer. A human corrected it and resolved the enquiry. "
                    "The error still counts against the AI.")
     if outcome.get("reason"):
@@ -581,6 +623,7 @@ def _enquiry_evidence(result):
             "Result": label(grade.get("status") or "unknown"),
             "Severity": label(grade.get("severity") or "unknown"),
             "ETA error (s)": error,
+            "ETA penalty (/100)": grade.get("timing_failure_score"),
             "Overdue (s)": delay,
             "Reason": grade.get("reason") or "",
             "Source records": ", ".join(grade.get("refs", [])),
@@ -588,6 +631,9 @@ def _enquiry_evidence(result):
     if checks:
         st.subheader("Verification checks")
         st.dataframe(checks, hide_index=True)
+        if any(check["ETA penalty (/100)"] is not None for check in checks):
+            st.caption("ETA penalty runs from 0 for an exact match to 100 for full timing failure. "
+                       "The built-in limits are illustrative benchmark settings.")
     actions = case_review_actions(assessment)
     if actions:
         st.subheader("What to review and retest")
@@ -717,6 +763,13 @@ def main():
         with st.expander("Company service rules"):
             policy_upload = st.file_uploader("Grading policy (optional JSON)", type=["json"], key="company_policy")
             st.caption("Use the company-approved service rules for a pilot. The bundled rules are synthetic benchmark settings.")
+        with st.expander("Read sent replies with local AI"):
+            use_reader = st.checkbox("Enable local Ollama reply reader", key="shipment_read_claims")
+            model = st.text_input("Installed Ollama model", value="qwen2.5:7b-instruct", key="shipment_claim_model")
+            max_reads = st.number_input("Maximum local model calls", min_value=1, max_value=500, value=25, step=1,
+                                        key="shipment_max_claim_reads")
+            st.caption("Ollama reads the customer question and sent reply on this computer. The evaluator checks times and claims against the records. "
+                       "Start with one scenario. Replies above the call limit need review.")
         submitted = st.form_submit_button("Run evaluation", type="primary")
     if submitted:
         st.session_state.pop("shipment_analysis", None)
@@ -729,14 +782,15 @@ def main():
             _settings(policy)
             for profile in policy.get("profiles", {}):
                 grade_enquiry(policy, {"enquiry_id": "policy-validation", "profile": profile})
+            reader = OllamaClaimReader(model, max_reads=int(max_reads)) if use_reader else None
             with st.spinner("Checking records and comparing handling policies"):
                 if dataset == UPLOAD:
                     if upload is None:
                         raise ValueError("Choose an exports ZIP before running the evaluation.")
                     with unpack_exports(upload.getvalue()) as path:
-                        result = analyze_exports(path, policy, config)
+                        result = analyze_exports(path, policy, config, claim_reader=reader)
                 else:
-                    result = analyze_exports(demos[dataset], policy, config)
+                    result = analyze_exports(demos[dataset], policy, config, claim_reader=reader)
             st.session_state["shipment_analysis"] = (result, dataset, policy)
             st.session_state["shipment_settings"] = config
         except (OSError, ValueError, TypeError, OverflowError) as error:

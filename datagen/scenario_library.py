@@ -248,6 +248,7 @@ def write(scenarios: list[Scenario], out_dir: Path = OUT_DIR) -> None:
         received = [datetime.fromisoformat(q["received_at"]) for q in s.tables["enquiries"]]
         period_end = max(received) + timedelta(seconds=1)
         meta = {
+            "dataset_origin": "synthetic",
             "rule_version": s.rule_version,
             "study_period": [min(received).isoformat(), period_end.isoformat()],
             "data_cutoff": (s.data_cutoff or period_end + timedelta(days=14)).isoformat(),

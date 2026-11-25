@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0-proposed",
+  "version": "0.9.0-proposed",
   "verification": {
     "delay_hours": 24,
     "escalation_hours": 2,
@@ -19,12 +19,28 @@
       "method": "binary",
       "applies_when": "status_reply_in_scope"
     },
+    "sent_action_claim": {
+      "method": "binary",
+      "critical": true,
+      "applies_when": "sent_action_claim_in_scope",
+      "default_applicability": false
+    },
     "eta_accuracy": {
       "method": "distance",
-      "applies_when": "eta_reply_in_scope"
+      "applies_when": "eta_reply_in_scope",
+      "zero_score_early_seconds": 72000,
+      "zero_score_late_seconds": 72000
+    },
+    "eta_request_answered": {
+      "method": "binary",
+      "applies_when": "eta_requested",
+      "default_applicability": false
     },
     "coordination_eta": {
-      "method": "distance"
+      "method": "distance",
+      "zero_score_early_seconds": 72000,
+      "zero_score_late_seconds": 72000,
+      "zero_score_on_cutoff_crossing": true
     },
     "arrival_decision": {
       "method": "binary"
@@ -45,18 +61,20 @@
     }
   },
   "profiles": {
-    "shipment_status": ["shipment_identity", "milestone_status", "eta_accuracy"],
+    "shipment_status": ["shipment_identity", "milestone_status", "eta_accuracy", "eta_request_answered", "sent_action_claim"],
     "arrival_coordination": [
-      "shipment_identity", "milestone_status", "coordination_eta", "arrival_decision",
-      "initial_escalation", "escalation_deadline", "follow_up_deadline"
+      "shipment_identity", "milestone_status", "coordination_eta", "eta_request_answered", "arrival_decision",
+      "initial_escalation", "escalation_deadline", "follow_up_deadline", "sent_action_claim"
     ],
     "shipment_delay": [
       "shipment_identity",
       "milestone_status",
       "eta_accuracy",
+      "eta_request_answered",
       "initial_escalation",
       "escalation_deadline",
-      "follow_up_deadline"
+      "follow_up_deadline",
+      "sent_action_claim"
     ]
   }
 }

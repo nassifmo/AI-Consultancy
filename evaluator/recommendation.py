@@ -25,6 +25,11 @@ CASE_ACTIONS = {
         "Use the case and routing history to find the missing step. Check that a required case is recorded and reaches the operations queue before the enquiry leaves agent handling.",
         "Replay a required escalation with a failed case-creation or routing attempt. Check that the workflow verifies the case and queue or activates a confirmed fallback within the agreed service deadline.",
     ),
+    "sent_action_claim": (
+        "Contradicted action claim in the reply",
+        "Check the sent acknowledgement against the case and routing history available at the time it was sent.",
+        "Replay a failed case operation. Check that the customer receives an accurate acknowledgement before and after a verified retry.",
+    ),
 }
 
 NEXT_ACTIONS = {

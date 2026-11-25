@@ -179,7 +179,7 @@ class Tracking:
                 continue
             yield event
 
-    def snapshot(self, target, as_of):
+    def snapshot(self, target, as_of, *, status_subject=None):
         as_of = self._through_cutoff(as_of)
         coverage = self.data.metadata.get("source_completeness")
         incomplete_history = coverage is not None and (
@@ -214,7 +214,13 @@ class Tracking:
                 or _key(event.row.get("event_type")) != _EVENT_TYPE[event.code]
                 or event.classifier not in _ETA_PRIORITY
             )
-            if event.classifier not in {"EST", "PLN"}:
+            subject_matches = (
+                status_subject not in {"vessel", "container"}
+                or (status_subject == "vessel" and _EVENT_TYPE[event.code] == "TRANSPORT")
+                or (status_subject == "container" and _EVENT_TYPE[event.code] == "EQUIPMENT"
+                    and target.container and _key(event.row.get("container_ref")) == _key(target.container))
+            )
+            if subject_matches and event.classifier not in {"EST", "PLN"}:
                 (uncertain_status if uncertain else status_events).append(event)
             if event.code == "ARRI":
                 (uncertain_eta if uncertain else eta_events).append(event)

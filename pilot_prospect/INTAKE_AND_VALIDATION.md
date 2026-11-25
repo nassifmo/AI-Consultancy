@@ -1,5 +1,9 @@
 # Shipment support pilot intake and validation
 
+## Who does what
+
+The evaluator supports a consultant-led assessment. The consultant and company teams agree on the workflow, how its systems will supply the records, which rules apply, and which comparison can answer the business question. The evaluator checks enquiries, calculates service and cost metrics, and shows the evidence and uncertainty behind supported comparisons. The consultant investigates discrepancies, reviews assumptions and prepares recommendations. The company's decision owner reviews the findings and approves any change to the deployment.
+
 ## 1. Agree on the decision and scope
 
 Choose one support channel, a segment of shipment-status and delay enquiries, and one handling comparison. Record who owns the decision, the outcome they want to improve, and the quality limits the agent must meet. Examples include wrong-container answers, missed escalations, and responses that arrive too late for an operational decision. Record the scope, time window, follow-up period, and known process or release changes.
@@ -18,7 +22,7 @@ Agree with the company on pseudonymization, access, transfer, storage and deleti
 | Operations and finance, when applicable | Observed active-work records and their timing method, comparable labour and usage rates, invoice or spending records, and the payer and final amount for any downstream charge being evaluated |
 | Rollout or experiment owner, when applicable | Intended handling policy recorded before exposure, eligibility, release changes, comparator assignment or rollout schedule, and any known contamination between groups |
 
-The support owner sets operating rules and guardrails. Data owners reconcile the extracts and attest to their coverage. Two suitable reviewers label the selected feasibility cases independently using the same source evidence. The project team maps the data, runs the frozen evaluator, explains discrepancies and publishes results. The named company owner decides whether the resulting action is appropriate.
+The support owner confirms operating rules and guardrails. Data owners reconcile the extracts and attest to their coverage. Two suitable reviewers label the selected feasibility cases independently from the same source evidence. The consultant confirms the mappings with the data owners and runs the evaluator with the agreed policy version.
 
 ## 3. Validate before advancing
 
@@ -26,13 +30,15 @@ The support owner sets operating rules and guardrails. Data owners reconcile the
 | --- | --- | --- |
 | Source fit | Reconcile population and table counts to the extract scope. Explain unmatched identifiers, duplicates, revisions and missing history. Verify time zone, event time and publication time on reviewed records. | Repair the mapping or restrict the supported findings to the verified subset. |
 | Case verification | Review each selected enquiry for shipment identity, evidence visible at reply time, required actions, and final outcome. Reconcile every discrepancy. Block the affected rule if a critical handling error is missed, an unsupported resolution is reported, or records link to the wrong customer's shipment. Keep uncertain findings visible. | Adjudicate against source records and confirm the revised policy on additional cases. Hold the affected automatic finding until review passes. |
-| Effort and cost | Reconcile a sample of measured durations and cost lines to the source and agree the applicable rates, currency, scope and shared-cost treatment. | Show only supported quantities, such as elapsed service time or a documented cost subtotal. |
-| Comparative evidence | Prespecify eligibility, assignment unit, comparator, observation period, coverage floors and a minimum worthwhile improvement before estimating the effect. Confirm the available design can support attribution and meet the minimum scale. | Keep the findings descriptive. Improve tracking or run a controlled comparison where feasible. |
-| Decision support | Have the decision owner check that the proposed action follows the agreed service limits, economic criteria and evidence. Record the rationale, material uncertainty, next action, owner and recheck point. | Propose a bounded follow-up, such as collecting a missing field, keeping human review or comparing a specific change. |
+| Effort and cost | The consultant and relevant company owners reconcile measured time, charges and credits against source records. Confirm rates, currency, scope, payer and shared costs with finance. | Report supported quantities, such as elapsed service time or a documented cost subtotal. |
+| Comparative evidence | Before estimating the effect, the consultant and company rollout owner agree on eligibility, assignment unit, comparator, observation period, coverage floors and minimum worthwhile improvement. Check that the design supports attribution. | Report descriptive results. Improve tracking or run a controlled comparison where feasible. |
+| Decision support | The consultant presents the recommendation, evidence, assumptions and unresolved risks. The company's decision owner reviews the service and financial implications, decides on the action and records when to reassess it. | Propose a bounded follow-up, such as collecting a missing field, keeping human review or comparing a specific change. |
 
 Classify documented active time, capacity released, company cash changes and customer cost consequences separately. For example, a failed truck trip requires evidence of the dispatch decision, when the correct pickup information was available, the final cost or credit and who paid it. A tariff alone supplies a potential charge under stated terms. A company claim needs the actual evidence and a defensible comparison.
 
 ## Before and during the pilot
+
+During development, Bahaa and Mohamad take the support and operations review roles. Each works from the original synthetic records and records findings independently before comparing them with the evaluator. The team can use disagreements to improve the grading rules and test coverage before a pilot. Use the same review sheet with authorized company cases once the source owners have confirmed the records and the workflow rules.
 
 | Before a company shares records | Once the company authorizes a pilot |
 | --- | --- |

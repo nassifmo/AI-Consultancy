@@ -1,14 +1,23 @@
 """Check what was sent against source records visible at that time."""
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 import re
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+from .claim_checks import action_terms, historical_benchmark, mentions_action, mentions_status, review_claims, status_terms
+from .eta_claims import conflicting_eta_passage, quoted_eta, requested_eta_response, sent_eta
 from .exports import reference
 
 
 ETA_REQUEST = re.compile(r"\beta\b|arrival (?:estimate|time)|when .*arriv|(?:what time|expected to) .*arriv", re.IGNORECASE)
+ETA_SUBJECT = r"(?:ETA|arrival (?:estimate|time|date)|estimated (?:time|date) of arrival)"
+EXPLICIT_ETA_REQUEST = re.compile(
+    rf"^\s*(?:(?:current|new|revised|latest)\s+)?{ETA_SUBJECT}\s*\??\s*$"
+    rf"|\b(?:what(?:['’]s| is| will be)|provide|tell (?:me|us)|send|give|check|confirm|share|need)\b[^.!?]{{0,40}}\b{ETA_SUBJECT}\b"
+    r"|(?:^|[.!?]\s+|\b(?:confirm|tell me|check)\s+)(?:when|what (?:date|time))\b[^.!?]{0,75}\b(?:arriv(?:e|al|ing)|reach|dock)\b",
+    re.IGNORECASE,
+)
 STATUS_REQUEST = re.compile(r"\b(status|unload(?:ed|ing)?|discharg(?:e|ed)|arrived|departed)\b|where is", re.IGNORECASE)
 DISCHARGE_REQUEST = re.compile(r"\b(unload(?:ed|ing)?|discharg(?:e|ed))\b", re.IGNORECASE)
 COORDINATION_REQUEST = re.compile(r"\bwhich\b.{0,45}\bteam\b.{0,40}\bnotify\b", re.IGNORECASE)
@@ -25,6 +34,10 @@ class ReplyReview:
     evidence: dict = field(default_factory=dict)
     eta_in_scope: bool | None = None
     status_in_scope: bool | None = None
+    action_in_scope: bool | None = None
+    requested_eta: dict | None = None
+    eta_interpretation: dict | None = None
+    reply_claims: dict | None = None
     refs: list[str] = field(default_factory=list)
     reason: str | None = None
 
@@ -33,6 +46,27 @@ def coordination_request(enquiry: dict) -> bool:
     return enquiry.get("request_profile") == "arrival_coordination" or bool(
         COORDINATION_REQUEST.search(enquiry.get("customer_message") or "")
     )
+
+
+def explicit_eta_request(enquiry: dict) -> bool:
+    return coordination_request(enquiry) or bool(EXPLICIT_ETA_REQUEST.search((enquiry.get("customer_message") or "").strip()))
+
+
+def interpret_exchange(reader, question, message):
+    interpret = getattr(reader, "interpret_eta", None)
+    if not callable(interpret) or not question.strip() or not message.strip():
+        return None
+    return interpret(question, message)
+
+
+def _apply_eta_interpretation(reading, known, explicit):
+    ai_eta_request = (reading is not None and reading.state == "classified" and reading.intent == "arrival_time")
+    if not explicit and not ai_eta_request:
+        return None
+    state, basis = known, "rules" if explicit else "ai"
+    if known == "unknown" and ai_eta_request and reading.response != "unknown":
+        state, basis = reading.response, "ai"
+    return {"state": state, "basis": basis}
 
 
 def _successful_steps(run: dict, tool: str) -> list[dict]:
@@ -149,7 +183,14 @@ def _status_check(target, enquiry: dict, reply: dict, snapshot, settings: dict) 
     return status.casefold() == snapshot.status
 
 
-def review_reply(data, tracking, enquiry: dict, reply: dict, runs: list[dict], settings: dict) -> ReplyReview:
+def _matches_display(observed, reference_time, precision):
+    if precision == 60:
+        reference_time = reference_time.replace(second=0, microsecond=0)
+    return observed == reference_time
+
+
+def review_reply(data, tracking, enquiry: dict, reply: dict, runs: list[dict], settings: dict, *,
+                 claim_reader=None, cases=(), histories=()) -> ReplyReview:
     result = ReplyReview(reply)
     sent = data.time("responses", reply.get("sent_at"))
     if sent is None:
@@ -172,39 +213,100 @@ def review_reply(data, tracking, enquiry: dict, reply: dict, runs: list[dict], s
 
     snapshot = tracking.snapshot(target, sent)
     question = enquiry.get("customer_message") or ""
+    message = reply.get("message_text") or ""
     planned = coordination_request(enquiry)
     eta_claim = reply.get("claimed_eta")
     if not eta_claim and run is not None:
         eta_claim = run.get("claimed_eta")
+    port = target.shipment.get("destination")
+    port_name = settings.get("port_names", {}).get(port)
+    port_timezone = settings["port_timezones"].get(port)
+    observed, precision, eta_basis = sent_eta(message, sent, port_name, port_timezone)
+    structured = (data.time("responses", reply["claimed_eta"]) if reply.get("claimed_eta") else
+                  data.time("agent_runs", eta_claim) if run is not None else None)
+    known_response = requested_eta_response(message, eta_basis)
+    reading = interpret_exchange(claim_reader, question, message)
+    if reading is not None:
+        result.eta_interpretation = asdict(reading)
+    result.requested_eta = _apply_eta_interpretation(reading, known_response, explicit_eta_request(enquiry))
+    eta_text = result.requested_eta is not None
+    legacy = claim_reader is None and historical_benchmark(data)
+    eta_response = (result.requested_eta or {}).get("state")
+    non_answer = eta_response in {"omitted", "declared_unavailable"}
+    if eta_text and eta_response == "provided" and known_response == "unknown":
+        observed, precision, eta_basis = quoted_eta(reading.reply_quote, message, sent, port_name, port_timezone)
+        if conflicting_eta_passage(reading.reply_quote, port_name):
+            eta_response = result.requested_eta["state"] = "unknown"
+    if eta_text:
+        result.evidence["eta_request_answered"] = {
+            "passed": None if eta_response == "unknown" else not non_answer,
+            "context_impact": "material", "refs": result.refs.copy(),
+        }
+    if eta_basis == "no_eta_in_sent_message" and legacy and structured is not None and not non_answer:
+        observed, eta_basis = structured, "legacy_structured_claim"
     status_text = bool(STATUS_REQUEST.search(question))
-    eta_text = bool(ETA_REQUEST.search(question)) or planned
-    result.status_in_scope = bool(reply.get("claimed_status")) or status_text
-    result.eta_in_scope = bool(eta_claim) or eta_text or (not question and snapshot.eta_kind in {"EST", "PLN"})
+    result.status_in_scope = status_text or (bool(reply.get("claimed_status")) if legacy else mentions_status(message))
+    result.eta_in_scope = (eta_basis != "no_eta_in_sent_message" or eta_text
+                           or (legacy and not question and snapshot.eta_kind in {"EST", "PLN"}))
 
     checks = []
     record_checks = []
-    if result.status_in_scope:
+    if legacy and result.status_in_scope:
         status_pass = _status_check(target, enquiry, reply, snapshot, settings)
         result.evidence["milestone_status"] = {
             "passed": status_pass, "refs": result.refs + snapshot.status_refs + snapshot.eta_refs,
         }
         checks.append(status_pass)
         record_checks.append(status_pass)
+    if not legacy:
+        if claim_reader is not None:
+            result.reply_claims = review_claims(
+                claim_reader, data, tracking, target, enquiry, reply, sent, settings, cases, histories,
+            )
+            if result.reply_claims["state"] != "extracted":
+                checks.append(None)
+                record_checks.append(None)
+        findings = result.reply_claims["findings"] if result.reply_claims else []
+        unquoted = message
+        for finding in findings:
+            unquoted = unquoted.replace(finding["quote"], " ")
+            result.refs.extend(ref for ref in finding["refs"] if ref not in result.refs)
+        if any(finding.get("reason_code") == "wrong_reference" for finding in findings):
+            result.evidence["shipment_identity"] = {"passed": False, "refs": result.refs.copy()}
+        result.action_in_scope = mentions_action(message) or any(f["kind"] == "action" for f in findings)
+        result.status_in_scope |= any(f["kind"] == "status" for f in findings)
+        for needed, kind, criterion, terms in (
+            (result.status_in_scope, "status", "milestone_status", status_terms),
+            (result.action_in_scope, "action", "sent_action_claim", action_terms),
+        ):
+            if needed:
+                selected = [finding for finding in findings if finding["kind"] == kind]
+                verdicts = {finding["verdict"] for finding in selected}
+                unaccounted = terms(unquoted) or terms(message).difference(finding["value"] for finding in selected)
+                passed = (False if "contradicted" in verdicts else
+                          True if verdicts == {"supported"} and not unaccounted else None)
+                result.evidence[criterion] = {"passed": passed, "refs": result.refs.copy()}
+                checks.append(passed)
+                record_checks.append(passed)
     if result.eta_in_scope:
-        observed = data.time("responses", reply.get("claimed_eta"))
-        if not reply.get("claimed_eta") and run is not None:
-            observed = data.time("agent_runs", run.get("claimed_eta"))
+        disagrees = (eta_basis in {"sent_message", "ai_quote"} and structured is not None
+                     and not _matches_display(observed, structured, precision))
         eta_result = {
             "observed_at": observed.isoformat() if observed is not None else None,
             "reference_at": snapshot.eta.isoformat() if snapshot.eta is not None else None,
             "refs": result.refs + snapshot.eta_refs,
+            "eta_claim_basis": eta_basis,
+            "eta_display_precision_seconds": precision,
+            "structured_eta_disagrees": disagrees,
         }
+        if disagrees:
+            eta_result["structured_eta_at"] = structured.isoformat()
         eta_match = None
         exact_eta = None
         if observed is not None and snapshot.eta is not None:
             deviation = abs((observed - snapshot.eta).total_seconds())
-            exact_eta = deviation == 0
-            if deviation == 0:
+            exact_eta = _matches_display(observed, snapshot.eta, precision)
+            if exact_eta:
                 eta_match = True
             elif (not planned and enquiry.get("enquiry_type") == "status"
                   and not TIMING_CONSTRAINT.search(question) and deviation <= settings["routine_eta_minor_seconds"]):
@@ -229,14 +331,17 @@ def review_reply(data, tracking, enquiry: dict, reply: dict, runs: list[dict], s
         checks.append(eta_match)
         record_checks.append(exact_eta)
     result.refs.extend(ref for ref in dict.fromkeys(snapshot.status_refs + snapshot.eta_refs) if ref not in result.refs)
-    if False in checks:
+    if eta_response == "omitted":
         result.verdict = "failed"
-        result.reason = "The sent reply contradicted a verified status or decision."
+        result.reason = "The sent reply did not answer the customer's arrival-time question."
+    elif False in checks:
+        result.verdict = "failed"
+        result.reason = "The sent reply contradicted a verified status, action or decision."
     elif checks and all(check is True for check in checks):
         result.verdict = "supported"
     else:
         result.reason = "Evidence is incomplete for the requested reply or its operational context."
-    if False in record_checks:
+    if eta_response == "omitted" or False in record_checks:
         result.matches_record = False
     elif record_checks and all(check is True for check in record_checks):
         result.matches_record = True

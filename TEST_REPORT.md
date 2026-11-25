@@ -1,8 +1,75 @@
 # Shipment evaluator meeting release verification
 
-## Customer-facing ETA verification check, 23 November 2026
+## Repository verification, 25 November 2026
 
-In a temporary S28 copy, the sent message was changed from 11:00 to 17:00 local time while the structured ETA stayed at 11:00. The evaluator still marked the reply supported and reported zero ETA error. This is an open limitation when the delivered wording diverges from the structured claim. Before the pilot, validate the claim in the actual sent reply against tracking evidence available at the time.
+The combined evaluator and data-generation suite passed **344 tests and 124
+subtests**. The scenario library regenerated all 56 scenarios and 61 expected
+enquiry results. The data dictionary, dependency check and synthetic pilot
+readiness rehearsal also passed.
+
+## Local AI interpretation of ETA exchanges, 24 November 2026
+
+The installed `qwen2.5:7b-instruct` model read seven synthetic examples through the evaluator under proposed policy `0.9.0-proposed`. The records retained the exact customer question and reply passages supporting the interpretation.
+
+| Example | Evaluator result |
+| --- | --- |
+| “When is she due in Rotterdam?” with a precise expected arrival in ordinary phrasing | AI recognized the ETA request and supplied estimate. The quoted timestamp matched tracking and the enquiry resolved. |
+| “How long until she gets to Rotterdam?” with a departure-only reply | AI recognized the omitted ETA. The linked records showed no handoff and the enquiry failed. |
+| An agent says it is still waiting for a firm estimate from the carrier | AI classified the ETA as unavailable. The records showed no handoff and the enquiry failed. |
+| “Tomorrow around lunchtime” | AI identified an estimate. Numeric accuracy and the outcome remained unknown. |
+| Antwerp timing given in response to a Rotterdam question | The integrated run recorded an omitted ETA and left the timing error unavailable. An earlier direct model check mislabeled a wrong-port estimate as provided. A regression test forces that label and verifies that the destination check blocks scoring. |
+| A promise to send the ETA later | The reply went to review. The promised update time received no ETA score. |
+| S33 human confirms the updated ETA and closes the case | The evaluator verified resolution and human recovery while preserving the initial critical failure for missed escalation. A regression also covers a model incorrectly treating the estimate as an actual arrival. |
+
+The full suite passed **223 tests and 124 subtests**. The data dictionary check passed. These are specific synthetic tests. The language reader still needs validation on representative company replies and review of disagreements.
+
+## Unanswered ETA requests and handoff, 24 November 2026
+
+In an S28 variation, the customer asked for an ETA and the delivered reply said only “The vessel has departed.” It failed the requested-answer check in both rules-only and AI-assisted verification, including when the internal field retained the correct ETA. The unlabeled ZIP followed the same rule. With complete supplied handoff evidence showing no transfer or subsequent answer, the service outcome was failed. Removing the routing history made the final outcome unknown while preserving the reply failure.
+
+An explicit unavailable-ETA reply with a verified pending handoff remained open. Adding a later correct human reply resolved the enquiry and preserved the first answer finding. Tests also covered an incidental ETA mention in a status request, unconfirmed promises to transfer, unsupported ETA wording, and partial closure history after verified routing.
+
+The local suite passed **195 tests and 124 subtests**. The dictionary check passed. The demo and all six bulk datasets produced valid results and retained their expected comparison-design status.
+
+## Development review from support and operations perspectives, 24 November 2026
+
+Two independent assistant review passes assessed five existing synthetic cases from the raw exports before comparison with the evaluator. The review used proposed policy `0.7.0-proposed`. The evaluator ran in both rules-only and local AI-assisted modes. The local `qwen2.5:7b-instruct` reader made six calls across the five cases. This was a rehearsal for the development team. Bahaa and Mohamad can record their own judgments on the [review sheet](pilot_prospect/INDEPENDENT_REVIEW_SHEET.md).
+
+| Case | Review of the sent reply and records | Local AI-assisted evaluator result |
+| --- | --- | --- |
+| S28 | `RSP-S28-AI1` matches `E-24B` and `E-24C`. The vessel had departed and the recorded ETA was 11:00 Rotterdam time. The reply answered the enquiry. | Agreed. Verified resolution and zero ETA error. |
+| S29 | `RSP-S29-AI1` quotes 11:01 instead of 11:00. The one-minute discrepancy is minor for this routine ETA request under the proposed policy. | Agreed. Verified resolution, with exact accuracy marked false and the one-minute error preserved. |
+| S30 | `RSP-S30-AI1` repeats the one-minute error and recommends the afternoon team. At the documented inclusive 11:00 cutoff, the morning team was correct. The records show no customer action or resulting loss. | Agreed. Material decision error and failed enquiry. The reply reader correctly leaves departure status outside this check because the sent reply did not claim it. |
+| S32 | `RSP-S32-AI1` attributes sibling container `SYNU9000015`'s unloading (`E-M2`) to `SYNU9000020`. The human reply at 13:08 UTC corrects this. `E-M3` for the target container was published at 17:00 UTC. `WRK-S32-1` records five active minutes. | Captured the critical initial error and reported recovery. Its quote-level evidence verified vessel arrival. It did not capture the correction's key fact that no unloading was recorded for the requested container at 13:08. The verdict agrees with the case review and the explanation is incomplete. |
+| S33 | `RSP-S33-AI1` quotes the correct revised ETA (`E-D5`), but the AI misses required escalation. `CAS-S33` and `CH-S33-1/2` show the human opening and escalating at 12:00 UTC, one hour past the two-hour target. `RSP-S33-H2` and `CH-S33-3` record the confirmation and closure. | Captured the initial critical failure. The reader classified “arrival estimate” in the human's closing message as actual arrival. The verifier then contradicted that extracted claim and reported failed with no human recovery. The rules-only benchmark showed resolved and recovered. |
+
+The review identified two extraction and evidence gaps. S33 needs a distinction between an ETA confirmation and an assertion of actual arrival. S32 needs the recovery explanation to check the requested container's milestone, including a qualified claim about what was recorded at reply time. The final S33 message was 70 hours after case opening. The same-day acknowledgment would count under a rule that accepts acknowledgment as follow-up. Clarify the follow-up requirement for each pilot workflow before using deadline compliance to make recommendations. The five known examples do not estimate accuracy on real or held-out cases.
+
+## Strict evidence for unlabeled imports, 24 November 2026
+
+Reproduced the S28 false pass with the correct ETA in the structured field and only a departure update in the sent text. Before the fix, the old rule version allowed an unlabeled export to resolve. The updated evaluator leaves the requested ETA and resolution unknown for unlabeled and company exports. The uploaded ZIP resolves when the sent reply includes the correct ETA. Explicitly synthetic fixtures retain their rules-only fallback. The scenario generator and all 56 generated scenario metadata files now identify their synthetic origin.
+
+The local suite passed **184 tests and 125 subtests**. The scenario library validated all 56 scenarios and 61 expected enquiry results. Regeneration also produced the synthetic origin label. The data dictionary check passed. The demo and six bulk datasets produced valid JSON with the expected comparison-design status.
+
+## Local AI reply reading, 24 November 2026
+
+The evaluator sent synthetic replies to the installed `qwen2.5:7b-instruct` model and checked its extracted quotes against the operational exports. Five end-to-end checks used four local model calls because the repeated replies reused their extraction. The control analysis saved a run bundle with the model and findings hash. No company records or paid API calls were used.
+
+| Check | Observed result |
+| --- | --- |
+| Sent departure matches tracking | The claim was supported and the enquiry resolved. |
+| Sent arrival contradicts tracking, while the internal field says departed | The arrival claim was contradicted and the reply failed verification. |
+| Sent reply claims case opening and routing before either is recorded | Both claims were contradicted. The critical initial failure stayed visible after verified human recovery. |
+| Missing case export for the same action claims | Both action claims stayed unknown. |
+| Linked case and routing records exist when the reply is sent | Both action claims were supported. |
+
+The final local suite passed **182 tests and 118 subtests**. The Streamlit application test verifies the model option, quoted claim evidence and run provenance. The demo and six bulk exports produced valid JSON in rules-only mode and retained their expected comparison-design status. The data dictionary and dependency checks passed. These checks cover specific synthetic examples. Extraction coverage and accuracy on authorized pilot replies still need measurement against independent human review.
+
+## Sent ETA and directional scoring, 23 November 2026
+
+The original S28 variation put 17:00 in the sent reply and kept 11:00 in its structured field. The revised evaluator records a six-hour late error, a structured-claim mismatch and a 30/100 timing penalty under the illustrative 20-hour limit. The first answer no longer matches the record and the service outcome is unknown. S29's one-minute routine difference receives about 0.083/100. S30's one-minute difference crosses the documented monitoring-team cutoff and receives 100/100 under its configured override. Tests also cover the early and late boundaries, separate directional limits, minute-level displays, missing text and ambiguous wording. The full local suite passed 154 tests and 118 subtests. The data dictionary check passed.
+
+On 24 November, the full local suite passed again. The demo and six bulk datasets all produced valid JSON and retained the expected comparison-design status under the revised policy.
 
 ## Full local Ollama replay, 23 November 2026
 

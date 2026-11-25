@@ -95,14 +95,38 @@ def _timeline(verifier, enquiry):
     return sorted(events, key=lambda event: (event["at"], event["event"], event["ref"]))
 
 
-def _provenance(data, policy, config):
+def _claim_provenance(reader, latest, checkpoints):
+    assessments = {
+        scope: {
+            key: {
+                phase: {field: reply[field] for field in ("reply_claims", "eta_interpretation") if field in reply}
+                for phase, reply in result.get("verification", {}).items()
+                if phase in {"initial_reply", "last_reply"} and reply
+            }
+            for key, result in results.items()
+        }
+        for scope, results in (("latest", latest), ("checkpoint", checkpoints))
+    }
+    return {
+        "provider": getattr(reader, "provider", None),
+        "model": getattr(reader, "model", None),
+        "max_reads": getattr(reader, "max_reads", None),
+        "reads": getattr(reader, "reads", None),
+        "findings_sha256": hashlib.sha256(json.dumps(assessments, sort_keys=True, allow_nan=False).encode()).hexdigest(),
+    }
+
+
+def _provenance(data, policy, config, claim_extraction=None):
     package = Path(__file__).parent
     sources = hashlib.sha256()
     for path in sorted(package.glob("*.py")):
         sources.update(path.name.encode("utf-8"))
         sources.update(path.read_bytes())
     dependencies = {}
-    for name in ("numpy", "scipy", "streamlit", "pydantic", "pyyaml", "tzdata"):
+    names = ("numpy", "scipy", "streamlit", "pydantic", "pyyaml", "tzdata")
+    if claim_extraction is not None:
+        names += ("requests",)
+    for name in names:
         try:
             dependencies[name] = version(name)
         except PackageNotFoundError:
@@ -118,17 +142,19 @@ def _provenance(data, policy, config):
         "evaluator_sha256": sources.hexdigest(), "python_version": platform.python_version(),
         "dependencies": dependencies, "analysis_config": config,
     }
-    # Hash inputs and effective settings, without timestamps or location-dependent values.
+    if claim_extraction is not None:
+        snapshot["claim_extraction"] = claim_extraction
+    # Include the findings used for AI-assisted runs in the run identity.
     snapshot["run_id"] = hashlib.sha256(json.dumps(snapshot, sort_keys=True, allow_nan=False).encode()).hexdigest()[:24]
     return snapshot
 
 
-def analyze_exports(exports_path, policy, analysis_config=None):
+def analyze_exports(exports_path, policy, analysis_config=None, *, claim_reader=None):
     """Return a reproducible analysis using operational exports only."""
     config = validate_config(analysis_config)
     data = load_exports(exports_path, analysis=True)
     overlaps = overlapping_work_ids(data)
-    verifier = Verifier(data, policy, excluded_work_ids=overlaps)
+    verifier = Verifier(data, policy, excluded_work_ids=overlaps, claim_reader=claim_reader)
     enquiries = sorted(verifier.enquiries, key=lambda row: row["enquiry_id"])
     latest = {row["enquiry_id"]: verifier.evaluate(row) for row in enquiries}
     episodes, checkpoints, exclusions, unlinked = assemble_episodes(
@@ -156,6 +182,10 @@ def analyze_exports(exports_path, policy, analysis_config=None):
         "Structured replies and reviewed request phrasing determine verification coverage.",
         "The valuation is limited to documented resource costs and capacity. Realized cash savings are unavailable.",
     ]
+    claim_extraction = None
+    if claim_reader is not None:
+        claim_extraction = _claim_provenance(claim_reader, latest, checkpoints)
+        limitations.append("AI-assisted reading can miss or misread questions and reply claims. Review uncertain findings and validate coverage before relying on these results for a pilot.")
     if data.metadata.get("dataset_origin") == "synthetic":
         limitations.append("Synthetic results represent the simulated workflow.")
     if data.metadata.get("rule_version") and data.metadata["rule_version"] != policy["version"]:
@@ -166,7 +196,7 @@ def analyze_exports(exports_path, policy, analysis_config=None):
                                  ledger=ledger, diagnostics=diagnostics)
     quality = assess_input_quality(data, latest.values(), overlaps, episodes)
     return {
-        "schema_version": "1.0", "run_provenance": _provenance(data, policy, config), "analysis_config": config,
+        "schema_version": "1.0", "run_provenance": _provenance(data, policy, config, claim_extraction), "analysis_config": config,
         "data_readiness": {
             "dataset_origin": data.metadata.get("dataset_origin", "unconfirmed"),
             "study_period": data.metadata.get("study_period"),

@@ -22,6 +22,8 @@ After setup, you can also double-click `Launch evaluator.cmd` on Windows.
 
 Choose **Three handling policies · clean demo**, leave follow-up at **7 days**, then select **Run evaluation**. Use **S32 · Wrong container with human recovery** for the case walkthrough. See the [five-minute meeting guide](MEETING_DEMO.md), [advisor summary](ADVISOR_SUMMARY.md), and [test report](TEST_REPORT.md). To try **Upload an exports ZIP**, generate `meeting_release/demo_exports.zip` with the packaging command below.
 
+To try AI-assisted reading of the actual sent reply, start Ollama, choose **S28 · Vessel status and ETA**, and enable **Read sent replies with local AI**. The **Enquiry evidence** tab shows which claims the tracking or case records support. See [reply reader setup and limits](EVALUATOR_GRADING.md#read-sent-replies-with-local-ai).
+
 ### Prepare for a company pilot
 
 Start with the [client one-pager](pilot_prospect/PILOT_ONE_PAGER.html), the [five-minute pilot demo](pilot_prospect/FIVE_MINUTE_DEMO.md) and the [sample decision brief](pilot_prospect/DEMO_DECISION.html). Use the [intake and validation plan](pilot_prospect/INTAKE_AND_VALIDATION.md) and [independent review sheet](pilot_prospect/INDEPENDENT_REVIEW_SHEET.md) to scope a first authorized sample. The [synthetic pilot rehearsal](qa/pilot_readiness.md) reproduces the full preparation and analysis path on complete and damaged inputs.

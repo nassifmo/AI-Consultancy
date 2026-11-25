@@ -81,7 +81,8 @@ class GradingTests(unittest.TestCase):
                 self.assertEqual(grade["eta_error_seconds"], target["eta_error_seconds"])
                 self.assertEqual(grade["severity"], target["severity"])
                 self.assertEqual(grade["crosses_decision_cutoff"], True if case == "S30" else None)
-                self.assertIsNone(grade["score"])
+                penalty = 100 if case == "S30" else abs(target["eta_error_seconds"]) / 720
+                self.assertAlmostEqual(grade["timing_failure_score"], penalty)
                 self.assertEqual(result["outcome"]["state"], "unknown")
 
     def test_configurable_timing_scores_are_profile_specific_and_asymmetric(self):
@@ -91,6 +92,8 @@ class GradingTests(unittest.TestCase):
         for profile, criterion, seconds, score in [
             ("shipment_status", "eta_accuracy", 60, 75),
             ("shipment_status", "eta_accuracy", -60, 50),
+            ("shipment_status", "eta_accuracy", 240, 0),
+            ("shipment_status", "eta_accuracy", -120, 0),
             ("arrival_coordination", "coordination_eta", 60, 50),
             ("arrival_coordination", "coordination_eta", -3600, 0),
         ]:
@@ -101,6 +104,7 @@ class GradingTests(unittest.TestCase):
                     "evidence": {criterion: timing(seconds)},
                 })["criteria"][criterion]
                 self.assertEqual(finding["score"], score)
+                self.assertEqual(finding["timing_failure_score"], 100 - score)
                 self.assertEqual(finding["eta_error_seconds"], seconds)
                 self.assertEqual(finding["severity"], "unknown")
 

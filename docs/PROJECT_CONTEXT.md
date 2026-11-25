@@ -87,3 +87,14 @@ live comparison of two model configurations on synthetic shipments. The
 output before increasing the run size. The [pilot economics contract](PILOT_ECONOMICS_CONTRACT.md)
 sets out the reconciled service and financial inputs needed to assess a company
 deployment. Offline tests do not establish live model performance or company ROI.
+
+## Customer reply verification and pilot review (25 November 2026)
+
+The evaluator checks the customer's sent reply against tracking evidence available
+at send time. An optional local model reads the request and reply. The evaluator
+checks extracted claims against the records and reports a confirmed omission,
+handoff and recovery separately. See the [grading guide](../EVALUATOR_GRADING.md)
+and the [pilot validation plan](../pilot_prospect/INTAKE_AND_VALIDATION.md).
+
+Bahaa requested that completed repository edits be checked and pushed to the
+existing default branch as part of the same task.

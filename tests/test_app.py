@@ -12,6 +12,7 @@ from streamlit.testing.v1 import AppTest
 
 from app import unpack_exports
 from evaluator.analysis import analyze_exports
+from evaluator.claim_reader import EtaReading, ReplyClaims, StatusClaim
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,6 +27,45 @@ def zip_bytes(entries):
 
 
 class InterfaceTests(unittest.TestCase):
+    def test_local_reply_reader_shows_evidence_and_records_its_run(self):
+        messages = []
+
+        class FixtureReader:
+            provider = "ollama"
+            reads = 1
+
+            def __init__(self, model, *, max_reads):
+                self.model, self.max_reads = model, max_reads
+
+            def __call__(self, text):
+                messages.append(text)
+                return ReplyClaims(status_claims=(StatusClaim("departed", "vessel", "The vessel has departed."),))
+
+            def interpret_eta(self, question, reply):
+                return EtaReading(intent="arrival_time", response="provided", request_quote=question,
+                                  reply_quote="The current Rotterdam ETA is 16 March at 11:00 local time.")
+
+        with patch("evaluator.claim_reader.OllamaClaimReader", FixtureReader):
+            app = AppTest.from_file(ROOT / "app.py", default_timeout=12).run()
+            app.selectbox[0].select("S28 · Vessel status and ETA")
+            app.checkbox(key="shipment_read_claims").check()
+            next(button for button in app.button if button.label == "Run evaluation").click().run()
+        self.assertFalse(app.exception)
+        self.assertTrue(messages and all("The vessel has departed." in text for text in messages))
+        self.assertTrue(any(heading.value == "Claims in sent replies" for heading in app.subheader))
+        self.assertTrue(any("Local model calls 1 of 25 allowed" in item.value for item in app.caption))
+        result, _, policy = app.session_state["shipment_analysis"]
+        provenance = result["run_provenance"]["claim_extraction"]
+        self.assertEqual(provenance["model"], "qwen2.5:7b-instruct")
+        self.assertEqual(len(provenance["findings_sha256"]), 64)
+        assessment = result["enquiries"][0]["verification"]["initial_reply"]["reply_claims"]
+        self.assertEqual(assessment["findings"][0]["verdict"], "supported")
+        reading = result["enquiries"][0]["verification"]["initial_reply"]["eta_interpretation"]
+        self.assertEqual(reading["intent"], "arrival_time")
+        self.assertIn("Rotterdam", reading["request_quote"])
+        rules_only = analyze_exports(ROOT / "datagen/datasets/scenarios/S28/exports", policy)
+        self.assertNotEqual(result["run_provenance"]["run_id"], rules_only["run_provenance"]["run_id"])
+
     def test_evaluation_review_rerun_and_download(self):
         app = AppTest.from_file(ROOT / "app.py", default_timeout=12).run()
         self.assertFalse(app.exception)
@@ -94,6 +134,33 @@ class InterfaceTests(unittest.TestCase):
         with unpack_exports(body) as path:
             uploaded = analyze_exports(path, policy)
         self.assertEqual(uploaded, direct)
+
+    def test_unlabeled_zip_requires_the_sent_eta(self):
+        source = ROOT / "datagen/datasets/scenarios/S28/exports"
+        policy = json.loads((ROOT / "evaluator/policy.json").read_text(encoding="utf-8"))
+        entries = {f"exports/{path.name}": path.read_bytes() for path in source.iterdir()}
+        metadata = json.loads(entries["exports/export_metadata.json"])
+        metadata.pop("dataset_origin")
+        entries["exports/export_metadata.json"] = json.dumps(metadata)
+        messages = (
+            ("The vessel has departed.", "failed"),
+            ("The current Rotterdam ETA is 16 March at 11:00 local time.", "resolved"),
+        )
+        original = entries["exports/responses.csv"]
+        for message, outcome in messages:
+            with self.subTest(message=message):
+                entries["exports/responses.csv"] = original.replace(
+                    b"The vessel has departed. The current Rotterdam ETA is 16 March at 11:00 local time.",
+                    message.encode("utf-8"),
+                )
+                with unpack_exports(zip_bytes(entries.items())) as exports:
+                    result = analyze_exports(exports, policy)
+                self.assertEqual(result["data_readiness"]["dataset_origin"], "unconfirmed")
+                enquiry = result["enquiries"][0]
+                self.assertEqual(enquiry["outcome"]["state"], outcome)
+                if outcome == "failed":
+                    self.assertEqual(enquiry["criteria"]["eta_accuracy"]["status"], "unknown")
+                    self.assertEqual(enquiry["criteria"]["eta_request_answered"]["status"], "unmet")
 
     def test_upload_rejects_paths_answers_links_and_excessive_expansion(self):
         common = (("exports/export_metadata.json", "{}"), ("exports/enquiries.csv", "id\n"))

@@ -124,6 +124,42 @@ class ExportVerificationTests(unittest.TestCase):
             self.assertIsNone(result["verification"]["initial_reply"])
             self.assertTrue(any(issue["code"] == "conflicting_record_id" for issue in payload["input_issues"]))
 
+    def test_sent_eta_takes_precedence_and_ambiguous_service_text_stays_unknown(self):
+        cases = (
+            ("The current Rotterdam ETA is 16 March at 17:00 local time.", 21600, 30),
+            ("The current Rotterdam ETA is 16 March at 05:00 local time.", -21600, 30),
+            ("The current Rotterdam ETA is 17 March at 07:00 local time.", 72000, 100),
+            ("The current Rotterdam ETA is 15 March at 11:00 local time.", -86400, 100),
+            ("The current Rotterdam ETA is around lunchtime.", None, None),
+            ("The current Rotterdam ETA is 16 March at 11:00 local time or 17:00 local time.", None, None),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            exports = shutil.copytree(SCENARIOS / "S28" / "exports", Path(directory) / "exports")
+            meta_path = exports / "export_metadata.json"
+            metadata = json.loads(meta_path.read_text(encoding="utf-8"))
+            meta_path.write_text(json.dumps({**metadata, "dataset_origin": "company"}), encoding="utf-8")
+            response_path = exports / "responses.csv"
+            with response_path.open(encoding="utf-8", newline="") as stream:
+                row = next(csv.DictReader(stream))
+            for message, seconds, penalty in cases:
+                with self.subTest(message=message):
+                    with response_path.open("w", encoding="utf-8", newline="") as stream:
+                        writer = csv.DictWriter(stream, row.keys())
+                        writer.writeheader()
+                        writer.writerow({**row, "message_text": message})
+                    result, = verify_exports(exports, POLICY)["enquiries"]
+                    grade = result["criteria"]["eta_accuracy"]
+                    reply = result["verification"]["initial_reply"]
+                    self.assertEqual(grade.get("eta_error_seconds"), seconds)
+                    if penalty is None:
+                        self.assertEqual(grade["status"], "unknown")
+                        self.assertIsNone(reply["matches_record"])
+                    else:
+                        self.assertAlmostEqual(grade["timing_failure_score"], penalty)
+                        self.assertTrue(grade["structured_eta_disagrees"])
+                        self.assertIs(reply["matches_record"], False)
+                    self.assertNotEqual(result["outcome"]["state"], "resolved")
+
     def test_policy_changes_numeric_grade_without_changing_the_observed_error(self):
         policy = deepcopy(POLICY)
         policy["criteria"]["eta_accuracy"]["zero_score_late_seconds"] = 120
@@ -131,6 +167,31 @@ class ExportVerificationTests(unittest.TestCase):
         result, = verify_exports(SCENARIOS / "S29" / "exports", policy)["enquiries"]
         self.assertEqual(result["criteria"]["eta_accuracy"]["score"], 50)
         self.assertEqual(result["criteria"]["eta_accuracy"]["eta_error_seconds"], 60)
+
+    def test_rule_version_alone_does_not_allow_eta_from_an_internal_field(self):
+        with tempfile.TemporaryDirectory() as directory:
+            exports = shutil.copytree(SCENARIOS / "S28" / "exports", Path(directory) / "exports")
+            meta_path = exports / "export_metadata.json"
+            metadata = json.loads(meta_path.read_text(encoding="utf-8"))
+            self.assertEqual(metadata.pop("dataset_origin"), "synthetic")
+            response_path = exports / "responses.csv"
+            with response_path.open(encoding="utf-8", newline="") as stream:
+                response = next(csv.DictReader(stream))
+            with response_path.open("w", encoding="utf-8", newline="") as stream:
+                writer = csv.DictWriter(stream, response.keys())
+                writer.writeheader()
+                writer.writerow({**response, "message_text": "Update on your shipment."})
+            for label in ({}, {"dataset_origin": None}, {"dataset_origin": "company"},
+                          {"dataset_origin": "unconfirmed"}, {"dataset_origin": "synthetic"}):
+                with self.subTest(label=label):
+                    meta_path.write_text(json.dumps({**metadata, **label}), encoding="utf-8")
+                    result, = verify_exports(exports, POLICY)["enquiries"]
+                    grade = result["criteria"]["eta_accuracy"]
+                    benchmark = label.get("dataset_origin") == "synthetic"
+                    self.assertEqual(result["outcome"]["state"], "resolved" if benchmark else "unknown")
+                    self.assertEqual(grade["status"], "met" if benchmark else "unknown")
+                    self.assertEqual(grade["eta_claim_basis"],
+                                     "legacy_structured_claim" if benchmark else "no_eta_in_sent_message")
 
     def test_all_scenario_exports_produce_one_result_per_exported_enquiry(self):
         count = 0
